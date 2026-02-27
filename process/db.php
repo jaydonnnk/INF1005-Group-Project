@@ -19,7 +19,7 @@ if (file_exists($env_file)) {
 $db_host = getenv('DB_HOST') ?: "localhost";
 $db_name = getenv('DB_NAME') ?: "rolling_dice_db";
 $db_user = getenv('DB_USER') ?: "root";
-$db_pass = getenv('DB_PASS') ?: "";
+$db_pass = getenv('DB_PASS') ?: "Student@sit";
 $db_charset = getenv('DB_CHARSET') ?: "utf8mb4";
 
 // DSN (Data Source Name)

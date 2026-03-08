@@ -10,7 +10,7 @@
  * Sanitize user input by trimming whitespace.
  * HTML encoding is done at OUTPUT time (in views), NOT at storage time.
  */
-function sanitize_input(string $data): string
+function sanitizeInput(string $data): string
 {
     return trim($data);
 }
@@ -18,7 +18,7 @@ function sanitize_input(string $data): string
 /**
  * Generate or retrieve the CSRF token for the current session.
  */
-function csrf_token(): string
+function csrfToken(): string
 {
     if (empty($_SESSION['csrf_token'])) {
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
@@ -29,16 +29,16 @@ function csrf_token(): string
 /**
  * Output a hidden CSRF input field for use inside forms.
  */
-function csrf_field(): string
+function csrfField(): string
 {
-    return '<input type="hidden" name="csrf_token" value="' . csrf_token() . '">';
+    return '<input type="hidden" name="csrf_token" value="' . csrfToken() . '">';
 }
 
 /**
  * Validate the CSRF token submitted via POST.
  * Redirects with a flash error if the token is missing or invalid.
  */
-function validate_csrf(string $redirect_url = '../index.php'): void
+function validateCsrf(string $redirect_url = '../index.php'): void
 {
     if (
         empty($_POST['csrf_token']) ||
@@ -55,7 +55,7 @@ function validate_csrf(string $redirect_url = '../index.php'): void
  * @param string $type  'success' or 'error'
  * @param string $message  The message text (plain text, will be escaped on display)
  */
-function set_flash(string $type, string $message): void
+function setFlash(string $type, string $message): void
 {
     $_SESSION['flash'] = ['type' => $type, 'message' => $message];
 }
@@ -64,7 +64,7 @@ function set_flash(string $type, string $message): void
  * Display and clear the flash message (if any).
  * Returns the HTML string for the alert.
  */
-function display_flash(): string
+function displayFlash(): string
 {
     if (empty($_SESSION['flash'])) {
         return '';
@@ -77,7 +77,7 @@ function display_flash(): string
     $message = htmlspecialchars($flash['message'], ENT_QUOTES, 'UTF-8');
 
     return '<div class="alert ' . $alert_class . ' alert-dismissible fade show" role="alert">'
-         . $message
-         . '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>'
-         . '</div>';
+        . $message
+        . '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>'
+        . '</div>';
 }

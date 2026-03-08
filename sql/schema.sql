@@ -2,12 +2,12 @@
 -- The Rolling Dice - Board Game Café
 -- Database Schema for INF1005 Project
 -- ============================================
--- For Google Cloud SQL: Create the database 'rolling_dice_db'
--- via the GCP Console first, then run this script against it.
---
--- For local development (XAMPP/WAMP), uncomment the two lines below:
--- CREATE DATABASE IF NOT EXISTS rolling_dice_db;
--- USE rolling_dice_db;
+-- Run this script as the MySQL root user on your GCP LAMP VM:
+--   mysql -u root -p < schema.sql
+-- ============================================
+
+CREATE DATABASE IF NOT EXISTS rolling_dice_db;
+USE rolling_dice_db;
 
 -- ----------------------------------------
 -- Members table (User accounts)
@@ -143,3 +143,11 @@ INSERT INTO menu_items (name, description, price, category, image_url) VALUES
 ('Espresso', 'Double shot of single-origin espresso.', 5.00, 'Drinks', 'images/espresso.jpg'),
 ('Warm Brownie Sundae', 'Fudge brownie with vanilla ice cream and chocolate sauce.', 11.90, 'Desserts', 'images/brownie.jpg'),
 ('Churros', 'Golden churros dusted with cinnamon sugar, served with dipping sauce.', 8.90, 'Desserts', 'images/churros.jpg');
+
+-- ============================================
+-- Database User (for PHP application)
+-- Change the password below before running!
+-- ============================================
+CREATE USER IF NOT EXISTS 'rolling_dice_user'@'localhost' IDENTIFIED BY 'YOUR_PASSWORD_HERE';
+GRANT ALL PRIVILEGES ON rolling_dice_db.* TO 'rolling_dice_user'@'localhost';
+FLUSH PRIVILEGES;

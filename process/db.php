@@ -12,7 +12,7 @@
 $db_host    = "localhost";
 $db_name    = "rolling_dice_db";
 $db_user    = "rolling_dice_user";     // Created during MySQL setup
-$db_pass    = "YOUR_PASSWORD_HERE";    // Set during MySQL setup
+$db_pass    = "Student@s1t";    // Set during MySQL setup
 $db_charset = "utf8mb4";
 
 // DSN (Data Source Name)

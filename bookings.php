@@ -37,7 +37,7 @@ $all_games = $games_stmt->fetchAll();
 <body>
     <?php include "inc/nav.inc.php"; ?>
 
-    <main class="container section-padding">
+    <main id="main-content" class="container section-padding">
 
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1>My Bookings</h1>
@@ -61,6 +61,9 @@ $all_games = $games_stmt->fetchAll();
                       aria-label="Booking form">
 
                     <?php echo csrf_field(); ?>
+
+                    <p class="text-muted small"><span class="text-danger">*</span> indicates a required field.</p>
+
                     <input type="hidden" name="action" value="<?php echo $booking_data ? 'update' : 'create'; ?>">
                     <?php if ($booking_data): ?>
                         <input type="hidden" name="booking_id" value="<?php echo $booking_data['booking_id']; ?>">
@@ -83,7 +86,7 @@ $all_games = $games_stmt->fetchAll();
                                       '5:00 PM - 7:00 PM', '7:00 PM - 9:00 PM', '9:00 PM - 11:00 PM'];
                             foreach ($slots as $s) {
                                 $selected = ($booking_data && $booking_data['time_slot'] === $s) ? 'selected' : '';
-                                echo "<option value=\"$s\" $selected>$s</option>";
+                                echo '<option value="' . htmlspecialchars($s) . '" ' . $selected . '>'. htmlspecialchars($s) . '</option>';
                             }
                             ?>
                         </select>
@@ -178,7 +181,7 @@ $all_games = $games_stmt->fetchAll();
                                 <td>
                                     <?php if ($b['status'] === 'Confirmed'): ?>
                                         <a href="bookings.php?action=edit&id=<?php echo $b['booking_id']; ?>"
-                                           class="btn btn-sm btn-outline-primary me-1" title="Edit booking">
+                                           class="btn btn-sm btn-outline-primary me-1" title="Edit booking" aria-label="Edit booking">
                                             <span class="material-icons" style="font-size:1rem;" aria-hidden="true">edit</span>
                                         </a>
                                         <form method="post" action="process/process_booking.php" class="d-inline"
@@ -186,7 +189,7 @@ $all_games = $games_stmt->fetchAll();
                                             <?php echo csrf_field(); ?>
                                             <input type="hidden" name="action" value="delete">
                                             <input type="hidden" name="booking_id" value="<?php echo $b['booking_id']; ?>">
-                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Cancel booking">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Cancel booking" aria-label="Cancel booking">
                                                 <span class="material-icons" style="font-size:1rem;" aria-hidden="true">cancel</span>
                                             </button>
                                         </form>

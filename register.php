@@ -7,7 +7,7 @@
 <body>
     <?php include "inc/nav.inc.php"; ?>
 
-    <main class="container section-padding">
+    <main id="main-content" class="container section-padding">
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6">
 
@@ -22,6 +22,8 @@
                       aria-label="Member registration form">
 
                     <?php echo csrf_field(); ?>
+
+                    <p class="text-muted small"><span class="text-danger">*</span> indicates a required field.</p>
 
                     <!-- First Name (optional) -->
                     <div class="mb-3">

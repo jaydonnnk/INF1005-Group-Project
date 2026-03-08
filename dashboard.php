@@ -16,7 +16,7 @@ $member_id = $_SESSION["member_id"];
 <body>
     <?php include "inc/nav.inc.php"; ?>
 
-    <main class="container section-padding">
+    <main id="main-content" class="container section-padding">
 
         <h1>Welcome back, <?php echo $member_name; ?>!</h1>
         <p class="lead">Manage your bookings, orders, reviews, and wishlist from here.</p>
@@ -50,40 +50,40 @@ $member_id = $_SESSION["member_id"];
 
         <div class="row g-4 mb-5">
             <div class="col-sm-6 col-lg-3">
-                <a href="bookings.php" class="text-decoration-none">
+                <a href="bookings.php" class="text-decoration-none" aria-label="Bookings: <?php echo $bookings; ?> active">
                     <div class="dashboard-card">
                         <span class="material-icons" aria-hidden="true">event</span>
-                        <h5>Bookings</h5>
+                        <h3>Bookings</h3>
                         <p class="fs-3 fw-bold text-caramel mb-0"><?php echo $bookings; ?></p>
                         <p class="text-muted">active</p>
                     </div>
                 </a>
             </div>
             <div class="col-sm-6 col-lg-3">
-                <a href="orders.php" class="text-decoration-none">
+                <a href="orders.php" class="text-decoration-none" aria-label="Orders: <?php echo $orders; ?> in progress">
                     <div class="dashboard-card">
                         <span class="material-icons" aria-hidden="true">receipt_long</span>
-                        <h5>Orders</h5>
+                        <h3>Orders</h3>
                         <p class="fs-3 fw-bold text-caramel mb-0"><?php echo $orders; ?></p>
                         <p class="text-muted">in progress</p>
                     </div>
                 </a>
             </div>
             <div class="col-sm-6 col-lg-3">
-                <a href="reviews.php" class="text-decoration-none">
+                <a href="reviews.php" class="text-decoration-none" aria-label="Reviews: <?php echo $reviews; ?> written">
                     <div class="dashboard-card">
                         <span class="material-icons" aria-hidden="true">rate_review</span>
-                        <h5>Reviews</h5>
+                        <h3>Reviews</h3>
                         <p class="fs-3 fw-bold text-caramel mb-0"><?php echo $reviews; ?></p>
                         <p class="text-muted">written</p>
                     </div>
                 </a>
             </div>
             <div class="col-sm-6 col-lg-3">
-                <a href="wishlist.php" class="text-decoration-none">
+                <a href="wishlist.php" class="text-decoration-none" aria-label="Wishlist: <?php echo $wishlists; ?> games saved">
                     <div class="dashboard-card">
                         <span class="material-icons" aria-hidden="true">favorite</span>
-                        <h5>Wishlist</h5>
+                        <h3>Wishlist</h3>
                         <p class="fs-3 fw-bold text-caramel mb-0"><?php echo $wishlists; ?></p>
                         <p class="text-muted">games saved</p>
                     </div>

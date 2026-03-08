@@ -57,7 +57,7 @@ try {
                     $levels = ['Easy', 'Medium', 'Hard'];
                     foreach ($levels as $l) {
                         $selected = (isset($_GET['difficulty']) && $_GET['difficulty'] === $l) ? 'selected' : '';
-                        echo "<option value=\"$l\" $selected>$l</option>";
+                        echo '<option value="' . htmlspecialchars($l) . '" ' . $selected . '>'. htmlspecialchars($l) . '</option>';
                     }
                     ?>
                 </select>
@@ -108,7 +108,7 @@ try {
                                 <img src="<?php echo htmlspecialchars($game['image_url']); ?>" class="card-img-top"
                                     alt="<?php echo htmlspecialchars($game['title']); ?>">
                                 <div class="card-body d-flex flex-column">
-                                    <h5 class="card-title"><?php echo htmlspecialchars($game['title']); ?></h5>
+                                    <h3 class="card-title"><?php echo htmlspecialchars($game['title']); ?></h5>
                                     <div class="mb-2">
                                         <span class="badge badge-genre"><?php echo htmlspecialchars($game['genre']); ?></span>
                                         <span

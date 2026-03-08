@@ -45,7 +45,7 @@ function registerImagePopups() {
             }
 
             // Create popup element
-            const popup = document.createElement("span");
+            const popup = document.createElement("div");
             popup.setAttribute("class", "img-popup");
             popup.setAttribute("role", "dialog");
             popup.setAttribute("aria-label", "Enlarged image view");
@@ -64,10 +64,24 @@ function registerImagePopups() {
             // Close popup on click
             popup.addEventListener("click", function () {
                 popup.remove();
+                document.removeEventListener("keydown", handleEscape);
             });
 
+            // Close popup on Escape key
+            var self = this;
+            function handleEscape(e) {
+                if (e.key === "Escape") {
+                    popup.remove();
+                    document.removeEventListener("keydown", handleEscape);
+                    self.focus();
+                }
+            }
+            document.addEventListener("keydown", handleEscape);
+
             // Insert popup into the page
+            popup.setAttribute("tabindex", "-1");
             document.body.appendChild(popup);
+            popup.focus();
         });
     }
 }

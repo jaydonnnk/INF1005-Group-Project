@@ -16,7 +16,7 @@ require_once "process/db.php";
 <body>
     <?php include "inc/nav.inc.php"; ?>
 
-    <main class="container section-padding">
+    <main id="main-content" class="container section-padding">
 
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1>My Orders</h1>
@@ -65,7 +65,7 @@ require_once "process/db.php";
                                     <?php echo csrf_field(); ?>
                                     <input type="hidden" name="action" value="cancel">
                                     <input type="hidden" name="order_id" value="<?php echo $order['order_id']; ?>">
-                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Cancel order">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Cancel order" aria-label="Cancel order">
                                         <span class="material-icons" style="font-size:1rem;" aria-hidden="true">cancel</span>
                                     </button>
                                 </form>
@@ -86,9 +86,9 @@ require_once "process/db.php";
                         <table class="table table-sm mb-0" aria-label="Order items">
                             <thead>
                                 <tr>
-                                    <th>Item</th>
-                                    <th class="text-center">Qty</th>
-                                    <th class="text-end">Subtotal</th>
+                                    <th scope="col">Item</th>
+                                    <th scope="col" class="text-center">Qty</th>
+                                    <th scope="col" class="text-end">Subtotal</th>
                                 </tr>
                             </thead>
                             <tbody>

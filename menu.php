@@ -7,14 +7,16 @@
 <body>
     <?php include "inc/nav.inc.php"; ?>
 
-    <header class="hero-section">
-        <div class="container">
-            <h1>Food &amp; Drinks</h1>
-            <p>Comfort food, craft drinks, and sweet treats to fuel your game night.</p>
-        </div>
-    </header>
+    <main id="main-content">
 
-    <main class="container section-padding">
+        <header class="hero-section">
+            <div class="container">
+                <h1>Food &amp; Drinks</h1>
+                <p>Comfort food, craft drinks, and sweet treats to fuel your game night.</p>
+            </div>
+        </header>
+
+        <div class="container section-padding">
 
         <?php echo display_flash(); ?>
 
@@ -46,7 +48,7 @@
                                          class="card-img-top"
                                          alt="<?php echo htmlspecialchars($item['name']); ?>">
                                     <div class="card-body d-flex flex-column">
-                                        <h5 class="card-title"><?php echo htmlspecialchars($item['name']); ?></h5>
+                                        <h3 class="card-title"><?php echo htmlspecialchars($item['name']); ?></h5>
                                         <p class="card-text"><?php echo htmlspecialchars($item['description']); ?></p>
                                         <div class="mt-auto d-flex justify-content-between align-items-center">
                                             <span class="fs-5 fw-bold text-caramel">$<?php echo number_format($item['price'], 2); ?></span>
@@ -84,6 +86,8 @@
                 </p>
             </div>
         <?php endif; ?>
+
+        </div>
 
     </main>
 

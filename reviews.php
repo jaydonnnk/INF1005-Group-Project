@@ -41,7 +41,7 @@ $all_games = $pdo->query("SELECT game_id, title FROM games ORDER BY title ASC")-
 <body>
     <?php include "inc/nav.inc.php"; ?>
 
-    <main class="container section-padding">
+    <main id="main-content" class="container section-padding">
 
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1>My Reviews</h1>
@@ -64,6 +64,8 @@ $all_games = $pdo->query("SELECT game_id, title FROM games ORDER BY title ASC")-
                       class="needs-validation" novalidate aria-label="Review form">
 
                     <?php echo csrf_field(); ?>
+
+                    <p class="text-muted small"><span class="text-danger">*</span> indicates a required field.</p>
                     <input type="hidden" name="action" value="<?php echo $review_data ? 'update' : 'create'; ?>">
                     <?php if ($review_data): ?>
                         <input type="hidden" name="review_id" value="<?php echo $review_data['review_id']; ?>">
@@ -136,7 +138,7 @@ $all_games = $pdo->query("SELECT game_id, title FROM games ORDER BY title ASC")-
                     <div class="col-md-6">
                         <div class="card h-100">
                             <div class="card-body">
-                                <h5 class="card-title"><?php echo htmlspecialchars($r['game_title']); ?></h5>
+                                <h3 class="card-title"><?php echo htmlspecialchars($r['game_title']); ?></h5>
                                 <div class="star-rating mb-2">
                                     <?php for ($i = 1; $i <= 5; $i++): ?>
                                         <span class="material-icons <?php echo $i <= $r['rating'] ? '' : 'empty'; ?>" aria-hidden="true">star</span>

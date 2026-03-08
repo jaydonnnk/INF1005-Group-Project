@@ -290,16 +290,18 @@ figcaption {
     color: var(--color-cream);
     opacity: 0.8;
     text-decoration: none;
+    transition: color 0.2s ease, text-decoration 0.2s ease;
 }
 
 .site-footer a:hover {
     color: var(--color-honey);
     opacity: 1;
+    text-decoration: underline;
 }
 
 .footer-tagline {
     color: var(--color-cream);
-    opacity: 0.75;
+    opacity: 0.9;
     font-size: 0.95rem;
 }
 
@@ -316,7 +318,7 @@ figcaption {
 
 .footer-copyright {
     font-size: 0.85rem;
-    opacity: 0.6;
+    opacity: 0.85;
     margin-bottom: 0;
 }
 
@@ -329,3 +331,9 @@ figcaption {
 .text-walnut   { color: var(--color-walnut); }
 .text-honey    { color: var(--color-honey); }
 .bg-warm-white { background-color: var(--color-warm-white); }
+
+/* ---------- Heading Size Overrides ---------- */
+/* h3 used for proper heading hierarchy; sized to match card context */
+.card-title, .dashboard-card h3 {
+    font-size: 1.25rem;
+}

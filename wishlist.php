@@ -16,7 +16,7 @@ require_once "process/db.php";
 <body>
     <?php include "inc/nav.inc.php"; ?>
 
-    <main class="container section-padding">
+    <main id="main-content" class="container section-padding">
 
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1>My Wishlist</h1>
@@ -54,7 +54,7 @@ require_once "process/db.php";
                                  class="card-img-top"
                                  alt="<?php echo htmlspecialchars($item['title']); ?>">
                             <div class="card-body d-flex flex-column">
-                                <h5 class="card-title"><?php echo htmlspecialchars($item['title']); ?></h5>
+                                <h3 class="card-title"><?php echo htmlspecialchars($item['title']); ?></h5>
                                 <div class="mb-2">
                                     <span class="badge badge-genre"><?php echo htmlspecialchars($item['genre']); ?></span>
                                     <span class="badge badge-difficulty-<?php echo strtolower($item['difficulty']); ?>">

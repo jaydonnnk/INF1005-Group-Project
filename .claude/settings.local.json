@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(sed -i 's/opacity: 0.6;/opacity: 0.85;/' css/main.css)",
-      "Bash(sed -i 's/opacity: 0.75;/opacity: 0.9;/' css/main.css)",
-      "Bash(\"c:/Users/jayd0/OneDrive/Desktop/INF1005 Web:*)"
-    ]
-  }
-}

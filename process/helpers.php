@@ -44,7 +44,7 @@ function validateCsrf(string $redirect_url = '../index.php'): void
         empty($_POST['csrf_token']) ||
         !hash_equals($_SESSION['csrf_token'] ?? '', $_POST['csrf_token'])
     ) {
-        set_flash('error', 'Invalid or expired form submission. Please try again.');
+        setFlash('error', 'Invalid or expired form submission. Please try again.');
         header("Location: $redirect_url");
         exit();
     }

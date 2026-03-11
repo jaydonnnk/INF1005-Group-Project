@@ -18,7 +18,7 @@ if ($show_form && $_GET['action'] === 'edit' && $edit_id > 0) {
     $stmt->execute([':id' => $edit_id, ':mid' => $member_id]);
     $booking_data = $stmt->fetch();
     if (!$booking_data) {
-        set_flash('error', 'Booking not found.');
+        setFlash('error', 'Booking not found.');
         header("Location: bookings.php");
         exit();
     }
@@ -48,7 +48,7 @@ $all_games = $games_stmt->fetchAll();
             <?php endif; ?>
         </div>
 
-        <?php echo display_flash(); ?>
+        <?php echo displayFlash(); ?>
 
         <?php if ($show_form): ?>
         <!-- CREATE / EDIT FORM -->
@@ -57,10 +57,10 @@ $all_games = $games_stmt->fetchAll();
                 <h2><?php echo $booking_data ? 'Edit Booking' : 'New Booking'; ?></h2>
 
                 <form action="process/process_booking.php" method="post"
-                      class="needs-validation" novalidate
-                      aria-label="Booking form">
+                    class="needs-validation" novalidate
+                    aria-label="Booking form">
 
-                    <?php echo csrf_field(); ?>
+                    <?php echo csrfField(); ?>
 
                     <p class="text-muted small"><span class="text-danger">*</span> indicates a required field.</p>
 
@@ -72,8 +72,8 @@ $all_games = $games_stmt->fetchAll();
                     <div class="mb-3">
                         <label for="booking_date" class="form-label">Date: <span class="text-danger">*</span></label>
                         <input type="date" id="booking_date" name="booking_date" class="form-control" required
-                               min="<?php echo date('Y-m-d'); ?>"
-                               value="<?php echo $booking_data ? htmlspecialchars($booking_data['booking_date']) : ''; ?>">
+                            min="<?php echo date('Y-m-d'); ?>"
+                            value="<?php echo $booking_data ? htmlspecialchars($booking_data['booking_date']) : ''; ?>">
                         <div class="invalid-feedback">Please select a date.</div>
                     </div>
 
@@ -83,7 +83,7 @@ $all_games = $games_stmt->fetchAll();
                             <option value="">Select a time slot</option>
                             <?php
                             $slots = ['11:00 AM - 1:00 PM', '1:00 PM - 3:00 PM', '3:00 PM - 5:00 PM',
-                                      '5:00 PM - 7:00 PM', '7:00 PM - 9:00 PM', '9:00 PM - 11:00 PM'];
+                                    '5:00 PM - 7:00 PM', '7:00 PM - 9:00 PM', '9:00 PM - 11:00 PM'];
                             foreach ($slots as $s) {
                                 $selected = ($booking_data && $booking_data['time_slot'] === $s) ? 'selected' : '';
                                 echo '<option value="' . htmlspecialchars($s) . '" ' . $selected . '>'. htmlspecialchars($s) . '</option>';
@@ -96,8 +96,8 @@ $all_games = $games_stmt->fetchAll();
                     <div class="mb-3">
                         <label for="party_size" class="form-label">Party Size: <span class="text-danger">*</span></label>
                         <input type="number" id="party_size" name="party_size" class="form-control"
-                               min="1" max="12" required
-                               value="<?php echo $booking_data ? htmlspecialchars($booking_data['party_size']) : '2'; ?>">
+                            min="1" max="12" required
+                            value="<?php echo $booking_data ? htmlspecialchars($booking_data['party_size']) : '2'; ?>">
                         <div class="invalid-feedback">Enter a party size between 1 and 12.</div>
                     </div>
 
@@ -117,7 +117,7 @@ $all_games = $games_stmt->fetchAll();
                     <div class="mb-3">
                         <label for="notes" class="form-label">Special Requests:</label>
                         <textarea id="notes" name="notes" class="form-control" rows="3"
-                                  maxlength="500" placeholder="Birthday decorations, highchair needed, etc."><?php echo $booking_data ? htmlspecialchars($booking_data['notes']) : ''; ?></textarea>
+                                maxlength="500" placeholder="Birthday decorations, highchair needed, etc."><?php echo $booking_data ? htmlspecialchars($booking_data['notes']) : ''; ?></textarea>
                     </div>
 
                     <div class="d-flex gap-2">
@@ -136,10 +136,10 @@ $all_games = $games_stmt->fetchAll();
         <?php
         $stmt = $pdo->prepare(
             "SELECT b.*, g.title AS game_title
-             FROM bookings b
-             LEFT JOIN games g ON b.game_id = g.game_id
-             WHERE b.member_id = :mid
-             ORDER BY b.booking_date DESC, b.time_slot ASC"
+            FROM bookings b
+            LEFT JOIN games g ON b.game_id = g.game_id
+            WHERE b.member_id = :mid
+            ORDER BY b.booking_date DESC, b.time_slot ASC"
         );
         $stmt->execute([':mid' => $member_id]);
         $bookings = $stmt->fetchAll();
@@ -181,12 +181,12 @@ $all_games = $games_stmt->fetchAll();
                                 <td>
                                     <?php if ($b['status'] === 'Confirmed'): ?>
                                         <a href="bookings.php?action=edit&id=<?php echo $b['booking_id']; ?>"
-                                           class="btn btn-sm btn-outline-primary me-1" title="Edit booking" aria-label="Edit booking">
+                                        class="btn btn-sm btn-outline-primary me-1" title="Edit booking" aria-label="Edit booking">
                                             <span class="material-icons" style="font-size:1rem;" aria-hidden="true">edit</span>
                                         </a>
                                         <form method="post" action="process/process_booking.php" class="d-inline"
-                                              onsubmit="return confirm('Cancel this booking?');">
-                                            <?php echo csrf_field(); ?>
+                                            onsubmit="return confirm('Cancel this booking?');">
+                                            <?php echo csrfField(); ?>
                                             <input type="hidden" name="action" value="delete">
                                             <input type="hidden" name="booking_id" value="<?php echo $b['booking_id']; ?>">
                                             <button type="submit" class="btn btn-sm btn-outline-danger" title="Cancel booking" aria-label="Cancel booking">

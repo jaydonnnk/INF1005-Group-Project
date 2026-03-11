@@ -9,10 +9,12 @@ require_once "process/db.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>My Orders - The Rolling Dice</title>
     <?php include "inc/head.inc.php"; ?>
 </head>
+
 <body>
     <?php include "inc/nav.inc.php"; ?>
 
@@ -25,7 +27,7 @@ require_once "process/db.php";
             </a>
         </div>
 
-        <?php echo display_flash(); ?>
+        <?php echo displayFlash(); ?>
 
         <?php
         // Fetch all orders with their items
@@ -45,11 +47,12 @@ require_once "process/db.php";
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <div>
                             <strong>Order #<?php echo $order['order_id']; ?></strong>
-                            <span class="text-muted ms-2"><?php echo date('d M Y, g:i A', strtotime($order['order_date'])); ?></span>
+                            <span
+                                class="text-muted ms-2"><?php echo date('d M Y, g:i A', strtotime($order['order_date'])); ?></span>
                         </div>
                         <div class="d-flex align-items-center gap-2">
                             <?php
-                            $badge = match($order['status']) {
+                            $badge = match ($order['status']) {
                                 'Pending' => 'bg-warning text-dark',
                                 'Preparing' => 'bg-info',
                                 'Completed' => 'bg-success',
@@ -61,11 +64,12 @@ require_once "process/db.php";
 
                             <?php if ($order['status'] === 'Pending'): ?>
                                 <form method="post" action="process/process_order.php" class="d-inline"
-                                      onsubmit="return confirm('Cancel this order?');">
-                                    <?php echo csrf_field(); ?>
+                                    onsubmit="return confirm('Cancel this order?');">
+                                    <?php echo csrfField(); ?>
                                     <input type="hidden" name="action" value="cancel">
                                     <input type="hidden" name="order_id" value="<?php echo $order['order_id']; ?>">
-                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Cancel order" aria-label="Cancel order">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Cancel order"
+                                        aria-label="Cancel order">
                                         <span class="material-icons" style="font-size:1rem;" aria-hidden="true">cancel</span>
                                     </button>
                                 </form>
@@ -103,7 +107,8 @@ require_once "process/db.php";
                             <tfoot>
                                 <tr>
                                     <td colspan="2" class="text-end fw-bold">Total:</td>
-                                    <td class="text-end fw-bold text-caramel">$<?php echo number_format($order['total_amount'], 2); ?></td>
+                                    <td class="text-end fw-bold text-caramel">
+                                        $<?php echo number_format($order['total_amount'], 2); ?></td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -117,4 +122,5 @@ require_once "process/db.php";
 
     <?php include "inc/footer.inc.php"; ?>
 </body>
+
 </html>

@@ -20,7 +20,7 @@ if (!isset($_SESSION["member_id"])) {
     exit();
 }
 
-validate_csrf('../menu.php');
+validateCsrf('../menu.php');
 
 $member_id = $_SESSION["member_id"];
 require_once "db.php";
@@ -33,7 +33,7 @@ switch ($action) {
     case "add_item":
         $item_id = (int) ($_POST["item_id"] ?? 0);
         if ($item_id <= 0) {
-            set_flash('error', 'Invalid item.');
+            setFlash('error', 'Invalid item.');
             header("Location: ../menu.php");
             exit();
         }
@@ -44,7 +44,7 @@ switch ($action) {
         $menu_item = $item_stmt->fetch();
 
         if (!$menu_item) {
-            set_flash('error', 'Item not available.');
+            setFlash('error', 'Item not available.');
             header("Location: ../menu.php");
             exit();
         }
@@ -95,7 +95,7 @@ switch ($action) {
         } catch (Exception $e) {
             $pdo->rollBack();
             error_log("Order error: " . $e->getMessage());
-            set_flash('error', 'Failed to add item. Please try again.');
+            setFlash('error', 'Failed to add item. Please try again.');
             header("Location: ../menu.php");
             exit();
         }
@@ -104,7 +104,7 @@ switch ($action) {
         $allowed_pages = ['menu', 'orders'];
         $from = in_array($_POST["from_page"] ?? "", $allowed_pages) ? $_POST["from_page"] : "menu";
 
-        set_flash('success', 'Item added to your order!');
+        setFlash('success', 'Item added to your order!');
         header("Location: ../$from.php");
         exit();
 
@@ -114,7 +114,7 @@ switch ($action) {
         $stmt = $pdo->prepare("UPDATE orders SET status = 'Cancelled' WHERE order_id = :oid AND member_id = :mid AND status = 'Pending'");
         $stmt->execute([':oid' => $order_id, ':mid' => $member_id]);
 
-        set_flash('success', 'Order cancelled.');
+        setFlash('success', 'Order cancelled.');
         header("Location: ../orders.php");
         exit();
 

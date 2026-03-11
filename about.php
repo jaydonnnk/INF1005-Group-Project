@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>About Us - The Rolling Dice</title>
     <?php include "inc/head.inc.php"; ?>
 </head>
+
 <body>
     <?php include "inc/nav.inc.php"; ?>
 
@@ -51,7 +53,8 @@
                 <div class="row g-4">
                     <div class="col-md-4">
                         <div class="card text-center p-3">
-                            <span class="material-icons mx-auto mb-2 text-caramel" style="font-size:3rem;" aria-hidden="true">person</span>
+                            <span class="material-icons mx-auto mb-2 text-caramel" style="font-size:3rem;"
+                                aria-hidden="true">person</span>
                             <h3 class="card-title">Alex Tan</h3>
                             <p class="text-muted">Founder &amp; Game Curator</p>
                             <p>Lifelong board game enthusiast with a collection of 500+ titles at home.</p>
@@ -59,7 +62,8 @@
                     </div>
                     <div class="col-md-4">
                         <div class="card text-center p-3">
-                            <span class="material-icons mx-auto mb-2 text-caramel" style="font-size:3rem;" aria-hidden="true">person</span>
+                            <span class="material-icons mx-auto mb-2 text-caramel" style="font-size:3rem;"
+                                aria-hidden="true">person</span>
                             <h3 class="card-title">Sam Lee</h3>
                             <p class="text-muted">Head Chef</p>
                             <p>Brings comfort food and creative drinks that pair perfectly with game nights.</p>
@@ -67,7 +71,8 @@
                     </div>
                     <div class="col-md-4">
                         <div class="card text-center p-3">
-                            <span class="material-icons mx-auto mb-2 text-caramel" style="font-size:3rem;" aria-hidden="true">person</span>
+                            <span class="material-icons mx-auto mb-2 text-caramel" style="font-size:3rem;"
+                                aria-hidden="true">person</span>
                             <h3 class="card-title">Jamie Wong</h3>
                             <p class="text-muted">Community Manager</p>
                             <p>Organises weekly game nights, tournaments, and new player workshops.</p>
@@ -107,4 +112,5 @@
 
     <?php include "inc/footer.inc.php"; ?>
 </body>
+
 </html>

@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>Sign In - The Rolling Dice</title>
     <?php include "inc/head.inc.php"; ?>
 </head>
+
 <body>
     <?php include "inc/nav.inc.php"; ?>
 
@@ -17,31 +19,28 @@
                     <a href="register.php">Register here</a>.
                 </p>
 
-                <?php echo display_flash(); ?>
+                <?php echo displayFlash(); ?>
 
-                <form action="process/process_login.php" method="post"
-                      class="needs-validation" novalidate
-                      aria-label="Member sign-in form">
+                <form action="process/process_login.php" method="post" class="needs-validation" novalidate
+                    aria-label="Member sign-in form">
 
-                    <?php echo csrf_field(); ?>
+                    <?php echo csrfField(); ?>
 
                     <p class="text-muted small"><span class="text-danger">*</span> indicates a required field.</p>
 
                     <!-- Email -->
                     <div class="mb-3">
                         <label for="email" class="form-label">Email: <span class="text-danger">*</span></label>
-                        <input type="email" id="email" name="email"
-                               class="form-control" maxlength="100"
-                               placeholder="Enter your email" required>
+                        <input type="email" id="email" name="email" class="form-control" maxlength="100"
+                            placeholder="Enter your email" required>
                         <div class="invalid-feedback">Please enter your email address.</div>
                     </div>
 
                     <!-- Password -->
                     <div class="mb-3">
                         <label for="pwd" class="form-label">Password: <span class="text-danger">*</span></label>
-                        <input type="password" id="pwd" name="pwd"
-                               class="form-control"
-                               placeholder="Enter your password" required>
+                        <input type="password" id="pwd" name="pwd" class="form-control"
+                            placeholder="Enter your password" required>
                         <div class="invalid-feedback">Please enter your password.</div>
                     </div>
 
@@ -60,4 +59,5 @@
 
     <?php include "inc/footer.inc.php"; ?>
 </body>
+
 </html>

@@ -17,7 +17,7 @@ if (!isset($_SESSION["member_id"])) {
     exit();
 }
 
-validate_csrf('../games.php');
+validateCsrf('../games.php');
 
 $member_id = $_SESSION["member_id"];
 require_once "db.php";
@@ -30,7 +30,7 @@ switch ($action) {
     case "add":
         $game_id = (int) ($_POST["game_id"] ?? 0);
         if ($game_id <= 0) {
-            set_flash('error', 'Invalid game.');
+            setFlash('error', 'Invalid game.');
             header("Location: ../games.php");
             exit();
         }
@@ -40,7 +40,7 @@ switch ($action) {
         $check->execute([':mid' => $member_id, ':gid' => $game_id]);
 
         if ($check->rowCount() > 0) {
-            set_flash('success', 'This game is already in your wishlist!');
+            setFlash('success', 'This game is already in your wishlist!');
             header("Location: ../games.php");
             exit();
         }
@@ -48,7 +48,7 @@ switch ($action) {
         $stmt = $pdo->prepare("INSERT INTO wishlists (member_id, game_id) VALUES (:mid, :gid)");
         $stmt->execute([':mid' => $member_id, ':gid' => $game_id]);
 
-        set_flash('success', 'Added to your wishlist!');
+        setFlash('success', 'Added to your wishlist!');
         header("Location: ../games.php");
         exit();
 
@@ -58,7 +58,7 @@ switch ($action) {
         $stmt = $pdo->prepare("DELETE FROM wishlists WHERE wishlist_id = :wid AND member_id = :mid");
         $stmt->execute([':wid' => $wishlist_id, ':mid' => $member_id]);
 
-        set_flash('success', 'Removed from wishlist.');
+        setFlash('success', 'Removed from wishlist.');
         header("Location: ../wishlist.php");
         exit();
 

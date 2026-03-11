@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>The Rolling Dice - Board Game Caf&eacute;</title>
     <?php include "inc/head.inc.php"; ?>
 </head>
+
 <body>
     <?php include "inc/nav.inc.php"; ?>
 
@@ -95,7 +97,8 @@
             <!-- Call to Action -->
             <section class="section-padding text-center" id="cta">
                 <h2>Ready to Roll?</h2>
-                <p class="lead">Join our community of board game lovers. Members get priority reservations, loyalty points, and exclusive event invites.</p>
+                <p class="lead">Join our community of board game lovers. Members get priority reservations, loyalty
+                    points, and exclusive event invites.</p>
                 <a href="register.php" class="btn btn-primary btn-lg">
                     <span class="material-icons align-middle me-1" aria-hidden="true">person_add</span>
                     Become a Member
@@ -108,4 +111,5 @@
 
     <?php include "inc/footer.inc.php"; ?>
 </body>
+
 </html>

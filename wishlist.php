@@ -9,10 +9,12 @@ require_once "process/db.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>My Wishlist - The Rolling Dice</title>
     <?php include "inc/head.inc.php"; ?>
 </head>
+
 <body>
     <?php include "inc/nav.inc.php"; ?>
 
@@ -25,7 +27,7 @@ require_once "process/db.php";
             </a>
         </div>
 
-        <?php echo display_flash(); ?>
+        <?php echo displayFlash(); ?>
 
         <?php
         // Fetch wishlist with game details
@@ -50,33 +52,34 @@ require_once "process/db.php";
                 <?php foreach ($wishlist as $item): ?>
                     <div class="col-sm-6 col-lg-4">
                         <div class="card h-100">
-                            <img src="<?php echo htmlspecialchars($item['image_url']); ?>"
-                                 class="card-img-top"
-                                 alt="<?php echo htmlspecialchars($item['title']); ?>">
+                            <img src="<?php echo htmlspecialchars($item['image_url']); ?>" class="card-img-top"
+                                alt="<?php echo htmlspecialchars($item['title']); ?>">
                             <div class="card-body d-flex flex-column">
                                 <h3 class="card-title"><?php echo htmlspecialchars($item['title']); ?></h5>
-                                <div class="mb-2">
-                                    <span class="badge badge-genre"><?php echo htmlspecialchars($item['genre']); ?></span>
-                                    <span class="badge badge-difficulty-<?php echo strtolower($item['difficulty']); ?>">
-                                        <?php echo htmlspecialchars($item['difficulty']); ?>
-                                    </span>
-                                </div>
-                                <p class="card-text"><?php echo htmlspecialchars($item['description']); ?></p>
-                                <p class="text-muted small mt-auto">
-                                    Added <?php echo date('d M Y', strtotime($item['added_at'])); ?>
-                                </p>
+                                    <div class="mb-2">
+                                        <span class="badge badge-genre"><?php echo htmlspecialchars($item['genre']); ?></span>
+                                        <span class="badge badge-difficulty-<?php echo strtolower($item['difficulty']); ?>">
+                                            <?php echo htmlspecialchars($item['difficulty']); ?>
+                                        </span>
+                                    </div>
+                                    <p class="card-text"><?php echo htmlspecialchars($item['description']); ?></p>
+                                    <p class="text-muted small mt-auto">
+                                        Added <?php echo date('d M Y', strtotime($item['added_at'])); ?>
+                                    </p>
                             </div>
                             <div class="card-footer bg-transparent d-flex gap-2">
                                 <a href="bookings.php?action=new" class="btn btn-sm btn-primary">
-                                    <span class="material-icons" style="font-size:1rem;" aria-hidden="true">event</span> Book &amp; Play
+                                    <span class="material-icons" style="font-size:1rem;" aria-hidden="true">event</span> Book
+                                    &amp; Play
                                 </a>
                                 <form method="post" action="process/process_wishlist.php" class="d-inline"
-                                      onsubmit="return confirm('Remove from wishlist?');">
-                                    <?php echo csrf_field(); ?>
+                                    onsubmit="return confirm('Remove from wishlist?');">
+                                    <?php echo csrfField(); ?>
                                     <input type="hidden" name="action" value="remove">
                                     <input type="hidden" name="wishlist_id" value="<?php echo $item['wishlist_id']; ?>">
                                     <button type="submit" class="btn btn-sm btn-outline-danger">
-                                        <span class="material-icons" style="font-size:1rem;" aria-hidden="true">heart_broken</span> Remove
+                                        <span class="material-icons" style="font-size:1rem;"
+                                            aria-hidden="true">heart_broken</span> Remove
                                     </button>
                                 </form>
                             </div>
@@ -90,4 +93,5 @@ require_once "process/db.php";
 
     <?php include "inc/footer.inc.php"; ?>
 </body>
+
 </html>

@@ -9,10 +9,12 @@ $member_id = $_SESSION["member_id"];
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>Dashboard - The Rolling Dice</title>
     <?php include "inc/head.inc.php"; ?>
 </head>
+
 <body>
     <?php include "inc/nav.inc.php"; ?>
 
@@ -21,7 +23,7 @@ $member_id = $_SESSION["member_id"];
         <h1>Welcome back, <?php echo $member_name; ?>!</h1>
         <p class="lead">Manage your bookings, orders, reviews, and wishlist from here.</p>
 
-        <?php echo display_flash(); ?>
+        <?php echo displayFlash(); ?>
 
         <!-- Dashboard Quick Stats -->
         <?php
@@ -50,7 +52,8 @@ $member_id = $_SESSION["member_id"];
 
         <div class="row g-4 mb-5">
             <div class="col-sm-6 col-lg-3">
-                <a href="bookings.php" class="text-decoration-none" aria-label="Bookings: <?php echo $bookings; ?> active">
+                <a href="bookings.php" class="text-decoration-none"
+                    aria-label="Bookings: <?php echo $bookings; ?> active">
                     <div class="dashboard-card">
                         <span class="material-icons" aria-hidden="true">event</span>
                         <h3>Bookings</h3>
@@ -60,7 +63,8 @@ $member_id = $_SESSION["member_id"];
                 </a>
             </div>
             <div class="col-sm-6 col-lg-3">
-                <a href="orders.php" class="text-decoration-none" aria-label="Orders: <?php echo $orders; ?> in progress">
+                <a href="orders.php" class="text-decoration-none"
+                    aria-label="Orders: <?php echo $orders; ?> in progress">
                     <div class="dashboard-card">
                         <span class="material-icons" aria-hidden="true">receipt_long</span>
                         <h3>Orders</h3>
@@ -70,7 +74,8 @@ $member_id = $_SESSION["member_id"];
                 </a>
             </div>
             <div class="col-sm-6 col-lg-3">
-                <a href="reviews.php" class="text-decoration-none" aria-label="Reviews: <?php echo $reviews; ?> written">
+                <a href="reviews.php" class="text-decoration-none"
+                    aria-label="Reviews: <?php echo $reviews; ?> written">
                     <div class="dashboard-card">
                         <span class="material-icons" aria-hidden="true">rate_review</span>
                         <h3>Reviews</h3>
@@ -80,7 +85,8 @@ $member_id = $_SESSION["member_id"];
                 </a>
             </div>
             <div class="col-sm-6 col-lg-3">
-                <a href="wishlist.php" class="text-decoration-none" aria-label="Wishlist: <?php echo $wishlists; ?> games saved">
+                <a href="wishlist.php" class="text-decoration-none"
+                    aria-label="Wishlist: <?php echo $wishlists; ?> games saved">
                     <div class="dashboard-card">
                         <span class="material-icons" aria-hidden="true">favorite</span>
                         <h3>Wishlist</h3>
@@ -111,4 +117,5 @@ $member_id = $_SESSION["member_id"];
 
     <?php include "inc/footer.inc.php"; ?>
 </body>
+
 </html>

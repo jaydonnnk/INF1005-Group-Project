@@ -10,17 +10,19 @@
 session_start();
 require_once "helpers.php";
 
+define('LOGIN_PAGE', '../login.php');
+
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: ../login.php");
+    header("Location: " . LOGIN_PAGE);
     exit();
 }
 
-validate_csrf('../login.php');
+validateCsrf(redirect_url: '../login.php');
 
 // Validate email
 if (empty($_POST["email"])) {
-    set_flash('error', 'Email is required.');
-    header("Location: ../login.php");
+    setFlash('error', 'Email is required.');
+    header("Location: " . LOGIN_PAGE);
     exit();
 }
 
@@ -29,8 +31,8 @@ $email = filter_var($email, FILTER_SANITIZE_EMAIL);
 
 // Validate password
 if (empty($_POST["pwd"])) {
-    set_flash('error', 'Password is required.');
-    header("Location: ../login.php");
+    setFlash('error', 'Password is required.');
+    header("Location: " . LOGIN_PAGE);
     exit();
 }
 
@@ -56,11 +58,11 @@ try {
         header("Location: ../dashboard.php");
         exit();
     } else {
-        set_flash('error', 'Invalid email or password.');
+        setFlash('error', 'Invalid email or password.');
     }
 } catch (PDOException $e) {
     error_log("Login error: " . $e->getMessage());
-    set_flash('error', 'A system error occurred. Please try again later.');
+    setFlash('error', 'A system error occurred. Please try again later.');
 }
 
 header("Location: ../login.php");

@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     exit();
 }
 
-validate_csrf('../register.php');
+validateCsrf('../register.php');
 
 // ============================================
 // 1. VALIDATE & SANITIZE EACH FIELD
@@ -26,7 +26,7 @@ $errors = [];
 
 // --- First Name (optional) ---
 if (!empty($_POST["fname"])) {
-    $fname = sanitize_input($_POST["fname"]);
+    $fname = sanitizeInput($_POST["fname"]);
     if (strlen($fname) > 45) {
         $errors[] = "First name must be 45 characters or fewer.";
     }
@@ -36,7 +36,7 @@ if (!empty($_POST["fname"])) {
 if (empty($_POST["lname"])) {
     $errors[] = "Last name is required.";
 } else {
-    $lname = sanitize_input($_POST["lname"]);
+    $lname = sanitizeInput($_POST["lname"]);
     if (strlen($lname) > 45) {
         $errors[] = "Last name must be 45 characters or fewer.";
     }
@@ -46,7 +46,7 @@ if (empty($_POST["lname"])) {
 if (empty($_POST["email"])) {
     $errors[] = "Email is required.";
 } else {
-    $email = sanitize_input($_POST["email"]);
+    $email = sanitizeInput($_POST["email"]);
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errors[] = "Invalid email format.";
     }
@@ -54,7 +54,7 @@ if (empty($_POST["email"])) {
 
 // --- Phone (optional) ---
 if (!empty($_POST["phone"])) {
-    $phone = sanitize_input($_POST["phone"]);
+    $phone = sanitizeInput($_POST["phone"]);
     // Allow digits, spaces, +, -, and parentheses
     if (!preg_match('/^[\d\s\+\-\(\)]+$/', $phone)) {
         $errors[] = "Invalid phone number format.";
@@ -107,13 +107,13 @@ if ($success) {
             // Insert new member using prepared statement (prevents SQL injection)
             $insert_stmt = $pdo->prepare(
                 "INSERT INTO members (fname, lname, email, phone, password_hash)
-                 VALUES (:fname, :lname, :email, :phone, :password_hash)"
+                VALUES (:fname, :lname, :email, :phone, :password_hash)"
             );
             $insert_stmt->execute([
-                ":fname"         => $fname,
-                ":lname"         => $lname,
-                ":email"         => $email,
-                ":phone"         => $phone,
+                ":fname" => $fname,
+                ":lname" => $lname,
+                ":email" => $email,
+                ":phone" => $phone,
                 ":password_hash" => $password_hash,
             ]);
         }
@@ -130,10 +130,12 @@ if ($success) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>Registration Result - The Rolling Dice</title>
     <?php include "../inc/head.inc.php"; ?>
 </head>
+
 <body>
     <?php include "../inc/nav.inc.php"; ?>
 
@@ -143,7 +145,8 @@ if ($success) {
 
                 <?php if ($success): ?>
                     <div class="text-center">
-                        <span class="material-icons text-caramel" style="font-size: 4rem;" aria-hidden="true">check_circle</span>
+                        <span class="material-icons text-caramel" style="font-size: 4rem;"
+                            aria-hidden="true">check_circle</span>
                         <h1 class="mt-3">Welcome Aboard!</h1>
                         <p>
                             Your account has been created successfully.
@@ -185,4 +188,5 @@ if ($success) {
 
     <?php include "../inc/footer.inc.php"; ?>
 </body>
+
 </html>

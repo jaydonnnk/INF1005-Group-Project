@@ -17,7 +17,7 @@ if (!isset($_SESSION["member_id"])) {
     exit();
 }
 
-validate_csrf('../bookings.php');
+validateCsrf('../bookings.php');
 
 $member_id = $_SESSION["member_id"];
 require_once "db.php";
@@ -30,25 +30,25 @@ switch ($action) {
     case "create":
         $errors = validateBookingInput();
         if (!empty($errors)) {
-            set_flash('error', implode(" ", $errors));
+            setFlash('error', implode(" ", $errors));
             header("Location: ../bookings.php?action=new");
             exit();
         }
 
         $stmt = $pdo->prepare(
             "INSERT INTO bookings (member_id, booking_date, time_slot, party_size, game_id, notes)
-             VALUES (:mid, :date, :slot, :size, :gid, :notes)"
+            VALUES (:mid, :date, :slot, :size, :gid, :notes)"
         );
         $stmt->execute([
-            ':mid'   => $member_id,
-            ':date'  => $_POST["booking_date"],
-            ':slot'  => sanitize_input($_POST["time_slot"]),
-            ':size'  => (int) $_POST["party_size"],
-            ':gid'   => !empty($_POST["game_id"]) ? (int) $_POST["game_id"] : null,
-            ':notes' => sanitize_input($_POST["notes"] ?? ""),
+            ':mid' => $member_id,
+            ':date' => $_POST["booking_date"],
+            ':slot' => sanitizeInput($_POST["time_slot"]),
+            ':size' => (int) $_POST["party_size"],
+            ':gid' => !empty($_POST["game_id"]) ? (int) $_POST["game_id"] : null,
+            ':notes' => sanitizeInput($_POST["notes"] ?? ""),
         ]);
 
-        set_flash('success', 'Booking confirmed!');
+        setFlash('success', 'Booking confirmed!');
         header("Location: ../bookings.php");
         exit();
 
@@ -57,28 +57,28 @@ switch ($action) {
         $booking_id = (int) ($_POST["booking_id"] ?? 0);
         $errors = validateBookingInput();
         if (!empty($errors)) {
-            set_flash('error', implode(" ", $errors));
+            setFlash('error', implode(" ", $errors));
             header("Location: ../bookings.php?action=edit&id=$booking_id");
             exit();
         }
 
         $stmt = $pdo->prepare(
             "UPDATE bookings
-             SET booking_date = :date, time_slot = :slot, party_size = :size,
-                 game_id = :gid, notes = :notes
-             WHERE booking_id = :bid AND member_id = :mid"
+            SET booking_date = :date, time_slot = :slot, party_size = :size,
+                game_id = :gid, notes = :notes
+            WHERE booking_id = :bid AND member_id = :mid"
         );
         $stmt->execute([
-            ':date'  => $_POST["booking_date"],
-            ':slot'  => sanitize_input($_POST["time_slot"]),
-            ':size'  => (int) $_POST["party_size"],
-            ':gid'   => !empty($_POST["game_id"]) ? (int) $_POST["game_id"] : null,
-            ':notes' => sanitize_input($_POST["notes"] ?? ""),
-            ':bid'   => $booking_id,
-            ':mid'   => $member_id,
+            ':date' => $_POST["booking_date"],
+            ':slot' => sanitizeInput($_POST["time_slot"]),
+            ':size' => (int) $_POST["party_size"],
+            ':gid' => !empty($_POST["game_id"]) ? (int) $_POST["game_id"] : null,
+            ':notes' => sanitizeInput($_POST["notes"] ?? ""),
+            ':bid' => $booking_id,
+            ':mid' => $member_id,
         ]);
 
-        set_flash('success', 'Booking updated.');
+        setFlash('success', 'Booking updated.');
         header("Location: ../bookings.php");
         exit();
 
@@ -87,11 +87,11 @@ switch ($action) {
         $booking_id = (int) ($_POST["booking_id"] ?? 0);
         $stmt = $pdo->prepare(
             "UPDATE bookings SET status = 'Cancelled'
-             WHERE booking_id = :bid AND member_id = :mid"
+            WHERE booking_id = :bid AND member_id = :mid"
         );
         $stmt->execute([':bid' => $booking_id, ':mid' => $member_id]);
 
-        set_flash('success', 'Booking cancelled.');
+        setFlash('success', 'Booking cancelled.');
         header("Location: ../bookings.php");
         exit();
 
@@ -105,9 +105,13 @@ switch ($action) {
 function validateBookingInput(): array
 {
     $errors = [];
-    if (empty($_POST["booking_date"])) $errors[] = "Date is required.";
-    if (empty($_POST["time_slot"]))    $errors[] = "Time slot is required.";
-    if (empty($_POST["party_size"]) || (int)$_POST["party_size"] < 1 || (int)$_POST["party_size"] > 12) {
+    if (empty($_POST["booking_date"])) {
+        $errors[] = "Date is required.";
+    }
+    if (empty($_POST["time_slot"])) {
+        $errors[] = "Time slot is required.";
+    }
+    if (empty($_POST["party_size"]) || (int) $_POST["party_size"] < 1 || (int) $_POST["party_size"] > 12) {
         $errors[] = "Party size must be between 1 and 12.";
     }
     return $errors;

@@ -18,7 +18,7 @@ if ($show_form && $_GET['action'] === 'edit' && $edit_id > 0) {
     $stmt->execute([':rid' => $edit_id, ':mid' => $member_id]);
     $review_data = $stmt->fetch();
     if (!$review_data) {
-        set_flash('error', 'Review not found.');
+        setFlash('error', 'Review not found.');
         header("Location: reviews.php");
         exit();
     }
@@ -34,10 +34,12 @@ $all_games = $pdo->query("SELECT game_id, title FROM games ORDER BY title ASC")-
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>My Reviews - The Rolling Dice</title>
     <?php include "inc/head.inc.php"; ?>
 </head>
+
 <body>
     <?php include "inc/nav.inc.php"; ?>
 
@@ -52,128 +54,130 @@ $all_games = $pdo->query("SELECT game_id, title FROM games ORDER BY title ASC")-
             <?php endif; ?>
         </div>
 
-        <?php echo display_flash(); ?>
+        <?php echo displayFlash(); ?>
 
         <?php if ($show_form): ?>
-        <!-- CREATE / EDIT REVIEW FORM -->
-        <div class="row justify-content-center">
-            <div class="col-md-8 col-lg-6">
-                <h2><?php echo $review_data ? 'Edit Review' : 'Write a Review'; ?></h2>
+            <!-- CREATE / EDIT REVIEW FORM -->
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6">
+                    <h2><?php echo $review_data ? 'Edit Review' : 'Write a Review'; ?></h2>
 
-                <form action="process/process_review.php" method="post"
-                      class="needs-validation" novalidate aria-label="Review form">
+                    <form action="process/process_review.php" method="post" class="needs-validation" novalidate
+                        aria-label="Review form">
 
-                    <?php echo csrf_field(); ?>
+                        <?php echo csrfField(); ?>
 
-                    <p class="text-muted small"><span class="text-danger">*</span> indicates a required field.</p>
-                    <input type="hidden" name="action" value="<?php echo $review_data ? 'update' : 'create'; ?>">
-                    <?php if ($review_data): ?>
-                        <input type="hidden" name="review_id" value="<?php echo $review_data['review_id']; ?>">
-                    <?php endif; ?>
+                        <p class="text-muted small"><span class="text-danger">*</span> indicates a required field.</p>
+                        <input type="hidden" name="action" value="<?php echo $review_data ? 'update' : 'create'; ?>">
+                        <?php if ($review_data): ?>
+                            <input type="hidden" name="review_id" value="<?php echo $review_data['review_id']; ?>">
+                        <?php endif; ?>
 
-                    <div class="mb-3">
-                        <label for="game_id" class="form-label">Game: <span class="text-danger">*</span></label>
-                        <select id="game_id" name="game_id" class="form-select" required>
-                            <option value="">Select a game</option>
-                            <?php foreach ($all_games as $g): ?>
-                                <option value="<?php echo $g['game_id']; ?>"
-                                    <?php echo ($preselect_game == $g['game_id']) ? 'selected' : ''; ?>>
-                                    <?php echo htmlspecialchars($g['title']); ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                        <div class="invalid-feedback">Please select a game.</div>
-                    </div>
+                        <div class="mb-3">
+                            <label for="game_id" class="form-label">Game: <span class="text-danger">*</span></label>
+                            <select id="game_id" name="game_id" class="form-select" required>
+                                <option value="">Select a game</option>
+                                <?php foreach ($all_games as $g): ?>
+                                    <option value="<?php echo $g['game_id']; ?>" <?php echo ($preselect_game == $g['game_id']) ? 'selected' : ''; ?>>
+                                        <?php echo htmlspecialchars($g['title']); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                            <div class="invalid-feedback">Please select a game.</div>
+                        </div>
 
-                    <div class="mb-3">
-                        <label for="rating" class="form-label">Rating: <span class="text-danger">*</span></label>
-                        <select id="rating" name="rating" class="form-select" required>
-                            <option value="">Select rating</option>
-                            <?php for ($i = 5; $i >= 1; $i--): ?>
-                                <option value="<?php echo $i; ?>"
-                                    <?php echo ($review_data && $review_data['rating'] == $i) ? 'selected' : ''; ?>>
-                                    <?php echo str_repeat('★', $i) . str_repeat('☆', 5 - $i) . " ($i/5)"; ?>
-                                </option>
-                            <?php endfor; ?>
-                        </select>
-                        <div class="invalid-feedback">Please select a rating.</div>
-                    </div>
+                        <div class="mb-3">
+                            <label for="rating" class="form-label">Rating: <span class="text-danger">*</span></label>
+                            <select id="rating" name="rating" class="form-select" required>
+                                <option value="">Select rating</option>
+                                <?php for ($i = 5; $i >= 1; $i--): ?>
+                                    <option value="<?php echo $i; ?>" <?php echo ($review_data && $review_data['rating'] == $i) ? 'selected' : ''; ?>>
+                                        <?php echo str_repeat('★', $i) . str_repeat('☆', 5 - $i) . " ($i/5)"; ?>
+                                    </option>
+                                <?php endfor; ?>
+                            </select>
+                            <div class="invalid-feedback">Please select a rating.</div>
+                        </div>
 
-                    <div class="mb-3">
-                        <label for="comment" class="form-label">Your Review:</label>
-                        <textarea id="comment" name="comment" class="form-control" rows="4"
-                                  maxlength="1000" placeholder="What did you think of this game?"><?php echo $review_data ? htmlspecialchars($review_data['comment']) : ''; ?></textarea>
-                    </div>
+                        <div class="mb-3">
+                            <label for="comment" class="form-label">Your Review:</label>
+                            <textarea id="comment" name="comment" class="form-control" rows="4" maxlength="1000"
+                                placeholder="What did you think of this game?"><?php echo $review_data ? htmlspecialchars($review_data['comment']) : ''; ?></textarea>
+                        </div>
 
-                    <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-primary">
-                            <span class="material-icons align-middle me-1" aria-hidden="true">save</span>
-                            <?php echo $review_data ? 'Update Review' : 'Submit Review'; ?>
-                        </button>
-                        <a href="reviews.php" class="btn btn-outline-primary">Cancel</a>
-                    </div>
-                </form>
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <span class="material-icons align-middle me-1" aria-hidden="true">save</span>
+                                <?php echo $review_data ? 'Update Review' : 'Submit Review'; ?>
+                            </button>
+                            <a href="reviews.php" class="btn btn-outline-primary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </div>
 
         <?php else: ?>
-        <!-- REVIEW LIST -->
-        <?php
-        $stmt = $pdo->prepare(
-            "SELECT r.*, g.title AS game_title
+            <!-- REVIEW LIST -->
+            <?php
+            $stmt = $pdo->prepare(
+                "SELECT r.*, g.title AS game_title
              FROM reviews r
              JOIN games g ON r.game_id = g.game_id
              WHERE r.member_id = :mid
              ORDER BY r.created_at DESC"
-        );
-        $stmt->execute([':mid' => $member_id]);
-        $reviews = $stmt->fetchAll();
-        ?>
+            );
+            $stmt->execute([':mid' => $member_id]);
+            $reviews = $stmt->fetchAll();
+            ?>
 
-        <?php if (count($reviews) === 0): ?>
-            <p class="text-muted">You haven't written any reviews yet. <a href="games.php">Browse games</a> and share your thoughts!</p>
-        <?php else: ?>
-            <div class="row g-4">
-                <?php foreach ($reviews as $r): ?>
-                    <div class="col-md-6">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h3 class="card-title"><?php echo htmlspecialchars($r['game_title']); ?></h5>
-                                <div class="star-rating mb-2">
-                                    <?php for ($i = 1; $i <= 5; $i++): ?>
-                                        <span class="material-icons <?php echo $i <= $r['rating'] ? '' : 'empty'; ?>" aria-hidden="true">star</span>
-                                    <?php endfor; ?>
-                                    <span class="visually-hidden"><?php echo $r['rating']; ?> out of 5 stars</span>
+            <?php if (count($reviews) === 0): ?>
+                <p class="text-muted">You haven't written any reviews yet. <a href="games.php">Browse games</a> and share your
+                    thoughts!</p>
+            <?php else: ?>
+                <div class="row g-4">
+                    <?php foreach ($reviews as $r): ?>
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h3 class="card-title"><?php echo htmlspecialchars($r['game_title']); ?></h5>
+                                        <div class="star-rating mb-2">
+                                            <?php for ($i = 1; $i <= 5; $i++): ?>
+                                                <span class="material-icons <?php echo $i <= $r['rating'] ? '' : 'empty'; ?>"
+                                                    aria-hidden="true">star</span>
+                                            <?php endfor; ?>
+                                            <span class="visually-hidden"><?php echo $r['rating']; ?> out of 5 stars</span>
+                                        </div>
+                                        <?php if (!empty($r['comment'])): ?>
+                                            <p class="card-text"><?php echo nl2br(htmlspecialchars($r['comment'])); ?></p>
+                                        <?php endif; ?>
+                                        <p class="text-muted small"><?php echo date('d M Y', strtotime($r['created_at'])); ?></p>
                                 </div>
-                                <?php if (!empty($r['comment'])): ?>
-                                    <p class="card-text"><?php echo nl2br(htmlspecialchars($r['comment'])); ?></p>
-                                <?php endif; ?>
-                                <p class="text-muted small"><?php echo date('d M Y', strtotime($r['created_at'])); ?></p>
-                            </div>
-                            <div class="card-footer bg-transparent d-flex gap-2">
-                                <a href="reviews.php?action=edit&review_id=<?php echo $r['review_id']; ?>"
-                                   class="btn btn-sm btn-outline-primary">
-                                    <span class="material-icons" style="font-size:1rem;" aria-hidden="true">edit</span> Edit
-                                </a>
-                                <form method="post" action="process/process_review.php" class="d-inline"
-                                      onsubmit="return confirm('Delete this review?');">
-                                    <?php echo csrf_field(); ?>
-                                    <input type="hidden" name="action" value="delete">
-                                    <input type="hidden" name="review_id" value="<?php echo $r['review_id']; ?>">
-                                    <button type="submit" class="btn btn-sm btn-outline-danger">
-                                        <span class="material-icons" style="font-size:1rem;" aria-hidden="true">delete</span> Delete
-                                    </button>
-                                </form>
+                                <div class="card-footer bg-transparent d-flex gap-2">
+                                    <a href="reviews.php?action=edit&review_id=<?php echo $r['review_id']; ?>"
+                                        class="btn btn-sm btn-outline-primary">
+                                        <span class="material-icons" style="font-size:1rem;" aria-hidden="true">edit</span> Edit
+                                    </a>
+                                    <form method="post" action="process/process_review.php" class="d-inline"
+                                        onsubmit="return confirm('Delete this review?');">
+                                        <?php echo csrfField(); ?>
+                                        <input type="hidden" name="action" value="delete">
+                                        <input type="hidden" name="review_id" value="<?php echo $r['review_id']; ?>">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            <span class="material-icons" style="font-size:1rem;" aria-hidden="true">delete</span>
+                                            Delete
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
         <?php endif; ?>
 
     </main>
 
     <?php include "inc/footer.inc.php"; ?>
 </body>
+
 </html>

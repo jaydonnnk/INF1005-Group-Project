@@ -10,9 +10,9 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 /* ----------------------------------------
-   Active Menu Highlighting
-   Sets the 'active' class on the nav link
-   matching the current page URL.
+Active Menu Highlighting
+Sets the 'active' class on the nav link
+matching the current page URL.
    ---------------------------------------- */
 function activateMenu() {
     const navLinks = document.querySelectorAll("nav a.nav-link");
@@ -28,15 +28,15 @@ function activateMenu() {
 }
 
 /* ----------------------------------------
-   Image Popup on Click
-   Clicking a .img-thumbnail image opens a
-   larger popup; clicking again closes it.
+Image Popup on Click
+Clicking a .img-thumbnail image opens a
+larger popup; clicking again closes it.
    ---------------------------------------- */
 function registerImagePopups() {
     const thumbnails = document.getElementsByClassName("img-thumbnail");
 
-    for (let i = 0; i < thumbnails.length; i++) {
-        thumbnails[i].addEventListener("click", function () {
+    for (const thumbnail of thumbnails) {
+        thumbnail.addEventListener("click", function () {
             // Remove any existing popup first
             const existingPopup = document.querySelector(".img-popup");
             if (existingPopup) {
@@ -68,7 +68,7 @@ function registerImagePopups() {
             });
 
             // Close popup on Escape key
-            var self = this;
+            const self = this;
             function handleEscape(e) {
                 if (e.key === "Escape") {
                     popup.remove();

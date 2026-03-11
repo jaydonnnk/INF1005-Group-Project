@@ -127,23 +127,23 @@ CREATE TABLE IF NOT EXISTS wishlists (
 
 -- Sample Games
 INSERT INTO games (title, description, min_players, max_players, genre, difficulty, image_url, price_per_hour, quantity) VALUES
-('Catan', 'Trade, build, and settle the island of Catan in this classic strategy game.', 3, 4, 'Strategy', 'Medium', 'images/catan.jpg', 5.00, 3),
-('Codenames', 'Give one-word clues to help your team guess the right words.', 4, 8, 'Party', 'Easy', 'images/codenames.jpg', 3.00, 3),
-('Pandemic', 'Work together to stop global outbreaks and save humanity.', 2, 4, 'Co-op', 'Hard', 'images/pandemic.jpg', 5.00, 3),
-('Ticket to Ride', 'Collect cards and claim railway routes across the map.', 2, 5, 'Family', 'Easy', 'images/ticket-to-ride.jpg', 4.00, 3),
-('Azul', 'Draft beautiful tiles and decorate the walls of your palace.', 2, 4, 'Abstract', 'Medium', 'images/azul.jpg', 4.50, 3),
-('Wingspan', 'Attract birds to your wildlife preserves in this engine-building game.', 1, 5, 'Strategy', 'Medium', 'images/wingspan.jpg', 5.50, 3);
+('Catan', 'Trade, build, and settle the island of Catan in this classic strategy game.', 3, 4, 'Strategy', 'Medium', '/images/catan.jpg', 5.00, 3),
+('Codenames', 'Give one-word clues to help your team guess the right words.', 4, 8, 'Party', 'Easy', '/images/codenames.jpg', 3.00, 3),
+('Pandemic', 'Work together to stop global outbreaks and save humanity.', 2, 4, 'Co-op', 'Hard', '/images/pandemic.jpg', 5.00, 3),
+('Ticket to Ride', 'Collect cards and claim railway routes across the map.', 2, 5, 'Family', 'Easy', '/images/ticket-to-ride.jpg', 4.00, 3),
+('Azul', 'Draft beautiful tiles and decorate the walls of your palace.', 2, 4, 'Abstract', 'Medium', '/images/azul.jpg', 4.50, 3),
+('Wingspan', 'Attract birds to your wildlife preserves in this engine-building game.', 1, 5, 'Strategy', 'Medium', '/images/wingspan.jpg', 5.50, 3);
 
 -- Sample Menu Items
 INSERT INTO menu_items (name, description, price, category, image_url) VALUES
-('Classic Nachos', 'Crispy tortilla chips topped with melted cheese, jalapeños, and salsa.', 12.90, 'Food', 'images/nachos.jpg'),
-('Truffle Fries', 'Shoestring fries tossed in truffle oil and parmesan.', 10.90, 'Food', 'images/truffle-fries.jpg'),
-('Margherita Pizza', 'Wood-fired pizza with fresh mozzarella, basil, and tomato sauce.', 16.90, 'Food', 'images/pizza.jpg'),
-('Iced Matcha Latte', 'Premium matcha blended with oat milk over ice.', 7.50, 'Drinks', 'images/matcha.jpg'),
-('Craft Root Beer', 'House-brewed root beer with vanilla and spices.', 6.00, 'Drinks', 'images/rootbeer.jpg'),
-('Espresso', 'Double shot of single-origin espresso.', 5.00, 'Drinks', 'images/espresso.jpg'),
-('Warm Brownie Sundae', 'Fudge brownie with vanilla ice cream and chocolate sauce.', 11.90, 'Desserts', 'images/brownie.jpg'),
-('Churros', 'Golden churros dusted with cinnamon sugar, served with dipping sauce.', 8.90, 'Desserts', 'images/churros.jpg');
+('Classic Nachos', 'Crispy tortilla chips topped with melted cheese, jalapeños, and salsa.', 12.90, 'Food', '/images/nachos.jpg'),
+('Truffle Fries', 'Shoestring fries tossed in truffle oil and parmesan.', 10.90, 'Food', '/images/truffle-fries.jpg'),
+('Margherita Pizza', 'Wood-fired pizza with fresh mozzarella, basil, and tomato sauce.', 16.90, 'Food', '/images/pizza.jpg'),
+('Iced Matcha Latte', 'Premium matcha blended with oat milk over ice.', 7.50, 'Drinks', '/images/matcha.jpg'),
+('Craft Root Beer', 'House-brewed root beer with vanilla and spices.', 6.00, 'Drinks', '/images/rootbeer.jpg'),
+('Espresso', 'Double shot of single-origin espresso.', 5.00, 'Drinks', '/images/espresso.jpg'),
+('Warm Brownie Sundae', 'Fudge brownie with vanilla ice cream and chocolate sauce.', 11.90, 'Desserts', '/images/brownie.jpg'),
+('Churros', 'Golden churros dusted with cinnamon sugar, served with dipping sauce.', 8.90, 'Desserts', '/images/churros.jpg');
 
 -- ============================================
 -- Database User (for PHP application)

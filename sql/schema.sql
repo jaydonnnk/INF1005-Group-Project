@@ -34,7 +34,8 @@ CREATE TABLE IF NOT EXISTS games (
     genre         VARCHAR(50),
     difficulty    ENUM('Easy', 'Medium', 'Hard') NOT NULL DEFAULT 'Medium',
     image_url     VARCHAR(255),
-    price_per_hour DECIMAL(5,2) NOT NULL DEFAULT 0.00
+    price_per_hour DECIMAL(5,2) NOT NULL DEFAULT 0.00,
+    quantity      INT NOT NULL DEFAULT 3
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------------------
@@ -125,13 +126,13 @@ CREATE TABLE IF NOT EXISTS wishlists (
 -- ============================================
 
 -- Sample Games
-INSERT INTO games (title, description, min_players, max_players, genre, difficulty, image_url, price_per_hour) VALUES
-('Catan', 'Trade, build, and settle the island of Catan in this classic strategy game.', 3, 4, 'Strategy', 'Medium', 'images/catan.jpg', 5.00),
-('Codenames', 'Give one-word clues to help your team guess the right words.', 4, 8, 'Party', 'Easy', 'images/codenames.jpg', 3.00),
-('Pandemic', 'Work together to stop global outbreaks and save humanity.', 2, 4, 'Co-op', 'Hard', 'images/pandemic.jpg', 5.00),
-('Ticket to Ride', 'Collect cards and claim railway routes across the map.', 2, 5, 'Family', 'Easy', 'images/ticket-to-ride.jpg', 4.00),
-('Azul', 'Draft beautiful tiles and decorate the walls of your palace.', 2, 4, 'Abstract', 'Medium', 'images/azul.jpg', 4.50),
-('Wingspan', 'Attract birds to your wildlife preserves in this engine-building game.', 1, 5, 'Strategy', 'Medium', 'images/wingspan.jpg', 5.50);
+INSERT INTO games (title, description, min_players, max_players, genre, difficulty, image_url, price_per_hour, quantity) VALUES
+('Catan', 'Trade, build, and settle the island of Catan in this classic strategy game.', 3, 4, 'Strategy', 'Medium', 'images/catan.jpg', 5.00, 3),
+('Codenames', 'Give one-word clues to help your team guess the right words.', 4, 8, 'Party', 'Easy', 'images/codenames.jpg', 3.00, 3),
+('Pandemic', 'Work together to stop global outbreaks and save humanity.', 2, 4, 'Co-op', 'Hard', 'images/pandemic.jpg', 5.00, 3),
+('Ticket to Ride', 'Collect cards and claim railway routes across the map.', 2, 5, 'Family', 'Easy', 'images/ticket-to-ride.jpg', 4.00, 3),
+('Azul', 'Draft beautiful tiles and decorate the walls of your palace.', 2, 4, 'Abstract', 'Medium', 'images/azul.jpg', 4.50, 3),
+('Wingspan', 'Attract birds to your wildlife preserves in this engine-building game.', 1, 5, 'Strategy', 'Medium', 'images/wingspan.jpg', 5.50, 3);
 
 -- Sample Menu Items
 INSERT INTO menu_items (name, description, price, category, image_url) VALUES

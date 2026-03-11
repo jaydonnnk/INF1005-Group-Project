@@ -25,7 +25,7 @@ if ($show_form && $_GET['action'] === 'edit' && $edit_id > 0) {
 }
 
 // Fetch all games for the dropdown
-$games_stmt = $pdo->query("SELECT game_id, title FROM games ORDER BY title ASC");
+$games_stmt = $pdo->query("SELECT game_id, title FROM games WHERE quantity > 0 ORDER BY title ASC");
 $all_games = $games_stmt->fetchAll();
 ?>
 <!DOCTYPE html>

@@ -121,6 +121,9 @@ try {
                                             players &bull;
                                             $<?php echo htmlspecialchars($game['price_per_hour']); ?>/hr
                                         </p>
+                                        <p class="small mb-2 <?php echo $game['quantity'] > 0 ? 'text-success' : 'text-danger'; ?>">
+                                            <?php echo (int)$game['quantity']; ?> <?php echo $game['quantity'] == 1 ? 'copy' : 'copies'; ?> available
+                                        </p>
                                         <?php if ($is_logged_in): ?>
                                             <div class="d-flex gap-2">
                                                 <a href="reviews.php?game_id=<?php echo $game['game_id']; ?>"

@@ -149,6 +149,6 @@ INSERT INTO menu_items (name, description, price, category, image_url) VALUES
 -- Database User (for PHP application)
 -- Change the password below before running!
 -- ============================================
-CREATE USER IF NOT EXISTS 'rolling_dice_user'@'localhost' IDENTIFIED BY 'YOUR_PASSWORD_HERE';
+CREATE USER IF NOT EXISTS 'rolling_dice_user'@'localhost' IDENTIFIED BY 'Student@s1t';
 GRANT ALL PRIVILEGES ON rolling_dice_db.* TO 'rolling_dice_user'@'localhost';
 FLUSH PRIVILEGES;

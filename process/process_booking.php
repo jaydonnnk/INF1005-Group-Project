@@ -1,7 +1,6 @@
 <?php
 /**
  * Process Booking CRUD Operations
- * The Rolling Dice - Board Game Cafe
  */
 
 session_start();

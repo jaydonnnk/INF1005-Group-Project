@@ -118,7 +118,7 @@ try {
                                         <div class="mt-auto">
                                             <p class="text-caramel fw-bold mb-2">
                                                 <?php echo htmlspecialchars($game['min_players']); ?>&ndash;<?php echo htmlspecialchars($game['max_players']); ?>
-                                                players &bull; $5.00/hr
+                                                players &bull; $<?php echo number_format($game['price_per_hour'], 2); ?>/hr
                                             </p>
                                             <p
                                                 class="small mb-2 <?php echo $game['quantity'] > 0 ? 'text-success' : 'text-danger'; ?>">

@@ -1,6 +1,10 @@
 <?php
 /**
- * Process Booking CRUD Operations
+ * Process Booking Update & Cancel Operations
+ * The Rolling Dice - Board Game Café
+ *
+ * Note: Booking creation now goes through Stripe Checkout
+ * (create_checkout.php → payment_success.php).
  */
 
 session_start();
@@ -24,32 +28,6 @@ require_once "db.php";
 $action = $_POST["action"] ?? "";
 
 switch ($action) {
-
-    // ---- CREATE ----
-    case "create":
-        $errors = validateBookingInput();
-        if (!empty($errors)) {
-            setFlash('error', implode(" ", $errors));
-            header("Location: ../bookings.php?action=new");
-            exit();
-        }
-
-        $stmt = $pdo->prepare(
-            "INSERT INTO bookings (member_id, booking_date, time_slot, party_size, game_id, notes)
-            VALUES (:mid, :date, :slot, :size, :gid, :notes)"
-        );
-        $stmt->execute([
-            ':mid' => $member_id,
-            ':date' => $_POST["booking_date"],
-            ':slot' => sanitizeInput($_POST["time_slot"]),
-            ':size' => (int) $_POST["party_size"],
-            ':gid' => !empty($_POST["game_id"]) ? (int) $_POST["game_id"] : null,
-            ':notes' => sanitizeInput($_POST["notes"] ?? ""),
-        ]);
-
-        setFlash('success', 'Booking confirmed!');
-        header("Location: ../bookings.php");
-        exit();
 
     // ---- UPDATE ----
     case "update":

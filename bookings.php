@@ -12,6 +12,10 @@ $show_form = isset($_GET['action']) && in_array($_GET['action'], ['new', 'edit']
 $edit_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $booking_data = null;
 
+// Time slots used by both new and edit forms
+$slots = ['11:00 AM - 1:00 PM', '1:00 PM - 3:00 PM', '3:00 PM - 5:00 PM',
+          '5:00 PM - 7:00 PM', '7:00 PM - 9:00 PM', '9:00 PM - 11:00 PM'];
+
 // Fetch booking data for editing
 if ($show_form && $_GET['action'] === 'edit' && $edit_id > 0) {
     $stmt = $pdo->prepare("SELECT * FROM bookings WHERE booking_id = :id AND member_id = :mid");
@@ -24,9 +28,11 @@ if ($show_form && $_GET['action'] === 'edit' && $edit_id > 0) {
     }
 }
 
-// Fetch all games for the dropdown
-$games_stmt = $pdo->query("SELECT game_id, title FROM games WHERE quantity > 0 ORDER BY title ASC");
-$all_games = $games_stmt->fetchAll();
+// For edit form: fetch all games (not filtered by availability)
+if ($show_form && $booking_data) {
+    $games_stmt = $pdo->query("SELECT game_id, title FROM games WHERE quantity > 0 ORDER BY title ASC");
+    $all_games = $games_stmt->fetchAll();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -50,30 +56,26 @@ $all_games = $games_stmt->fetchAll();
 
         <?php echo displayFlash(); ?>
 
-        <?php if ($show_form): ?>
-        <!-- CREATE / EDIT FORM -->
+        <?php if ($show_form && !$booking_data): ?>
+        <!-- NEW BOOKING FORM (posts to Stripe checkout) -->
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6">
-                <h2><?php echo $booking_data ? 'Edit Booking' : 'New Booking'; ?></h2>
+                <h2>New Booking</h2>
 
-                <form action="process/process_booking.php" method="post"
+                <form action="process/create_checkout.php" method="post"
                     class="needs-validation" novalidate
-                    aria-label="Booking form">
+                    aria-label="Booking form"
+                    data-preselect-game="<?php echo isset($_GET['game_id']) ? (int)$_GET['game_id'] : ''; ?>">
 
                     <?php echo csrfField(); ?>
+                    <input type="hidden" name="checkout_type" value="booking">
 
                     <p class="text-muted small"><span class="text-danger">*</span> indicates a required field.</p>
-
-                    <input type="hidden" name="action" value="<?php echo $booking_data ? 'update' : 'create'; ?>">
-                    <?php if ($booking_data): ?>
-                        <input type="hidden" name="booking_id" value="<?php echo $booking_data['booking_id']; ?>">
-                    <?php endif; ?>
 
                     <div class="mb-3">
                         <label for="booking_date" class="form-label">Date: <span class="text-danger">*</span></label>
                         <input type="date" id="booking_date" name="booking_date" class="form-control" required
-                            min="<?php echo date('Y-m-d'); ?>"
-                            value="<?php echo $booking_data ? htmlspecialchars($booking_data['booking_date']) : ''; ?>">
+                            min="<?php echo date('Y-m-d'); ?>">
                         <div class="invalid-feedback">Please select a date.</div>
                     </div>
 
@@ -82,10 +84,86 @@ $all_games = $games_stmt->fetchAll();
                         <select id="time_slot" name="time_slot" class="form-select" required>
                             <option value="">Select a time slot</option>
                             <?php
-                            $slots = ['11:00 AM - 1:00 PM', '1:00 PM - 3:00 PM', '3:00 PM - 5:00 PM',
-                                    '5:00 PM - 7:00 PM', '7:00 PM - 9:00 PM', '9:00 PM - 11:00 PM'];
                             foreach ($slots as $s) {
-                                $selected = ($booking_data && $booking_data['time_slot'] === $s) ? 'selected' : '';
+                                echo '<option value="' . htmlspecialchars($s) . '">' . htmlspecialchars($s) . '</option>';
+                            }
+                            ?>
+                        </select>
+                        <div class="invalid-feedback">Please select a time slot.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="party_size" class="form-label">Party Size: <span class="text-danger">*</span></label>
+                        <input type="number" id="party_size" name="party_size" class="form-control"
+                            min="1" max="12" required value="2">
+                        <div class="invalid-feedback">Enter a party size between 1 and 12.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="game_id" class="form-label">Pre-select a Game (optional):</label>
+                        <select id="game_id" name="game_id" class="form-select" disabled>
+                            <option value="">Select date and time first</option>
+                        </select>
+                        <div class="form-text" id="game_help">Available games will load after you select a date and time slot.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="rental_hours" class="form-label">Rental Hours: <span class="text-danger">*</span></label>
+                        <input type="number" id="rental_hours" name="rental_hours" class="form-control"
+                            min="1" max="6" required value="2">
+                        <div class="form-text">$5.00/hr per game rental.</div>
+                        <div class="invalid-feedback">Enter rental hours between 1 and 6.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="notes" class="form-label">Special Requests:</label>
+                        <textarea id="notes" name="notes" class="form-control" rows="3"
+                                maxlength="500" placeholder="Birthday decorations, highchair needed, etc."></textarea>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <span class="material-icons align-middle me-1" aria-hidden="true">payment</span>
+                            Pay &amp; Confirm Booking
+                        </button>
+                        <a href="bookings.php" class="btn btn-outline-primary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <?php elseif ($show_form && $booking_data): ?>
+        <!-- EDIT BOOKING FORM (stays with process_booking.php) -->
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <h2>Edit Booking</h2>
+
+                <form action="process/process_booking.php" method="post"
+                    class="needs-validation" novalidate
+                    aria-label="Edit booking form">
+
+                    <?php echo csrfField(); ?>
+
+                    <p class="text-muted small"><span class="text-danger">*</span> indicates a required field.</p>
+
+                    <input type="hidden" name="action" value="update">
+                    <input type="hidden" name="booking_id" value="<?php echo $booking_data['booking_id']; ?>">
+
+                    <div class="mb-3">
+                        <label for="booking_date" class="form-label">Date: <span class="text-danger">*</span></label>
+                        <input type="date" id="booking_date" name="booking_date" class="form-control" required
+                            min="<?php echo date('Y-m-d'); ?>"
+                            value="<?php echo htmlspecialchars($booking_data['booking_date']); ?>">
+                        <div class="invalid-feedback">Please select a date.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="time_slot" class="form-label">Time Slot: <span class="text-danger">*</span></label>
+                        <select id="time_slot" name="time_slot" class="form-select" required>
+                            <option value="">Select a time slot</option>
+                            <?php
+                            foreach ($slots as $s) {
+                                $selected = ($booking_data['time_slot'] === $s) ? 'selected' : '';
                                 echo '<option value="' . htmlspecialchars($s) . '" ' . $selected . '>'. htmlspecialchars($s) . '</option>';
                             }
                             ?>
@@ -97,7 +175,7 @@ $all_games = $games_stmt->fetchAll();
                         <label for="party_size" class="form-label">Party Size: <span class="text-danger">*</span></label>
                         <input type="number" id="party_size" name="party_size" class="form-control"
                             min="1" max="12" required
-                            value="<?php echo $booking_data ? htmlspecialchars($booking_data['party_size']) : '2'; ?>">
+                            value="<?php echo htmlspecialchars($booking_data['party_size']); ?>">
                         <div class="invalid-feedback">Enter a party size between 1 and 12.</div>
                     </div>
 
@@ -107,7 +185,7 @@ $all_games = $games_stmt->fetchAll();
                             <option value="">We'll pick when we arrive</option>
                             <?php foreach ($all_games as $g): ?>
                                 <option value="<?php echo $g['game_id']; ?>"
-                                    <?php echo ($booking_data && $booking_data['game_id'] == $g['game_id']) ? 'selected' : ''; ?>>
+                                    <?php echo ($booking_data['game_id'] == $g['game_id']) ? 'selected' : ''; ?>>
                                     <?php echo htmlspecialchars($g['title']); ?>
                                 </option>
                             <?php endforeach; ?>
@@ -117,13 +195,13 @@ $all_games = $games_stmt->fetchAll();
                     <div class="mb-3">
                         <label for="notes" class="form-label">Special Requests:</label>
                         <textarea id="notes" name="notes" class="form-control" rows="3"
-                                maxlength="500" placeholder="Birthday decorations, highchair needed, etc."><?php echo $booking_data ? htmlspecialchars($booking_data['notes']) : ''; ?></textarea>
+                                maxlength="500" placeholder="Birthday decorations, highchair needed, etc."><?php echo htmlspecialchars($booking_data['notes']); ?></textarea>
                     </div>
 
                     <div class="d-flex gap-2">
                         <button type="submit" class="btn btn-primary">
                             <span class="material-icons align-middle me-1" aria-hidden="true">save</span>
-                            <?php echo $booking_data ? 'Update Booking' : 'Confirm Booking'; ?>
+                            Update Booking
                         </button>
                         <a href="bookings.php" class="btn btn-outline-primary">Cancel</a>
                     </div>
@@ -156,6 +234,7 @@ $all_games = $games_stmt->fetchAll();
                             <th scope="col">Time</th>
                             <th scope="col">Party</th>
                             <th scope="col">Game</th>
+                            <th scope="col">Hours</th>
                             <th scope="col">Status</th>
                             <th scope="col">Actions</th>
                         </tr>
@@ -167,6 +246,7 @@ $all_games = $games_stmt->fetchAll();
                                 <td><?php echo htmlspecialchars($b['time_slot']); ?></td>
                                 <td><?php echo htmlspecialchars($b['party_size']); ?></td>
                                 <td><?php echo $b['game_title'] ? htmlspecialchars($b['game_title']) : '<span class="text-muted">TBD</span>'; ?></td>
+                                <td><?php echo htmlspecialchars($b['rental_hours']); ?> hr</td>
                                 <td>
                                     <?php
                                     $badge = match($b['status']) {
@@ -193,6 +273,12 @@ $all_games = $games_stmt->fetchAll();
                                                 <span class="material-icons" style="font-size:1rem;" aria-hidden="true">cancel</span>
                                             </button>
                                         </form>
+                                    <?php endif; ?>
+                                    <?php if ($b['status'] === 'Confirmed' || $b['status'] === 'Completed'): ?>
+                                        <a href="receipt.php?type=booking&booking_id=<?php echo $b['booking_id']; ?>"
+                                           class="btn btn-sm btn-outline-primary ms-1" title="View receipt" aria-label="View receipt">
+                                            <span class="material-icons" style="font-size:1rem;" aria-hidden="true">receipt</span>
+                                        </a>
                                     <?php else: ?>
                                         <span class="text-muted">&mdash;</span>
                                     <?php endif; ?>

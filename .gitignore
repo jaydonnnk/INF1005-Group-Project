@@ -1,0 +1,11 @@
+# Environment variables (contains secrets)
+.env
+
+# Composer dependencies
+vendor/
+
+# IDE / OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

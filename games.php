@@ -118,8 +118,7 @@ try {
                                         <div class="mt-auto">
                                             <p class="text-caramel fw-bold mb-2">
                                                 <?php echo htmlspecialchars($game['min_players']); ?>&ndash;<?php echo htmlspecialchars($game['max_players']); ?>
-                                                players &bull;
-                                                $<?php echo htmlspecialchars($game['price_per_hour']); ?>/hr
+                                                players &bull; $5.00/hr
                                             </p>
                                             <p
                                                 class="small mb-2 <?php echo $game['quantity'] > 0 ? 'text-success' : 'text-danger'; ?>">
@@ -127,7 +126,12 @@ try {
                                                 <?php echo $game['quantity'] == 1 ? 'copy' : 'copies'; ?> available
                                             </p>
                                             <?php if ($is_logged_in): ?>
-                                                <div class="d-flex gap-2">
+                                                <div class="d-flex gap-2 flex-wrap">
+                                                    <a href="bookings.php?action=new&game_id=<?php echo $game['game_id']; ?>"
+                                                        class="btn btn-primary btn-sm">
+                                                        <span class="material-icons align-middle" style="font-size:1rem;"
+                                                            aria-hidden="true">event</span> Book
+                                                    </a>
                                                     <a href="reviews.php?game_id=<?php echo $game['game_id']; ?>"
                                                         class="btn btn-outline-primary btn-sm">
                                                         <span class="material-icons align-middle" style="font-size:1rem;"

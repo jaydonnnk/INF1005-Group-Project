@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     activateMenu();
     registerImagePopups();
     registerFormValidation();
+    registerBookingGameLoader();
 });
 
 /* ----------------------------------------
@@ -87,8 +88,81 @@ function registerImagePopups() {
 }
 
 /* ----------------------------------------
-   Client-side Form Validation Enhancement
-   Adds visual feedback for Bootstrap forms.
+   Booking Form: Load Available Games via AJAX
+   When date + time slot are both selected,
+   fetches games with available copies.
+   ---------------------------------------- */
+function registerBookingGameLoader() {
+    const dateInput = document.getElementById("booking_date");
+    const slotSelect = document.getElementById("time_slot");
+    const gameSelect = document.getElementById("game_id");
+
+    // Only run on pages with all three elements (booking form)
+    if (!dateInput || !slotSelect || !gameSelect) return;
+
+    // Skip if this is the edit form (game_id is not disabled)
+    if (!gameSelect.disabled) return;
+
+    // Check if a game was pre-selected from the URL (e.g. from games.php "Book" button)
+    const bookingForm = document.querySelector('form[data-preselect-game]');
+    const preselectGameId = bookingForm ? (bookingForm.dataset.preselectGame || '') : '';
+
+    function loadAvailableGames() {
+        const date = dateInput.value;
+        const slot = slotSelect.value;
+
+        if (!date || !slot) {
+            gameSelect.disabled = true;
+            gameSelect.innerHTML = '<option value="">Select date and time first</option>';
+            return;
+        }
+
+        gameSelect.disabled = true;
+        gameSelect.innerHTML = '<option value="">Loading games...</option>';
+
+        fetch("process/get_available_games.php?booking_date=" + encodeURIComponent(date) + "&time_slot=" + encodeURIComponent(slot))
+            .then(function (response) {
+                if (!response.ok) throw new Error("Server error");
+                return response.json();
+            })
+            .then(function (games) {
+                gameSelect.innerHTML = '<option value="">-- Select a game --</option>';
+
+                games.forEach(function (game) {
+                    var option = document.createElement("option");
+                    option.value = game.game_id;
+                    var copies = parseInt(game.available_copies, 10);
+
+                    if (copies > 0) {
+                        option.textContent = game.title + " (" + copies + " available)";
+                    } else {
+                        option.textContent = game.title + " (0 available \u2014 fully booked)";
+                        option.disabled = true;
+                    }
+
+                    gameSelect.appendChild(option);
+                });
+
+                // Pre-select game if passed via URL
+                if (preselectGameId) {
+                    gameSelect.value = preselectGameId;
+                }
+
+                gameSelect.disabled = false;
+            })
+            .catch(function () {
+                gameSelect.innerHTML = '<option value="">Could not load games</option>';
+                gameSelect.disabled = true;
+            });
+    }
+
+    dateInput.addEventListener("change", loadAvailableGames);
+    slotSelect.addEventListener("change", loadAvailableGames);
+}
+
+/* ----------------------------------------
+Client-side Form Validation Enhancement
+Adds visual feedback for Bootstrap forms.
    ---------------------------------------- */
 function registerFormValidation() {
     const forms = document.querySelectorAll("form.needs-validation");

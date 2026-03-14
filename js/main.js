@@ -145,7 +145,17 @@ function registerBookingGameLoader() {
 
                 // Pre-select game if passed via URL
                 if (preselectGameId) {
-                    gameSelect.value = preselectGameId;
+                    const targetOption = gameSelect.querySelector('option[value="' + preselectGameId + '"]');
+                    if (targetOption && !targetOption.disabled) {
+                        gameSelect.value = preselectGameId;
+                    } else if (targetOption?.disabled) {
+                        // Game exists but is fully booked for this slot
+                        const helpText = document.getElementById("game_help");
+                        if (helpText) {
+                            helpText.textContent = "The game you selected is fully booked for this slot. Please choose another or try a different time.";
+                            helpText.classList.add("text-danger");
+                        }
+                    }
                 }
 
                 gameSelect.disabled = false;

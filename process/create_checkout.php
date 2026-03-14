@@ -46,6 +46,18 @@ try {
                 header("Location: ../bookings.php?action=new");
                 exit();
             }
+            // Validate date format and reject past dates
+            $parsed_date = date_create_from_format('Y-m-d', $booking_date);
+            if (!$parsed_date || $parsed_date->format('Y-m-d') !== $booking_date) {
+                setFlash('error', 'Invalid date format.');
+                header("Location: ../bookings.php?action=new");
+                exit();
+            }
+            if ($booking_date < date('Y-m-d')) {
+                setFlash('error', 'Cannot book a date in the past.');
+                header("Location: ../bookings.php?action=new");
+                exit();
+            }
             if ($party_size < 1 || $party_size > 12) {
                 setFlash('error', 'Party size must be between 1 and 12.');
                 header("Location: ../bookings.php?action=new");

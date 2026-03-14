@@ -58,7 +58,7 @@ foreach ($orders as $order) {
                     <div class="card mb-4">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <div>
-                                <strong>Order #<?php echo $order['order_id']; ?></strong>
+                                <strong>Order #<?php echo (int)$order['order_id']; ?></strong>
                                 <span class="text-muted ms-2"><?php echo date('d M Y, g:i A', strtotime($order['order_date'])); ?></span>
                             </div>
                             <div class="d-flex align-items-center gap-2">
@@ -76,7 +76,7 @@ foreach ($orders as $order) {
                                     <form method="post" action="process/create_checkout.php" class="d-inline">
                                         <?php echo csrfField(); ?>
                                         <input type="hidden" name="checkout_type" value="order">
-                                        <input type="hidden" name="order_id" value="<?php echo $order['order_id']; ?>">
+                                        <input type="hidden" name="order_id" value="<?php echo (int)$order['order_id']; ?>">
                                         <button type="submit" class="btn btn-sm btn-primary" title="Pay and place order">
                                             <span class="material-icons align-middle" style="font-size:1rem;" aria-hidden="true">payment</span>
                                             Pay &amp; Place Order
@@ -88,7 +88,7 @@ foreach ($orders as $order) {
                                         onsubmit="return confirm('Cancel this order?');">
                                         <?php echo csrfField(); ?>
                                         <input type="hidden" name="action" value="cancel">
-                                        <input type="hidden" name="order_id" value="<?php echo $order['order_id']; ?>">
+                                        <input type="hidden" name="order_id" value="<?php echo (int)$order['order_id']; ?>">
                                         <button type="submit" class="btn btn-sm btn-outline-danger" title="Cancel order" aria-label="Cancel order">
                                             <span class="material-icons" style="font-size:1rem;" aria-hidden="true">cancel</span>
                                         </button>
@@ -144,7 +144,7 @@ foreach ($orders as $order) {
                     <div class="card mb-4">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <div>
-                                <strong>Order #<?php echo $order['order_id']; ?></strong>
+                                <strong>Order #<?php echo (int)$order['order_id']; ?></strong>
                                 <span class="text-muted ms-2"><?php echo date('d M Y, g:i A', strtotime($order['order_date'])); ?></span>
                             </div>
                             <div class="d-flex align-items-center gap-2">
@@ -158,7 +158,7 @@ foreach ($orders as $order) {
                                 <span class="badge <?php echo $badge; ?>"><?php echo htmlspecialchars($order['status']); ?></span>
 
                                 <?php if ($order['status'] === 'Completed'): ?>
-                                    <a href="receipt.php?type=order&order_id=<?php echo $order['order_id']; ?>"
+                                    <a href="receipt.php?type=order&order_id=<?php echo (int)$order['order_id']; ?>"
                                        class="btn btn-sm btn-outline-primary" title="View receipt">
                                         <span class="material-icons align-middle" style="font-size:1rem;" aria-hidden="true">receipt</span>
                                         Receipt

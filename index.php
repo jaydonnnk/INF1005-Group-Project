@@ -76,7 +76,7 @@
                             echo '      <span class="badge badge-genre mb-2">' . htmlspecialchars($game["genre"]) . '</span> ';
                             echo '      <span class="badge badge-difficulty-' . strtolower($game["difficulty"]) . ' mb-2">' . htmlspecialchars($game["difficulty"]) . '</span>';
                             echo '      <p class="card-text">' . htmlspecialchars($game["description"]) . '</p>';
-                            echo '      <p class="text-caramel fw-bold">' . htmlspecialchars($game["min_players"]) . '–' . htmlspecialchars($game["max_players"]) . ' players &bull; $5.00/hr</p>';
+                            echo '      <p class="text-caramel fw-bold">' . htmlspecialchars($game["min_players"]) . '–' . htmlspecialchars($game["max_players"]) . ' players &bull; $' . number_format($game["price_per_hour"], 2) . '/hr</p>';
                             echo '    </div>';
                             echo '  </div>';
                             echo '</div>';

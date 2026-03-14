@@ -19,113 +19,134 @@ if (empty($session_id)) {
     $error = "Missing payment session.";
 } else {
     try {
-        // Retrieve the Stripe session to verify payment
-        $session = \Stripe\Checkout\Session::retrieve($session_id);
-
-        if ($session->payment_status !== 'paid') {
-            $error = "Payment was not completed.";
+        // Idempotency check: prevent duplicate processing on page refresh
+        $dup_stmt = $pdo->prepare("SELECT payment_id FROM payments WHERE stripe_session_id = :sid LIMIT 1");
+        $dup_stmt->execute([':sid' => $session_id]);
+        if ($dup_stmt->fetch()) {
+            $error = "This payment has already been processed. Check your bookings or orders.";
         } else {
-            $checkout_type = $session->metadata->checkout_type ?? "";
-            $amount_paid = $session->amount_total / 100; // Convert from cents
+            // Retrieve the Stripe session to verify payment
+            $session = \Stripe\Checkout\Session::retrieve($session_id);
 
-            if ($checkout_type === 'booking' && isset($_SESSION['pending_booking'])) {
-                // ---- BOOKING: Save to database ----
-                $b = $_SESSION['pending_booking'];
+            if ($session->payment_status !== 'paid') {
+                $error = "Payment was not completed.";
+            } else {
+                $checkout_type = $session->metadata->checkout_type ?? "";
+                $amount_paid = $session->amount_total / 100; // Convert from cents
 
-                $stmt = $pdo->prepare(
-                    "INSERT INTO bookings (member_id, booking_date, time_slot, party_size, game_id, rental_hours, notes)
-                     VALUES (:mid, :date, :slot, :size, :gid, :hours, :notes)"
-                );
-                $stmt->execute([
-                    ':mid' => $member_id,
-                    ':date' => $b['booking_date'],
-                    ':slot' => $b['time_slot'],
-                    ':size' => $b['party_size'],
-                    ':gid' => $b['game_id'],
-                    ':hours' => $b['rental_hours'],
-                    ':notes' => $b['notes'],
-                ]);
-                $booking_id = $pdo->lastInsertId();
+                if ($checkout_type === 'booking' && isset($_SESSION['pending_booking'])) {
+                    // ---- BOOKING: Save to database (wrapped in transaction) ----
+                    $b = $_SESSION['pending_booking'];
 
-                // Insert payment record
-                $pay_stmt = $pdo->prepare(
-                    "INSERT INTO payments (member_id, stripe_session_id, amount, currency, payment_type, reference_id, status)
-                     VALUES (:mid, :sid, :amt, 'sgd', 'booking', :ref, 'completed')"
-                );
-                $pay_stmt->execute([
-                    ':mid' => $member_id,
-                    ':sid' => $session_id,
-                    ':amt' => $amount_paid,
-                    ':ref' => $booking_id,
-                ]);
+                    $pdo->beginTransaction();
 
-                // Fetch game title for summary
-                $game_title = "None selected";
-                if ($b['game_id']) {
-                    $g_stmt = $pdo->prepare("SELECT title FROM games WHERE game_id = :gid");
-                    $g_stmt->execute([':gid' => $b['game_id']]);
-                    $g = $g_stmt->fetch();
-                    if ($g) $game_title = $g['title'];
-                }
-
-                $booking_summary = [
-                    'booking_id' => $booking_id,
-                    'date' => date('d M Y', strtotime($b['booking_date'])),
-                    'time_slot' => $b['time_slot'],
-                    'party_size' => $b['party_size'],
-                    'game' => $game_title,
-                    'rental_hours' => $b['rental_hours'],
-                    'amount' => $amount_paid,
-                ];
-
-                unset($_SESSION['pending_booking']);
-                $success_type = 'booking';
-
-            } elseif ($checkout_type === 'order' && isset($_SESSION['pending_order_id'])) {
-                // ---- ORDER: Update status ----
-                $order_id = $_SESSION['pending_order_id'];
-
-                // Verify this order belongs to the member
-                $o_stmt = $pdo->prepare("SELECT * FROM orders WHERE order_id = :oid AND member_id = :mid");
-                $o_stmt->execute([':oid' => $order_id, ':mid' => $member_id]);
-                $order = $o_stmt->fetch();
-
-                if ($order) {
-                    // Update order status to Preparing
-                    $upd = $pdo->prepare("UPDATE orders SET status = 'Preparing' WHERE order_id = :oid");
-                    $upd->execute([':oid' => $order_id]);
+                    $stmt = $pdo->prepare(
+                        "INSERT INTO bookings (member_id, booking_date, time_slot, party_size, game_id, rental_hours, notes)
+                         VALUES (:mid, :date, :slot, :size, :gid, :hours, :notes)"
+                    );
+                    $stmt->execute([
+                        ':mid' => $member_id,
+                        ':date' => $b['booking_date'],
+                        ':slot' => $b['time_slot'],
+                        ':size' => $b['party_size'],
+                        ':gid' => $b['game_id'],
+                        ':hours' => $b['rental_hours'],
+                        ':notes' => $b['notes'],
+                    ]);
+                    $booking_id = $pdo->lastInsertId();
 
                     // Insert payment record
                     $pay_stmt = $pdo->prepare(
                         "INSERT INTO payments (member_id, stripe_session_id, amount, currency, payment_type, reference_id, status)
-                         VALUES (:mid, :sid, :amt, 'sgd', 'order', :ref, 'completed')"
+                         VALUES (:mid, :sid, :amt, 'sgd', 'booking', :ref, 'completed')"
                     );
                     $pay_stmt->execute([
                         ':mid' => $member_id,
                         ':sid' => $session_id,
                         ':amt' => $amount_paid,
-                        ':ref' => $order_id,
+                        ':ref' => $booking_id,
                     ]);
 
-                    $order_summary = [
-                        'order_id' => $order_id,
+                    $pdo->commit();
+
+                    // Fetch game title for summary
+                    $game_title = "None selected";
+                    if ($b['game_id']) {
+                        $g_stmt = $pdo->prepare("SELECT title FROM games WHERE game_id = :gid");
+                        $g_stmt->execute([':gid' => $b['game_id']]);
+                        $g = $g_stmt->fetch();
+                        if ($g) $game_title = $g['title'];
+                    }
+
+                    $booking_summary = [
+                        'booking_id' => $booking_id,
+                        'date' => date('d M Y', strtotime($b['booking_date'])),
+                        'time_slot' => $b['time_slot'],
+                        'party_size' => $b['party_size'],
+                        'game' => $game_title,
+                        'rental_hours' => $b['rental_hours'],
                         'amount' => $amount_paid,
                     ];
 
-                    $success_type = 'order';
+                    unset($_SESSION['pending_booking']);
+                    $success_type = 'booking';
+
+                } elseif ($checkout_type === 'order' && isset($_SESSION['pending_order_id'])) {
+                    // ---- ORDER: Update status (wrapped in transaction) ----
+                    $order_id = $_SESSION['pending_order_id'];
+
+                    // Verify this order belongs to the member
+                    $o_stmt = $pdo->prepare("SELECT * FROM orders WHERE order_id = :oid AND member_id = :mid");
+                    $o_stmt->execute([':oid' => $order_id, ':mid' => $member_id]);
+                    $order = $o_stmt->fetch();
+
+                    if ($order) {
+                        $pdo->beginTransaction();
+
+                        // Update order status to Preparing
+                        $upd = $pdo->prepare("UPDATE orders SET status = 'Preparing' WHERE order_id = :oid");
+                        $upd->execute([':oid' => $order_id]);
+
+                        // Insert payment record
+                        $pay_stmt = $pdo->prepare(
+                            "INSERT INTO payments (member_id, stripe_session_id, amount, currency, payment_type, reference_id, status)
+                             VALUES (:mid, :sid, :amt, 'sgd', 'order', :ref, 'completed')"
+                        );
+                        $pay_stmt->execute([
+                            ':mid' => $member_id,
+                            ':sid' => $session_id,
+                            ':amt' => $amount_paid,
+                            ':ref' => $order_id,
+                        ]);
+
+                        $pdo->commit();
+
+                        $order_summary = [
+                            'order_id' => $order_id,
+                            'amount' => $amount_paid,
+                        ];
+
+                        $success_type = 'order';
+                    } else {
+                        $error = "Order not found.";
+                    }
+
+                    // Only clear session after successful processing or order-not-found
+                    unset($_SESSION['pending_order_id']);
+
                 } else {
-                    $error = "Order not found.";
+                    $error = "Session data expired. Your payment was processed — please check your bookings or orders.";
                 }
-
-                unset($_SESSION['pending_order_id']);
-
-            } else {
-                $error = "Session data expired. Your payment was processed — please check your bookings or orders.";
             }
         }
     } catch (\Stripe\Exception\ApiErrorException $e) {
+        if ($pdo->inTransaction()) $pdo->rollBack();
         error_log("Stripe verification error: " . $e->getMessage());
         $error = "Could not verify payment. Please contact us if you were charged.";
+    } catch (Exception $e) {
+        if ($pdo->inTransaction()) $pdo->rollBack();
+        error_log("Payment processing error: " . $e->getMessage());
+        $error = "An error occurred while processing your payment. Please contact us.";
     }
 }
 ?>

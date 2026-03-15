@@ -31,25 +31,25 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <ul class="navbar-nav me-auto mb-2 mb-md-0">
                 <li class="nav-item">
                     <a class="nav-link <?php echo ($current_page === 'index.php') ? 'active' : ''; ?>" href="index.php"
-                       <?php echo ($current_page === 'index.php') ? 'aria-current="page"' : ''; ?>>
+                    <?php echo ($current_page === 'index.php') ? 'aria-current="page"' : ''; ?>>
                         <span class="material-icons align-middle me-1" aria-hidden="true">home</span>Home
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link <?php echo ($current_page === 'games.php') ? 'active' : ''; ?>" href="games.php"
-                       <?php echo ($current_page === 'games.php') ? 'aria-current="page"' : ''; ?>>
+                    <?php echo ($current_page === 'games.php') ? 'aria-current="page"' : ''; ?>>
                         <span class="material-icons align-middle me-1" aria-hidden="true">extension</span>Games
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link <?php echo ($current_page === 'menu.php') ? 'active' : ''; ?>" href="menu.php"
-                       <?php echo ($current_page === 'menu.php') ? 'aria-current="page"' : ''; ?>>
+                    <?php echo ($current_page === 'menu.php') ? 'aria-current="page"' : ''; ?>>
                         <span class="material-icons align-middle me-1" aria-hidden="true">restaurant</span>Menu
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link <?php echo ($current_page === 'about.php') ? 'active' : ''; ?>" href="about.php"
-                       <?php echo ($current_page === 'about.php') ? 'aria-current="page"' : ''; ?>>
+                    <?php echo ($current_page === 'about.php') ? 'aria-current="page"' : ''; ?>>
                         <span class="material-icons align-middle me-1" aria-hidden="true">info</span>About
                     </a>
                 </li>
@@ -58,9 +58,16 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <!-- Right-side Auth Links -->
             <ul class="navbar-nav ms-auto mb-2 mb-md-0">
                 <?php if ($is_logged_in): ?>
+                    <?php if (!empty($_SESSION['is_admin'])): ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="admin/index.php">
+                            <span class="material-icons align-middle me-1" aria-hidden="true">admin_panel_settings</span>Admin
+                        </a>
+                    </li>
+                    <?php endif; ?>
                     <li class="nav-item">
                         <a class="nav-link <?php echo ($current_page === 'dashboard.php') ? 'active' : ''; ?>" href="dashboard.php"
-                           <?php echo ($current_page === 'dashboard.php') ? 'aria-current="page"' : ''; ?>>
+                        <?php echo ($current_page === 'dashboard.php') ? 'aria-current="page"' : ''; ?>>
                             <span class="material-icons align-middle me-1" aria-hidden="true">dashboard</span>Dashboard
                         </a>
                     </li>
@@ -72,13 +79,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 <?php else: ?>
                     <li class="nav-item">
                         <a class="nav-link <?php echo ($current_page === 'login.php') ? 'active' : ''; ?>" href="login.php"
-                           <?php echo ($current_page === 'login.php') ? 'aria-current="page"' : ''; ?>>
+                        <?php echo ($current_page === 'login.php') ? 'aria-current="page"' : ''; ?>>
                             <span class="material-icons align-middle me-1" aria-hidden="true">login</span>Sign In
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link <?php echo ($current_page === 'register.php') ? 'active' : ''; ?>" href="register.php"
-                           <?php echo ($current_page === 'register.php') ? 'aria-current="page"' : ''; ?>>
+                        <?php echo ($current_page === 'register.php') ? 'aria-current="page"' : ''; ?>>
                             <span class="material-icons align-middle me-1" aria-hidden="true">person_add</span>Register
                         </a>
                     </li>

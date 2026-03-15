@@ -42,7 +42,7 @@ $pwd = $_POST["pwd"]; // Do NOT sanitize passwords
 try {
     require_once "db.php";
 
-    $stmt = $pdo->prepare("SELECT member_id, fname, lname, email, password_hash FROM members WHERE email = :email");
+    $stmt = $pdo->prepare("SELECT member_id, fname, lname, email, password_hash, is_admin FROM members WHERE email = :email");
     $stmt->execute([":email" => $email]);
     $member = $stmt->fetch();
 
@@ -51,6 +51,7 @@ try {
         $_SESSION["member_id"]   = $member["member_id"];
         $_SESSION["member_name"] = trim($member["fname"] . " " . $member["lname"]);
         $_SESSION["member_email"]= $member["email"];
+        $_SESSION["is_admin"]    = $member["is_admin"];
 
         // Regenerate session ID to prevent session fixation
         session_regenerate_id(true);

@@ -116,6 +116,37 @@ if ($success) {
                 ":phone" => $phone,
                 ":password_hash" => $password_hash,
             ]);
+
+            // Send verification email
+            $new_member_id = $pdo->lastInsertId();
+            $token = bin2hex(random_bytes(32));
+
+            $token_stmt = $pdo->prepare(
+                "UPDATE members
+                 SET verification_token = :token,
+                     verification_expires = DATE_ADD(NOW(), INTERVAL 24 HOUR)
+                 WHERE member_id = :id"
+            );
+            $token_stmt->execute([':token' => $token, ':id' => $new_member_id]);
+
+            // Load env and send email
+            require_once "env_loader.php";
+            loadEnv(__DIR__ . '/../.env');
+            require_once "send_email.php";
+
+            $base_url = getenv('SITE_BASE_URL');
+            $verify_link = $base_url . '/verify_email.php?token=' . $token;
+            $member_name = trim($fname . ' ' . $lname);
+
+            $htmlBody = '<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">'
+                . '<h2 style="color: #5C3D2E;">Welcome to The Rolling Dice!</h2>'
+                . '<p>Hi ' . htmlspecialchars($member_name) . ',</p>'
+                . '<p>Thank you for registering. Click the link below to verify your email address. This link expires in 24 hours.</p>'
+                . '<p><a href="' . htmlspecialchars($verify_link) . '" style="display: inline-block; background-color: #5C3D2E; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 8px;">Verify Email</a></p>'
+                . '<p style="color: #999; font-size: 0.85rem;">If you did not create this account, you can ignore this email.</p>'
+                . '</div>';
+
+            sendEmail($email, $member_name, 'Verify Your Rolling Dice Account', $htmlBody);
         }
     } catch (PDOException $e) {
         error_log("Registration error: " . $e->getMessage());
@@ -133,6 +164,7 @@ if ($success) {
 
 <head>
     <title>Registration Result - The Rolling Dice</title>
+    <base href="../">
     <?php include "../inc/head.inc.php"; ?>
 </head>
 
@@ -149,13 +181,12 @@ if ($success) {
                             aria-hidden="true">check_circle</span>
                         <h1 class="mt-3">Welcome Aboard!</h1>
                         <p>
-                            Your account has been created successfully.
-                            You can now <a href="../login.php">sign in</a> to start
-                            booking tables, ordering food, and reviewing your favourite games.
+                            A verification email has been sent to your email address.
+                            Please check your inbox and click the link to activate your account.
                         </p>
                         <a href="../login.php" class="btn btn-primary">
                             <span class="material-icons align-middle me-1" aria-hidden="true">login</span>
-                            Sign In Now
+                            Sign In
                         </a>
                     </div>
                 <?php else: ?>

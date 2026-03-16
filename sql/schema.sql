@@ -182,3 +182,12 @@ INSERT INTO menu_items (name, description, price, category, image_url, stripe_pr
 CREATE USER IF NOT EXISTS 'rolling_dice_user'@'localhost' IDENTIFIED BY 'Student@s1t';
 GRANT ALL PRIVILEGES ON rolling_dice_db.* TO 'rolling_dice_user'@'localhost';
 FLUSH PRIVILEGES;
+
+-- ============================================
+-- Email Verification & 2FA Columns (run on live DB)
+-- ============================================
+-- ALTER TABLE members ADD COLUMN email_verified TINYINT(1) NOT NULL DEFAULT 0 AFTER is_admin;
+-- ALTER TABLE members ADD COLUMN verification_token VARCHAR(64) DEFAULT NULL AFTER email_verified;
+-- ALTER TABLE members ADD COLUMN verification_expires DATETIME DEFAULT NULL AFTER verification_token;
+-- ALTER TABLE members ADD COLUMN totp_secret VARCHAR(64) DEFAULT NULL AFTER verification_expires;
+-- ALTER TABLE members ADD COLUMN totp_enabled TINYINT(1) NOT NULL DEFAULT 0 AFTER totp_secret;

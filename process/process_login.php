@@ -42,11 +42,18 @@ $pwd = $_POST["pwd"]; // Do NOT sanitize passwords
 try {
     require_once "db.php";
 
-    $stmt = $pdo->prepare("SELECT member_id, fname, lname, email, password_hash, is_admin FROM members WHERE email = :email");
+    $stmt = $pdo->prepare("SELECT member_id, fname, lname, email, password_hash, is_admin, email_verified FROM members WHERE email = :email");
     $stmt->execute([":email" => $email]);
     $member = $stmt->fetch();
 
     if ($member && password_verify($pwd, $member["password_hash"])) {
+        // Check email verification
+        if (empty($member['email_verified'])) {
+            setFlash('error', 'Please verify your email address first. Check your inbox for the verification link.');
+            header("Location: ../login.php");
+            exit();
+        }
+
         // Login successful — create session
         $_SESSION["member_id"]   = $member["member_id"];
         $_SESSION["member_name"] = trim($member["fname"] . " " . $member["lname"]);

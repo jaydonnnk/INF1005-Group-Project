@@ -53,6 +53,10 @@
                     </div>
 
                 </form>
+
+                <p class="text-muted small text-center mt-2">
+                    Didn't receive a verification email? <a href="resend_verification.php">Resend it</a>
+                </p>
             </div>
         </div>
     </main>

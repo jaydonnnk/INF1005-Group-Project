@@ -141,6 +141,28 @@ CREATE TABLE IF NOT EXISTS wishlists (
     UNIQUE KEY unique_wishlist (member_id, game_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+-- ----------------------------------------
+-- Waitlist table (Booking waitlist)
+-- ----------------------------------------
+CREATE TABLE IF NOT EXISTS waitlist (
+    waitlist_id       INT AUTO_INCREMENT PRIMARY KEY,
+    member_id         INT NOT NULL,
+    booking_date      DATE NOT NULL,
+    time_slot         VARCHAR(20) NOT NULL,
+    party_size        INT NOT NULL DEFAULT 2,
+    game_id           INT DEFAULT NULL,
+    notes             TEXT,
+    status            ENUM('Pending', 'Notified', 'Claimed', 'Expired', 'Cancelled') NOT NULL DEFAULT 'Pending',
+    claim_token       VARCHAR(64)  DEFAULT NULL,
+    notified_at       DATETIME     DEFAULT NULL,
+    claim_expires_at  DATETIME     DEFAULT NULL,
+    created_at        DATETIME     DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (member_id) REFERENCES members(member_id) ON DELETE CASCADE,
+    FOREIGN KEY (game_id)   REFERENCES games(game_id)     ON DELETE SET NULL,
+    UNIQUE KEY unique_claim_token (claim_token)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- ============================================
 -- Sample Data
 -- ============================================
@@ -152,6 +174,7 @@ DELETE FROM wishlists;
 DELETE FROM reviews;
 DELETE FROM payments;
 DELETE FROM bookings;
+DELETE FROM waitlist;
 DELETE FROM games;
 DELETE FROM menu_items;
 
@@ -182,12 +205,3 @@ INSERT INTO menu_items (name, description, price, category, image_url, stripe_pr
 CREATE USER IF NOT EXISTS 'rolling_dice_user'@'localhost' IDENTIFIED BY 'Student@s1t';
 GRANT ALL PRIVILEGES ON rolling_dice_db.* TO 'rolling_dice_user'@'localhost';
 FLUSH PRIVILEGES;
-
--- ============================================
--- Email Verification & 2FA Columns (run on live DB)
--- ============================================
--- ALTER TABLE members ADD COLUMN email_verified TINYINT(1) NOT NULL DEFAULT 0 AFTER is_admin;
--- ALTER TABLE members ADD COLUMN verification_token VARCHAR(64) DEFAULT NULL AFTER email_verified;
--- ALTER TABLE members ADD COLUMN verification_expires DATETIME DEFAULT NULL AFTER verification_token;
--- ALTER TABLE members ADD COLUMN totp_secret VARCHAR(64) DEFAULT NULL AFTER verification_expires;
--- ALTER TABLE members ADD COLUMN totp_enabled TINYINT(1) NOT NULL DEFAULT 0 AFTER totp_secret;

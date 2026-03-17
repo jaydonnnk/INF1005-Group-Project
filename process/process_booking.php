@@ -62,11 +62,26 @@ switch ($action) {
     // ---- DELETE (Cancel) ----
     case "delete":
         $booking_id = (int) ($_POST["booking_id"] ?? 0);
+
+        // Fetch date and slot before cancelling (needed for waitlist notification)
+        $slot_stmt = $pdo->prepare(
+            "SELECT booking_date, time_slot FROM bookings
+         WHERE booking_id = :bid AND member_id = :mid"
+        );
+        $slot_stmt->execute([':bid' => $booking_id, ':mid' => $member_id]);
+        $cancelled_booking = $slot_stmt->fetch();
+
         $stmt = $pdo->prepare(
             "UPDATE bookings SET status = 'Cancelled'
-            WHERE booking_id = :bid AND member_id = :mid"
+        WHERE booking_id = :bid AND member_id = :mid"
         );
         $stmt->execute([':bid' => $booking_id, ':mid' => $member_id]);
+
+        // Notify the first person on the waitlist for this slot
+        if ($cancelled_booking) {
+            require_once "waitlist_notifier.php";
+            notifyWaitlist($pdo, $cancelled_booking['booking_date'], $cancelled_booking['time_slot']);
+        }
 
         setFlash('success', 'Booking cancelled.');
         header("Location: ../bookings.php");

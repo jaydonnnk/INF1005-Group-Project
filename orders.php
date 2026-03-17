@@ -100,9 +100,9 @@ foreach ($orders as $order) {
                             <?php
                             $items_stmt = $pdo->prepare(
                                 "SELECT oi.*, mi.name AS item_name
-                                 FROM order_items oi
-                                 JOIN menu_items mi ON oi.item_id = mi.item_id
-                                 WHERE oi.order_id = :oid"
+                                FROM order_items oi
+                                JOIN menu_items mi ON oi.item_id = mi.item_id
+                                WHERE oi.order_id = :oid"
                             );
                             $items_stmt->execute([':oid' => $order['order_id']]);
                             $items = $items_stmt->fetchAll();
@@ -159,8 +159,8 @@ foreach ($orders as $order) {
 
                                 <?php if ($order['status'] === 'Completed'): ?>
                                     <a href="receipt.php?type=order&order_id=<?php echo (int)$order['order_id']; ?>"
-                                       class="btn btn-sm btn-outline-primary" title="View receipt">
-                                        <span class="material-icons align-middle" style="font-size:1rem;" aria-hidden="true">receipt</span>
+                                    class="btn btn-sm btn-outline-primary" title="View receipt">
+                                    <span class="material-icons align-middle" style="font-size:1rem;" aria-hidden="true">receipt</span>
                                         Receipt
                                     </a>
                                 <?php endif; ?>
@@ -170,9 +170,9 @@ foreach ($orders as $order) {
                             <?php
                             $items_stmt = $pdo->prepare(
                                 "SELECT oi.*, mi.name AS item_name
-                                 FROM order_items oi
-                                 JOIN menu_items mi ON oi.item_id = mi.item_id
-                                 WHERE oi.order_id = :oid"
+                                FROM order_items oi
+                                JOIN menu_items mi ON oi.item_id = mi.item_id
+                                WHERE oi.order_id = :oid"
                             );
                             $items_stmt->execute([':oid' => $order['order_id']]);
                             $items = $items_stmt->fetchAll();

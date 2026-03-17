@@ -17,9 +17,9 @@ if ($type === 'order') {
     // Fetch order belonging to this member
     $stmt = $pdo->prepare(
         "SELECT o.*, m.fname, m.lname, m.email
-         FROM orders o
-         JOIN members m ON o.member_id = m.member_id
-         WHERE o.order_id = :oid AND o.member_id = :mid"
+        FROM orders o
+        JOIN members m ON o.member_id = m.member_id
+        WHERE o.order_id = :oid AND o.member_id = :mid"
     );
     $stmt->execute([':oid' => $order_id, ':mid' => $member_id]);
     $order = $stmt->fetch();
@@ -30,9 +30,9 @@ if ($type === 'order') {
         // Fetch order items
         $items_stmt = $pdo->prepare(
             "SELECT oi.quantity, oi.subtotal, mi.name, mi.price
-             FROM order_items oi
-             JOIN menu_items mi ON oi.item_id = mi.item_id
-             WHERE oi.order_id = :oid"
+            FROM order_items oi
+            JOIN menu_items mi ON oi.item_id = mi.item_id
+            WHERE oi.order_id = :oid"
         );
         $items_stmt->execute([':oid' => $order_id]);
         $items = $items_stmt->fetchAll();
@@ -40,8 +40,8 @@ if ($type === 'order') {
         // Fetch payment record
         $pay_stmt = $pdo->prepare(
             "SELECT stripe_session_id, created_at FROM payments
-             WHERE payment_type = 'order' AND reference_id = :ref AND member_id = :mid
-             ORDER BY created_at DESC LIMIT 1"
+            WHERE payment_type = 'order' AND reference_id = :ref AND member_id = :mid
+            ORDER BY created_at DESC LIMIT 1"
         );
         $pay_stmt->execute([':ref' => $order_id, ':mid' => $member_id]);
         $payment = $pay_stmt->fetch();
@@ -59,10 +59,10 @@ if ($type === 'order') {
 
     $stmt = $pdo->prepare(
         "SELECT b.*, g.title AS game_title, g.price_per_hour, m.fname, m.lname, m.email
-         FROM bookings b
-         LEFT JOIN games g ON b.game_id = g.game_id
-         JOIN members m ON b.member_id = m.member_id
-         WHERE b.booking_id = :bid AND b.member_id = :mid"
+        FROM bookings b
+        LEFT JOIN games g ON b.game_id = g.game_id
+        JOIN members m ON b.member_id = m.member_id
+        WHERE b.booking_id = :bid AND b.member_id = :mid"
     );
     $stmt->execute([':bid' => $booking_id, ':mid' => $member_id]);
     $booking = $stmt->fetch();
@@ -73,8 +73,8 @@ if ($type === 'order') {
         // Fetch payment record
         $pay_stmt = $pdo->prepare(
             "SELECT stripe_session_id, amount, created_at FROM payments
-             WHERE payment_type = 'booking' AND reference_id = :ref AND member_id = :mid
-             ORDER BY created_at DESC LIMIT 1"
+            WHERE payment_type = 'booking' AND reference_id = :ref AND member_id = :mid
+            ORDER BY created_at DESC LIMIT 1"
         );
         $pay_stmt->execute([':ref' => $booking_id, ':mid' => $member_id]);
         $payment = $pay_stmt->fetch();

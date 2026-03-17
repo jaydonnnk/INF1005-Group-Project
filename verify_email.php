@@ -13,9 +13,9 @@ $token = $_GET['token'] ?? '';
 if (!empty($token) && strlen($token) === 64 && ctype_xdigit($token)) {
     $stmt = $pdo->prepare(
         "SELECT member_id FROM members
-         WHERE verification_token = :token
-         AND verification_expires > NOW()
-         AND email_verified = 0"
+        WHERE verification_token = :token
+        AND verification_expires > NOW()
+        AND email_verified = 0"
     );
     $stmt->execute([':token' => $token]);
     $member = $stmt->fetch();
@@ -23,8 +23,8 @@ if (!empty($token) && strlen($token) === 64 && ctype_xdigit($token)) {
     if ($member) {
         $update = $pdo->prepare(
             "UPDATE members
-             SET email_verified = 1, verification_token = NULL, verification_expires = NULL
-             WHERE member_id = :id"
+            SET email_verified = 1, verification_token = NULL, verification_expires = NULL
+            WHERE member_id = :id"
         );
         $update->execute([':id' => $member['member_id']]);
         $verified = true;

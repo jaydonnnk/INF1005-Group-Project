@@ -33,10 +33,10 @@ require_once "process/db.php";
         // Fetch wishlist with game details
         $stmt = $pdo->prepare(
             "SELECT w.wishlist_id, w.added_at, g.*
-             FROM wishlists w
-             JOIN games g ON w.game_id = g.game_id
-             WHERE w.member_id = :mid
-             ORDER BY w.added_at DESC"
+            FROM wishlists w
+            JOIN games g ON w.game_id = g.game_id
+            WHERE w.member_id = :mid
+            ORDER BY w.added_at DESC"
         );
         $stmt->execute([':mid' => $member_id]);
         $wishlist = $stmt->fetchAll();

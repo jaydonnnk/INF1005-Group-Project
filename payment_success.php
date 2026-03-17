@@ -42,7 +42,7 @@ if (empty($session_id)) {
 
                     $stmt = $pdo->prepare(
                         "INSERT INTO bookings (member_id, booking_date, time_slot, party_size, game_id, rental_hours, notes)
-                         VALUES (:mid, :date, :slot, :size, :gid, :hours, :notes)"
+                        VALUES (:mid, :date, :slot, :size, :gid, :hours, :notes)"
                     );
                     $stmt->execute([
                         ':mid' => $member_id,
@@ -58,7 +58,7 @@ if (empty($session_id)) {
                     // Insert payment record
                     $pay_stmt = $pdo->prepare(
                         "INSERT INTO payments (member_id, stripe_session_id, amount, currency, payment_type, reference_id, status)
-                         VALUES (:mid, :sid, :amt, 'sgd', 'booking', :ref, 'completed')"
+                        VALUES (:mid, :sid, :amt, 'sgd', 'booking', :ref, 'completed')"
                     );
                     $pay_stmt->execute([
                         ':mid' => $member_id,
@@ -110,7 +110,7 @@ if (empty($session_id)) {
                         // Insert payment record
                         $pay_stmt = $pdo->prepare(
                             "INSERT INTO payments (member_id, stripe_session_id, amount, currency, payment_type, reference_id, status)
-                             VALUES (:mid, :sid, :amt, 'sgd', 'order', :ref, 'completed')"
+                            VALUES (:mid, :sid, :amt, 'sgd', 'order', :ref, 'completed')"
                         );
                         $pay_stmt->execute([
                             ':mid' => $member_id,

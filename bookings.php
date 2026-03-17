@@ -276,7 +276,7 @@ if ($show_form && $booking_data) {
                                     <?php endif; ?>
                                     <?php if ($b['status'] === 'Confirmed' || $b['status'] === 'Completed'): ?>
                                         <a href="receipt.php?type=booking&booking_id=<?php echo $b['booking_id']; ?>"
-                                           class="btn btn-sm btn-outline-primary ms-1" title="View receipt" aria-label="View receipt">
+                                        class="btn btn-sm btn-outline-primary ms-1" title="View receipt" aria-label="View receipt">
                                             <span class="material-icons" style="font-size:1rem;" aria-hidden="true">receipt</span>
                                         </a>
                                     <?php else: ?>

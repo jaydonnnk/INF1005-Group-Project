@@ -121,10 +121,10 @@ $all_games = $pdo->query("SELECT game_id, title FROM games ORDER BY title ASC")-
             <?php
             $stmt = $pdo->prepare(
                 "SELECT r.*, g.title AS game_title
-             FROM reviews r
-             JOIN games g ON r.game_id = g.game_id
-             WHERE r.member_id = :mid
-             ORDER BY r.created_at DESC"
+                FROM reviews r
+                JOIN games g ON r.game_id = g.game_id
+                WHERE r.member_id = :mid
+                ORDER BY r.created_at DESC"
             );
             $stmt->execute([':mid' => $member_id]);
             $reviews = $stmt->fetchAll();

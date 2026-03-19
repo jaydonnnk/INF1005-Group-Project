@@ -72,6 +72,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link <?php echo ($current_page === 'profile.php') ? 'active' : ''; ?>" href="profile.php"
+                        <?php echo ($current_page === 'profile.php') ? 'aria-current="page"' : ''; ?>>
+                            <span class="material-icons align-middle me-1" aria-hidden="true">manage_accounts</span>Profile
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="process/process_logout.php">
                             <span class="material-icons align-middle me-1" aria-hidden="true">logout</span>Logout
                         </a>

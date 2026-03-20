@@ -20,16 +20,16 @@ function expireWaitlistNotifications(PDO $pdo): void
     // Find all Notified entries that have expired
     $expired = $pdo->query(
         "SELECT waitlist_id, booking_date, time_slot, member_id
-         FROM waitlist
-         WHERE status = 'Notified'
-           AND claim_expires_at < NOW()"
+        FROM waitlist
+        WHERE status = 'Notified'
+        AND claim_expires_at < NOW()"
     )->fetchAll();
 
     foreach ($expired as $entry) {
         // Mark as Expired
         $pdo->prepare(
             "UPDATE waitlist SET status = 'Expired', claim_token = NULL
-             WHERE waitlist_id = :id"
+            WHERE waitlist_id = :id"
         )->execute([':id' => $entry['waitlist_id']]);
 
         // Send "sorry, slot gone" email to the expired member
@@ -55,15 +55,15 @@ function notifyWaitlist(PDO $pdo, string $booking_date, string $time_slot): void
     // First expire any stale notifications for this slot
     $stale = $pdo->prepare(
         "SELECT waitlist_id, member_id FROM waitlist
-         WHERE status = 'Notified'
-           AND booking_date = :date AND time_slot = :slot
-           AND claim_expires_at < NOW()"
+        WHERE status = 'Notified'
+        AND booking_date = :date AND time_slot = :slot
+        AND claim_expires_at < NOW()"
     );
     $stale->execute([':date' => $booking_date, ':slot' => $time_slot]);
     foreach ($stale->fetchAll() as $s) {
         $pdo->prepare(
             "UPDATE waitlist SET status = 'Expired', claim_token = NULL
-             WHERE waitlist_id = :id"
+            WHERE waitlist_id = :id"
         )->execute([':id' => $s['waitlist_id']]);
 
         $m = $pdo->prepare("SELECT fname, email FROM members WHERE member_id = :id");
@@ -82,9 +82,9 @@ function notifyWaitlist(PDO $pdo, string $booking_date, string $time_slot): void
     // If someone is already Notified (within their 1hr window), do nothing
     $active = $pdo->prepare(
         "SELECT waitlist_id FROM waitlist
-         WHERE status = 'Notified'
-           AND booking_date = :date AND time_slot = :slot
-           AND claim_expires_at > NOW()"
+        WHERE status = 'Notified'
+        AND booking_date = :date AND time_slot = :slot
+        AND claim_expires_at > NOW()"
     );
     $active->execute([':date' => $booking_date, ':slot' => $time_slot]);
     if ($active->fetch()) {
@@ -94,13 +94,13 @@ function notifyWaitlist(PDO $pdo, string $booking_date, string $time_slot): void
     // Find the next Pending member (oldest first = first in queue)
     $next = $pdo->prepare(
         "SELECT w.waitlist_id, w.member_id, m.fname, m.email
-         FROM waitlist w
-         JOIN members m ON w.member_id = m.member_id
-         WHERE w.status = 'Pending'
-           AND w.booking_date = :date
-           AND w.time_slot    = :slot
-         ORDER BY w.created_at ASC
-         LIMIT 1"
+        FROM waitlist w
+        JOIN members m ON w.member_id = m.member_id
+        WHERE w.status = 'Pending'
+        AND w.booking_date = :date
+        AND w.time_slot    = :slot
+        ORDER BY w.created_at ASC
+        LIMIT 1"
     );
     $next->execute([':date' => $booking_date, ':slot' => $time_slot]);
     $member = $next->fetch();
@@ -115,9 +115,9 @@ function notifyWaitlist(PDO $pdo, string $booking_date, string $time_slot): void
 
     $pdo->prepare(
         "UPDATE waitlist
-         SET status = 'Notified', claim_token = :token,
-             notified_at = NOW(), claim_expires_at = :expires
-         WHERE waitlist_id = :id"
+        SET status = 'Notified', claim_token = :token,
+        notified_at = NOW(), claim_expires_at = :expires
+        WHERE waitlist_id = :id"
     )->execute([
                 ':token' => $token,
                 ':expires' => $expires,

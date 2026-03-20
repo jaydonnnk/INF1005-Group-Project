@@ -85,8 +85,8 @@ $secretDisplay = chunk_split($secret, 4, ' ');
                         </div>
 
                         <form action="process/process_setup_2fa.php" method="post"
-                              class="needs-validation" novalidate
-                              aria-label="Verify 2FA code form">
+                            class="needs-validation" novalidate
+                            aria-label="Verify 2FA code form">
 
                             <?php echo csrfField(); ?>
 
@@ -95,9 +95,9 @@ $secretDisplay = chunk_split($secret, 4, ' ');
                                     Verification Code: <span class="text-danger">*</span>
                                 </label>
                                 <input type="text" id="totp_code" name="totp_code"
-                                       class="form-control text-center fs-4"
-                                       maxlength="6" pattern="[0-9]{6}" inputmode="numeric"
-                                       placeholder="000000" autocomplete="one-time-code" required>
+                                class="form-control text-center fs-4"
+                                maxlength="6" pattern="[0-9]{6}" inputmode="numeric"
+                                placeholder="000000" autocomplete="one-time-code" required>
                                 <div class="invalid-feedback">Please enter the 6-digit code from your authenticator app.</div>
                             </div>
 

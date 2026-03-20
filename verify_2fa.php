@@ -54,9 +54,9 @@ if (empty($_SESSION['2fa_pending']) || empty($_SESSION['2fa_member_data'])) {
                                     Authentication Code: <span class="text-danger">*</span>
                                 </label>
                                 <input type="text" id="totp_code" name="totp_code"
-                                       class="form-control text-center fs-4"
-                                       maxlength="6" pattern="[0-9]{6}" inputmode="numeric"
-                                       placeholder="000000" autocomplete="one-time-code" required autofocus>
+                                    class="form-control text-center fs-4"
+                                    maxlength="6" pattern="[0-9]{6}" inputmode="numeric"
+                                    placeholder="000000" autocomplete="one-time-code" required autofocus>
                                 <div class="invalid-feedback">Please enter the 6-digit code.</div>
                             </div>
 

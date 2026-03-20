@@ -87,8 +87,8 @@ $entries = $entries_stmt->fetchAll();
                 </p>
 
                 <form action="process/process_waitlist.php" method="post"
-                      class="needs-validation" novalidate
-                      aria-label="Join waitlist form">
+                    class="needs-validation" novalidate
+                    aria-label="Join waitlist form">
 
                     <?php echo csrfField(); ?>
                     <input type="hidden" name="action" value="join">
@@ -102,9 +102,9 @@ $entries = $entries_stmt->fetchAll();
                             Preferred Date: <span class="text-danger">*</span>
                         </label>
                         <input type="date" id="booking_date" name="booking_date"
-                               class="form-control" required
-                               min="<?php echo date('Y-m-d'); ?>"
-                               value="<?php echo $prefill_date; ?>">
+                            class="form-control" required
+                            min="<?php echo date('Y-m-d'); ?>"
+                            value="<?php echo $prefill_date; ?>">
                         <div class="invalid-feedback">Please select a date.</div>
                     </div>
 
@@ -129,7 +129,7 @@ $entries = $entries_stmt->fetchAll();
                             Party Size: <span class="text-danger">*</span>
                         </label>
                         <input type="number" id="party_size" name="party_size"
-                               class="form-control" min="1" max="12" required value="2">
+                            class="form-control" min="1" max="12" required value="2">
                         <div class="invalid-feedback">Enter a party size between 1 and 12.</div>
                     </div>
 
@@ -148,8 +148,8 @@ $entries = $entries_stmt->fetchAll();
                     <div class="mb-3">
                         <label for="notes" class="form-label">Special Requests:</label>
                         <textarea id="notes" name="notes" class="form-control" rows="3"
-                                  maxlength="500"
-                                  placeholder="Birthday decorations, highchair needed, etc."></textarea>
+                                maxlength="500"
+                                placeholder="Birthday decorations, highchair needed, etc."></textarea>
                     </div>
 
                     <div class="d-flex gap-2">
@@ -229,8 +229,8 @@ $entries = $entries_stmt->fetchAll();
                             <td>
                                 <?php if ($e['status'] === 'Pending'): ?>
                                 <form method="post" action="process/process_waitlist.php"
-                                      class="d-inline"
-                                      onsubmit="return confirm('Remove yourself from this waitlist?');">
+                                    class="d-inline"
+                                    onsubmit="return confirm('Remove yourself from this waitlist?');">
                                     <?php echo csrfField(); ?>
                                     <input type="hidden" name="action" value="cancel">
                                     <input type="hidden" name="waitlist_id" value="<?php echo $e['waitlist_id']; ?>">

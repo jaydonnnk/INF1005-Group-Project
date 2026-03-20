@@ -10,7 +10,7 @@ require_once "process/helpers.php";
 
 // Must have a pending 2FA session
 if (empty($_SESSION['2fa_pending']) || empty($_SESSION['2fa_member_data'])) {
-    header("Location: login.php");
+    header("Location: " . Routes::ROOT_LOGIN);
     exit();
 }
 ?>

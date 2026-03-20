@@ -11,22 +11,17 @@ require_once "helpers.php";
 require_once "stripe_config.php";
 require_once "db.php";
 
-define('CHECKOUT_INDEX', '../index.php');
-define('CHECKOUT_LOGIN', '../login.php');
-define('CHECKOUT_BOOKING', '../bookings.php?action=new');
-define('CHECKOUT_ORDERS', '../orders.php');
-
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: " . CHECKOUT_INDEX);
+    header("Location: " . Routes::INDEX);
     exit();
 }
 
 if (!isset($_SESSION["member_id"])) {
-    header("Location: " . CHECKOUT_LOGIN);
+    header("Location: " . Routes::LOGIN);
     exit();
 }
 
-validateCsrf(CHECKOUT_INDEX);
+validateCsrf(Routes::INDEX);
 
 $member_id = $_SESSION["member_id"];
 $checkout_type = $_POST["checkout_type"] ?? "";
@@ -46,36 +41,36 @@ try {
 
             if (empty($booking_date) || empty($time_slot)) {
                 setFlash('error', 'Date and time slot are required.');
-                header("Location: " . CHECKOUT_BOOKING);
+                header("Location: " . Routes::BOOKINGS . "?action=new");
                 exit();
             }
             // Validate date format and reject past dates
             $parsed_date = date_create_from_format('Y-m-d', $booking_date);
             if (!$parsed_date || $parsed_date->format('Y-m-d') !== $booking_date) {
                 setFlash('error', 'Invalid date format.');
-                header("Location: " . CHECKOUT_BOOKING);
+                header("Location: " . Routes::BOOKINGS . "?action=new");
                 exit();
             }
             if ($booking_date < date('Y-m-d')) {
                 setFlash('error', 'Cannot book a date in the past.');
-                header("Location: " . CHECKOUT_BOOKING);
+                header("Location: " . Routes::BOOKINGS . "?action=new");
                 exit();
             }
             if ($party_size < 1 || $party_size > 12) {
                 setFlash('error', 'Party size must be between 1 and 12.');
-                header("Location: " . CHECKOUT_BOOKING);
+                header("Location: " . Routes::BOOKINGS . "?action=new");
                 exit();
             }
             if ($rental_hours < 1 || $rental_hours > 6) {
                 setFlash('error', 'Rental hours must be between 1 and 6.');
-                header("Location: " . CHECKOUT_BOOKING);
+                header("Location: " . Routes::BOOKINGS . "?action=new");
                 exit();
             }
 
             // A game must be selected to proceed with payment
             if (!$game_id) {
                 setFlash('error', 'Please select a game to book.');
-                header("Location: " . CHECKOUT_BOOKING);
+                header("Location: " . Routes::BOOKINGS . "?action=new");
                 exit();
             }
 
@@ -96,7 +91,7 @@ try {
 
             if (!$game_avail || $game_avail['available_copies'] <= 0) {
                 setFlash('error', 'Sorry, that game is no longer available for the selected date and time.');
-                header("Location: " . CHECKOUT_BOOKING);
+                header("Location: " . Routes::BOOKINGS . "?action=new");
                 exit();
             }
 
@@ -146,7 +141,7 @@ try {
 
             if (!$order) {
                 setFlash('error', 'No pending order found.');
-                header("Location: " . CHECKOUT_ORDERS);
+                header("Location: " . Routes::ORDERS);
                 exit();
             }
 
@@ -162,7 +157,7 @@ try {
 
             if (empty($items)) {
                 setFlash('error', 'Your order is empty.');
-                header("Location: " . CHECKOUT_ORDERS);
+                header("Location: " . Routes::ORDERS);
                 exit();
             }
 
@@ -203,7 +198,7 @@ try {
 } catch (\Stripe\Exception\ApiErrorException $e) {
     error_log("Stripe error: " . $e->getMessage());
     setFlash('error', 'Payment service error. Please try again.');
-    $redirect = ($checkout_type === 'booking') ? CHECKOUT_BOOKING : CHECKOUT_ORDERS;
+    $redirect = ($checkout_type === 'booking') ? Routes::BOOKINGS . '?action=new' : Routes::ORDERS;
     header("Location: " . $redirect);
     exit();
 }

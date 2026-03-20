@@ -5,9 +5,10 @@
  *
  * Destroys the current session and redirects to the home page.
  */
+require_once __DIR__ . '/process_routes.php';
 
 session_start();
 $_SESSION = [];
 session_destroy();
-header("Location: ../index.php");
+header("Location: " . Routes::INDEX);
 exit();

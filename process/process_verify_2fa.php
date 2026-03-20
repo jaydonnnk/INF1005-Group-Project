@@ -10,23 +10,23 @@ session_start();
 require_once "helpers.php";
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: ../login.php");
+    header("Location: " . Routes::LOGIN);
     exit();
 }
 
 // Must have a pending 2FA session
 if (empty($_SESSION['2fa_pending']) || empty($_SESSION['2fa_member_data'])) {
-    header("Location: ../login.php");
+    header("Location: " . Routes::LOGIN);
     exit();
 }
 
-validateCsrf('../verify_2fa.php');
+validateCsrf(Routes::VERIFY_2FA);
 
 $code = trim($_POST['totp_code'] ?? '');
 $member = $_SESSION['2fa_member_data'];
 
 if (empty($code)) {
-    header("Location: ../verify_2fa.php?error=" . urlencode("Please enter the 6-digit code."));
+    header("Location: " . Routes::VERIFY_2FA . "?error=" . urlencode("Please enter the 6-digit code."));
     exit();
 }
 
@@ -49,9 +49,9 @@ if ($tfa->verifyCode($member['totp_secret'], $code)) {
     // Regenerate session ID to prevent session fixation
     session_regenerate_id(true);
 
-    header("Location: ../dashboard.php");
+    header("Location: " . Routes::DASHBOARD);
     exit();
 } else {
-    header("Location: ../verify_2fa.php?error=" . urlencode("Invalid code. Please try again."));
+    header("Location: " . Routes::VERIFY_2FA . "?error=" . urlencode("Invalid code. Please try again."));
     exit();
 }

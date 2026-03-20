@@ -8,20 +8,17 @@
 session_start();
 require_once "helpers.php";
 
-define('BOOKINGS_PAGE', '../bookings.php');
-define('LOGIN_PAGE', '../login.php');
-
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: " . BOOKINGS_PAGE);
+    header("Location: " . Routes::BOOKINGS);
     exit();
 }
 
 if (!isset($_SESSION["member_id"])) {
-    header("Location: " . LOGIN_PAGE);
+    header("Location: " . Routes::LOGIN);
     exit();
 }
 
-validateCsrf(BOOKINGS_PAGE);
+validateCsrf(Routes::BOOKINGS);
 
 $member_id = $_SESSION["member_id"];
 require_once "db.php";
@@ -36,7 +33,7 @@ switch ($action) {
         $errors = validateBookingInput();
         if (!empty($errors)) {
             setFlash('error', implode(" ", $errors));
-            header("Location: " . BOOKINGS_PAGE . "?action=edit&id=$booking_id");
+            header("Location: " . Routes::BOOKINGS . "?action=edit&id=$booking_id");
             exit();
         }
 
@@ -57,7 +54,7 @@ switch ($action) {
         ]);
 
         setFlash('success', 'Booking updated.');
-        header("Location: " . BOOKINGS_PAGE);
+        header("Location: " . Routes::BOOKINGS);
         exit();
 
     // ---- DELETE (Cancel) ----
@@ -85,11 +82,11 @@ switch ($action) {
         }
 
         setFlash('success', 'Booking cancelled.');
-        header("Location: " . BOOKINGS_PAGE);
+        header("Location: " . Routes::BOOKINGS);
         exit();
 
     default:
-        header("Location: " . BOOKINGS_PAGE);
+        header("Location: " . Routes::BOOKINGS);
         exit();
 }
 

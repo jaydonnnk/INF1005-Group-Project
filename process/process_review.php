@@ -7,20 +7,17 @@
 session_start();
 require_once "helpers.php";
 
-define('REVIEWS_PAGE', '../reviews.php');
-define('LOGIN_PAGE', '../login.php');
-
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: " . REVIEWS_PAGE);
+    header("Location: " . Routes::REVIEWS);
     exit();
 }
 
 if (!isset($_SESSION["member_id"])) {
-    header("Location: " . LOGIN_PAGE);
+    header("Location: " . Routes::LOGIN);
     exit();
 }
 
-validateCsrf(REVIEWS_PAGE);
+validateCsrf(Routes::REVIEWS);
 
 $member_id = $_SESSION["member_id"];
 require_once "db.php";
@@ -37,7 +34,7 @@ switch ($action) {
 
         if ($game_id <= 0 || $rating < 1 || $rating > 5) {
             setFlash('error', 'Please select a game and rating.');
-            header("Location: " . REVIEWS_PAGE . "?action=new");
+            header("Location: " . Routes::REVIEWS . "?action=new");
             exit();
         }
 
@@ -46,7 +43,7 @@ switch ($action) {
         $check->execute([':mid' => $member_id, ':gid' => $game_id]);
         if ($check->rowCount() > 0) {
             setFlash('error', "You've already reviewed this game. Edit your existing review instead.");
-            header("Location: " . REVIEWS_PAGE);
+            header("Location: " . Routes::REVIEWS);
             exit();
         }
 
@@ -62,7 +59,7 @@ switch ($action) {
         ]);
 
         setFlash('success', 'Review submitted!');
-        header("Location: " . REVIEWS_PAGE);
+        header("Location: " . Routes::REVIEWS);
         exit();
 
     // ---- UPDATE ----
@@ -74,7 +71,7 @@ switch ($action) {
 
         if ($game_id <= 0 || $rating < 1 || $rating > 5) {
             setFlash('error', 'Invalid input.');
-            header("Location: " . REVIEWS_PAGE . "?action=edit&review_id=$review_id");
+            header("Location: " . Routes::REVIEWS . "?action=edit&review_id=$review_id");
             exit();
         }
 
@@ -91,7 +88,7 @@ switch ($action) {
         ]);
 
         setFlash('success', 'Review updated.');
-        header("Location: " . REVIEWS_PAGE);
+        header("Location: " . Routes::REVIEWS);
         exit();
 
     // ---- DELETE ----
@@ -101,10 +98,10 @@ switch ($action) {
         $stmt->execute([':rid' => $review_id, ':mid' => $member_id]);
 
         setFlash('success', 'Review deleted.');
-        header("Location: " . REVIEWS_PAGE);
+        header("Location: " . Routes::REVIEWS);
         exit();
 
     default:
-        header("Location: " . REVIEWS_PAGE);
+        header("Location: " . Routes::REVIEWS);
         exit();
 }

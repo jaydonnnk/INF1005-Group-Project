@@ -10,26 +10,18 @@ session_start();
 require_once __DIR__ . "/../../process/helpers.php";
 require_once __DIR__ . "/../../process/db.php";
 
-define('ADMIN_DASHBOARD', '../../dashboard.php');
-define('ADMIN_HOME', '../index.php');
-define('ADMIN_GAMES', '../games.php');
-define('ADMIN_MENU', '../menu.php');
-define('ADMIN_BOOKINGS', '../bookings.php');
-define('ADMIN_ORDERS', '../orders.php');
-define('ADMIN_MEMBERS', '../members.php');
-
 // Must be admin
 if (!isset($_SESSION['member_id']) || empty($_SESSION['is_admin'])) {
-    header("Location: " . ADMIN_DASHBOARD);
+    header("Location: " . Routes::ADMIN_DASH);
     exit();
 }
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: " . ADMIN_HOME);
+    header("Location: " . Routes::ADMIN_HOME);
     exit();
 }
 
-validateCsrf(ADMIN_HOME);
+validateCsrf(Routes::ADMIN_HOME);
 
 $action = $_POST['action'] ?? '';
 
@@ -51,7 +43,7 @@ try {
 
             if (empty($title)) {
                 setFlash('error', 'Game title is required.');
-                header("Location: " . ADMIN_GAMES);
+                header("Location: " . Routes::ADMIN_GAMES);
                 exit();
             }
 
@@ -67,7 +59,7 @@ try {
                 ':qty' => $quantity, ':stripe' => $stripe_price_id
             ]);
             setFlash('success', 'Game added successfully.');
-            header("Location: " . ADMIN_GAMES);
+            header("Location: " . Routes::ADMIN_GAMES);
             exit();
 
         case 'edit_game':
@@ -85,7 +77,7 @@ try {
 
             if ($game_id <= 0 || empty($title)) {
                 setFlash('error', 'Invalid game data.');
-                header("Location: " . ADMIN_GAMES);
+                header("Location: " . Routes::ADMIN_GAMES);
                 exit();
             }
 
@@ -104,7 +96,7 @@ try {
                 ':id' => $game_id
             ]);
             setFlash('success', 'Game updated successfully.');
-            header("Location: " . ADMIN_GAMES);
+            header("Location: " . Routes::ADMIN_GAMES);
             exit();
 
         case 'delete_game':
@@ -114,7 +106,7 @@ try {
                 $stmt->execute([':id' => $game_id]);
                 setFlash('success', 'Game deleted.');
             }
-            header("Location: " . ADMIN_GAMES);
+            header("Location: " . Routes::ADMIN_GAMES);
             exit();
 
         // Menu Items
@@ -128,7 +120,7 @@ try {
 
             if (empty($name) || $price <= 0) {
                 setFlash('error', 'Name and valid price are required.');
-                header("Location: " . ADMIN_MENU);
+                header("Location: " . Routes::ADMIN_MENU);
                 exit();
             }
 
@@ -141,7 +133,7 @@ try {
                 ':cat' => $category, ':img' => $image_url, ':stripe' => $stripe_price_id
             ]);
             setFlash('success', 'Menu item added.');
-            header("Location: " . ADMIN_MENU);
+            header("Location: " . Routes::ADMIN_MENU);
             exit();
 
         case 'edit_menu_item':
@@ -156,7 +148,7 @@ try {
 
             if ($item_id <= 0 || empty($name)) {
                 setFlash('error', 'Invalid menu item data.');
-                header("Location: " . ADMIN_MENU);
+                header("Location: " . Routes::ADMIN_MENU);
                 exit();
             }
 
@@ -171,7 +163,7 @@ try {
                 ':stripe' => $stripe_price_id, ':id' => $item_id
             ]);
             setFlash('success', 'Menu item updated.');
-            header("Location: " . ADMIN_MENU);
+            header("Location: " . Routes::ADMIN_MENU);
             exit();
 
         case 'delete_menu_item':
@@ -181,7 +173,7 @@ try {
                 $stmt->execute([':id' => $item_id]);
                 setFlash('success', 'Menu item deleted.');
             }
-            header("Location: " . ADMIN_MENU);
+            header("Location: " . Routes::ADMIN_MENU);
             exit();
 
         // Bookings
@@ -195,7 +187,7 @@ try {
                 $stmt->execute([':status' => $status, ':id' => $booking_id]);
                 setFlash('success', 'Booking status updated.');
             }
-            header("Location: " . ADMIN_BOOKINGS);
+            header("Location: " . Routes::ADMIN_BOOKINGS);
             exit();
 
         // Orders
@@ -209,7 +201,7 @@ try {
                 $stmt->execute([':status' => $status, ':id' => $order_id]);
                 setFlash('success', 'Order status updated.');
             }
-            header("Location: " . ADMIN_ORDERS);
+            header("Location: " . Routes::ADMIN_ORDERS);
             exit();
 
         // Members
@@ -220,7 +212,7 @@ try {
             // Prevent removing own admin
             if ($target_id === (int)$_SESSION['member_id']) {
                 setFlash('error', 'You cannot change your own admin status.');
-                header("Location: " . ADMIN_MEMBERS);
+                header("Location: " . Routes::ADMIN_MEMBERS);
                 exit();
             }
 
@@ -229,17 +221,17 @@ try {
                 $stmt->execute([':val' => $new_val ? 1 : 0, ':id' => $target_id]);
                 setFlash('success', 'Member admin status updated.');
             }
-            header("Location: " . ADMIN_MEMBERS);
+            header("Location: " . Routes::ADMIN_MEMBERS);
             exit();
 
         default:
             setFlash('error', 'Unknown action.');
-            header("Location: " . ADMIN_HOME);
+            header("Location: " . Routes::ADMIN_HOME);
             exit();
     }
 } catch (PDOException $e) {
     error_log("Admin error: " . $e->getMessage());
     setFlash('error', 'A database error occurred.');
-    header("Location: " . ADMIN_HOME);
+    header("Location: " . Routes::ADMIN_HOME);
     exit();
 }

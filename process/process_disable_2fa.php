@@ -10,23 +10,23 @@ session_start();
 require_once "helpers.php";
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: ../profile.php");
+    header("Location: " . Routes::PROFILE);
     exit();
 }
 
 if (!isset($_SESSION["member_id"])) {
-    header("Location: ../login.php");
+    header("Location: " . Routes::LOGIN);
     exit();
 }
 
-validateCsrf('../profile.php');
+validateCsrf(Routes::PROFILE);
 
 $member_id = $_SESSION["member_id"];
 $current_pwd = $_POST["current_pwd"] ?? "";
 
 if (empty($current_pwd)) {
     setFlash('error', 'Password is required to disable 2FA.');
-    header("Location: ../profile.php");
+    header("Location: " . Routes::PROFILE);
     exit();
 }
 
@@ -39,7 +39,7 @@ $row = $stmt->fetch();
 
 if (!$row || !password_verify($current_pwd, $row["password_hash"])) {
     setFlash('error', 'Incorrect password. 2FA was not disabled.');
-    header("Location: ../profile.php");
+    header("Location: " . Routes::PROFILE);
     exit();
 }
 
@@ -50,5 +50,5 @@ $update = $pdo->prepare(
 $update->execute([':id' => $member_id]);
 
 setFlash('success', 'Two-factor authentication has been disabled.');
-header("Location: ../profile.php");
+header("Location: " . Routes::PROFILE);
 exit();

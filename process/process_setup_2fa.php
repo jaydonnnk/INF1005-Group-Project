@@ -11,16 +11,16 @@ session_start();
 require_once "helpers.php";
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: ../setup_2fa.php");
+    header("Location: " . Routes::SETUP_2FA);
     exit();
 }
 
 if (!isset($_SESSION["member_id"])) {
-    header("Location: ../login.php");
+    header("Location: " . Routes::LOGIN);
     exit();
 }
 
-validateCsrf('../setup_2fa.php');
+validateCsrf(Routes::SETUP_2FA);
 
 $member_id = $_SESSION["member_id"];
 $secret = $_SESSION['pending_totp_secret'] ?? '';
@@ -49,9 +49,9 @@ if ($tfa->verifyCode($secret, $code)) {
     unset($_SESSION['pending_totp_secret']);
 
     setFlash('success', 'Two-factor authentication has been enabled successfully.');
-    header("Location: ../profile.php");
+    header("Location: " . Routes::PROFILE);
     exit();
 } else {
-    header("Location: ../setup_2fa.php?error=" . urlencode("Invalid code. Please try again."));
+    header("Location: " . Routes::SETUP_2FA . "?error=" . urlencode("Invalid code. Please try again."));
     exit();
 }

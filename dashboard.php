@@ -1,7 +1,9 @@
 <?php
 session_start();
+require_once "process/helpers.php";
+
 if (!isset($_SESSION["member_id"])) {
-    header("Location: login.php");
+    header("Location: " . Routes::ROOT_LOGIN);
     exit();
 }
 $member_name = htmlspecialchars($_SESSION["member_name"]);

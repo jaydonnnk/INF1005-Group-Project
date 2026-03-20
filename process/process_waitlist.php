@@ -9,19 +9,17 @@
 session_start();
 require_once "helpers.php";
 
-define('WAITLIST_PAGE', '../waitlist.php');
-
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: " . WAITLIST_PAGE);
+    header("Location: " . Routes::WAITLIST);
     exit();
 }
 
 if (!isset($_SESSION["member_id"])) {
-    header("Location: ../login.php");
+    header("Location: " . Routes::LOGIN);
     exit();
 }
 
-validateCsrf('../waitlist.php');
+validateCsrf(Routes::WAITLIST);
 
 $member_id = $_SESSION["member_id"];
 require_once "db.php";
@@ -62,28 +60,28 @@ switch ($action) {
 
         if (!empty($errors)) {
             setFlash('error', implode(" ", $errors));
-            header("Location: ../waitlist.php?action=new");
+            header("Location: " . Routes::WAITLIST . "?action=new");
             exit();
         }
 
         // Check member isn't already on the waitlist for this slot
         $check = $pdo->prepare(
             "SELECT waitlist_id FROM waitlist
-             WHERE member_id = :mid AND booking_date = :date
-               AND time_slot = :slot AND status = 'Pending'"
+            WHERE member_id = :mid AND booking_date = :date
+            AND time_slot = :slot AND status = 'Pending'"
         );
         $check->execute([':mid' => $member_id, ':date' => $booking_date, ':slot' => $time_slot]);
 
         if ($check->fetch()) {
             setFlash('error', "You're already on the waitlist for that date and time slot.");
-            header("Location: ../waitlist.php?action=new");
+            header("Location: " . Routes::WAITLIST . "?action=new");
             exit();
         }
 
         // Insert waitlist entry
         $stmt = $pdo->prepare(
             "INSERT INTO waitlist (member_id, booking_date, time_slot, party_size, game_id, notes)
-             VALUES (:mid, :date, :slot, :size, :gid, :notes)"
+            VALUES (:mid, :date, :slot, :size, :gid, :notes)"
         );
         $stmt->execute([
             ':mid' => $member_id,
@@ -97,13 +95,13 @@ switch ($action) {
         // Calculate queue position for the flash message
         $pos_stmt = $pdo->prepare(
             "SELECT COUNT(*) FROM waitlist
-             WHERE booking_date = :date AND time_slot = :slot AND status = 'Pending'"
+            WHERE booking_date = :date AND time_slot = :slot AND status = 'Pending'"
         );
         $pos_stmt->execute([':date' => $booking_date, ':slot' => $time_slot]);
         $position = $pos_stmt->fetchColumn();
 
         setFlash('success', "You've been added to the waitlist! You are number {$position} in the queue.");
-        header("Location: " . WAITLIST_PAGE);
+        header("Location: " . Routes::WAITLIST);
         exit();
 
     // ---- CANCEL WAITLIST ENTRY ----
@@ -112,15 +110,15 @@ switch ($action) {
 
         $stmt = $pdo->prepare(
             "UPDATE waitlist SET status = 'Cancelled'
-             WHERE waitlist_id = :wid AND member_id = :mid"
+            WHERE waitlist_id = :wid AND member_id = :mid"
         );
         $stmt->execute([':wid' => $waitlist_id, ':mid' => $member_id]);
 
         setFlash('success', "You've been removed from the waitlist.");
-        header("Location: " . WAITLIST_PAGE);
+        header("Location: " . Routes::WAITLIST);
         exit();
 
     default:
-        header("Location: " . WAITLIST_PAGE);
+        header("Location: " . Routes::WAITLIST);
         exit();
 }

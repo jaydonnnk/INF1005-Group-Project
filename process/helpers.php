@@ -3,6 +3,7 @@
  * Shared Helper Functions
  * Centralised utility functions used across process scripts and page templates.
  */
+require_once __DIR__ . '/process_routes.php';
 
 /**
  * Sanitize user input by trimming whitespace.

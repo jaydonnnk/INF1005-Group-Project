@@ -16,17 +16,17 @@ require_once "send_email.php";
 define('RESEND_PAGE', '../resend_verification.php');
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: " . RESEND_PAGE);
+    header("Location: " . Routes::RESEND_VERIFY);
     exit();
 }
 
-validateCsrf(RESEND_PAGE);
+validateCsrf(Routes::RESEND_VERIFY);
 
 $email = trim($_POST["email"] ?? "");
 
 if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
     setFlash('error', 'Please enter a valid email address.');
-    header("Location: " . RESEND_PAGE);
+    header("Location: " . Routes::RESEND_VERIFY);
     exit();
 }
 
@@ -44,9 +44,9 @@ try {
 
         $update = $pdo->prepare(
             "UPDATE members
-             SET verification_token = :token,
-                 verification_expires = DATE_ADD(NOW(), INTERVAL 24 HOUR)
-             WHERE member_id = :id"
+            SET verification_token = :token,
+            verification_expires = DATE_ADD(NOW(), INTERVAL 24 HOUR)
+            WHERE member_id = :id"
         );
         $update->execute([':token' => $token, ':id' => $member['member_id']]);
 
@@ -73,5 +73,5 @@ try {
     setFlash('success', 'If an account exists with that email, a verification link has been sent. Please check your inbox.');
 }
 
-header("Location: " . RESEND_PAGE);
+header("Location: " . Routes::RESEND_VERIFY);
 exit();

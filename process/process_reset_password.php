@@ -10,11 +10,11 @@ session_start();
 require_once "helpers.php";
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: ../login.php");
+    header("Location: " . Routes::LOGIN);
     exit();
 }
 
-validateCsrf('../login.php');
+validateCsrf(Routes::LOGIN);
 
 $token = trim($_POST['token'] ?? '');
 $new_pwd = $_POST['new_pwd'] ?? '';
@@ -23,26 +23,26 @@ $pwd_confirm = $_POST['pwd_confirm'] ?? '';
 // Validate token format
 if (empty($token) || strlen($token) !== 64 || !ctype_xdigit($token)) {
     setFlash('error', 'Invalid reset token.');
-    header("Location: ../forgot_password.php");
+    header("Location: " . Routes::FORGOT_PW);
     exit();
 }
 
 // Validate passwords
 if (empty($new_pwd) || empty($pwd_confirm)) {
     setFlash('error', 'All fields are required.');
-    header("Location: ../reset_password.php?token=" . urlencode($token));
+    header("Location: " . Routes::RESET_PW . "?token=" . urlencode($token));
     exit();
 }
 
 if (strlen($new_pwd) < 8) {
     setFlash('error', 'Password must be at least 8 characters.');
-    header("Location: ../reset_password.php?token=" . urlencode($token));
+    header("Location: " . Routes::RESET_PW . "?token=" . urlencode($token));
     exit();
 }
 
 if ($new_pwd !== $pwd_confirm) {
     setFlash('error', 'Passwords do not match.');
-    header("Location: ../reset_password.php?token=" . urlencode($token));
+    header("Location: " . Routes::RESET_PW . "?token=" . urlencode($token));
     exit();
 }
 
@@ -56,7 +56,7 @@ try {
 
     if (!$row) {
         setFlash('error', 'This reset link is invalid or has expired.');
-        header("Location: ../forgot_password.php");
+        header("Location: " . Routes::FORGOT_PW);
         exit();
     }
 
@@ -67,7 +67,7 @@ try {
 
     if (!$member) {
         setFlash('error', 'Unable to reset password. Please try again.');
-        header("Location: ../forgot_password.php");
+        header("Location: " . Routes::FORGOT_PW);
         exit();
     }
 
@@ -81,11 +81,11 @@ try {
     $delete->execute([':token' => $token]);
 
     setFlash('success', 'Your password has been reset. You can now sign in.');
-    header("Location: ../login.php");
+    header("Location: " . Routes::LOGIN);
     exit();
 } catch (PDOException $e) {
     error_log("Reset password error: " . $e->getMessage());
     setFlash('error', 'A system error occurred. Please try again.');
-    header("Location: ../forgot_password.php");
+    header("Location: " . Routes::FORGOT_PW);
     exit();
 }

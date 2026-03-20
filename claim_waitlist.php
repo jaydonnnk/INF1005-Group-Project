@@ -14,13 +14,11 @@ require_once "process/db.php";
 require_once "process/helpers.php";
 require_once "process/waitlist_notifier.php";
 
-define('HOME_PAGE', 'index.php');
-
 $token = trim($_GET['token'] ?? '');
 
 if (empty($token)) {
     setFlash('error', 'Invalid claim link.');
-    header("Location: " . HOME_PAGE);
+    header("Location: " . Routes::ROOT_INDEX);
     exit();
 }
 
@@ -40,7 +38,7 @@ $entry = $stmt->fetch();
 // Token not found
 if (!$entry) {
     setFlash('error', 'This claim link is invalid or has already been used.');
-    header("Location: " . HOME_PAGE);
+    header("Location: " . Routes::ROOT_INDEX);
     exit();
 }
 
@@ -54,14 +52,14 @@ if ($entry['status'] === 'Expired' || strtotime($entry['claim_expires_at']) < ti
         notifyWaitlist($pdo, $entry['booking_date'], $entry['time_slot']);
     }
     setFlash('error', 'Sorry — your 1-hour claim window has expired. The spot has been offered to the next person on the waitlist.');
-    header("Location: " . HOME_PAGE);
+    header("Location: " . Routes::ROOT_INDEX);
     exit();
 }
 
 // Already claimed
 if ($entry['status'] === 'Claimed') {
     setFlash('error', 'This spot has already been claimed.');
-    header("Location: " . HOME_PAGE);
+    header("Location: " . Routes::ROOT_INDEX);
     exit();
 }
 
@@ -80,7 +78,7 @@ if (!isset($_SESSION['member_id'])) {
 }
 
 setFlash('success', 'Your spot is reserved for 1 hour — please complete your booking below.');
-header("Location: bookings.php?action=new"
+header("Location: " . Routes::ROOT_BOOKINGS_NEW
     . "&date="     . urlencode($entry['booking_date'])
     . "&time_slot=" . urlencode($entry['time_slot'])
     . "&game_id="   . urlencode($entry['game_id'] ?? '')

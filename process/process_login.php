@@ -1,8 +1,6 @@
 <?php
 /**
  * Process Login Form
- *
- *
  * Validates credentials using password_verify() against the stored bcrypt hash.
  * On success, creates a session. On failure, redirects back with a flash error.
  */
@@ -10,20 +8,18 @@
 session_start();
 require_once "helpers.php";
 
-define('LOGIN_PAGE', '../login.php');
-define('DASHBOARD_PAGE', '../dashboard.php');
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: " . LOGIN_PAGE);
+    header("Location: " . Routes::LOGIN);
     exit();
 }
 
-validateCsrf(redirect_url: '../login.php');
+validateCsrf(redirect_url: Routes::LOGIN);
 
 // Validate email
 if (empty($_POST["email"])) {
     setFlash('error', 'Email is required.');
-    header("Location: " . LOGIN_PAGE);
+    header("Location: " . Routes::LOGIN);
     exit();
 }
 
@@ -33,7 +29,7 @@ $email = filter_var($email, FILTER_SANITIZE_EMAIL);
 // Validate password
 if (empty($_POST["pwd"])) {
     setFlash('error', 'Password is required.');
-    header("Location: " . LOGIN_PAGE);
+    header("Location: " . Routes::LOGIN);
     exit();
 }
 
@@ -51,7 +47,7 @@ try {
         // Check email verification
         if (empty($member['email_verified'])) {
             setFlash('error', 'Please verify your email address first. Check your inbox for the verification link.');
-            header("Location: " . LOGIN_PAGE);
+            header("Location: " . Routes::LOGIN);
             exit();
         }
 
@@ -59,7 +55,7 @@ try {
         if (!empty($member['totp_enabled'])) {
             $_SESSION['2fa_pending'] = true;
             $_SESSION['2fa_member_data'] = $member;
-            header("Location: ../verify_2fa.php");
+            header("Location: " . Routes::VERIFY_2FA);
             exit();
         }
 
@@ -72,7 +68,7 @@ try {
         // Regenerate session ID to prevent session fixation
         session_regenerate_id(true);
 
-        header("Location: " . DASHBOARD_PAGE);
+        header("Location: " . Routes::DASHBOARD);
         exit();
     } else {
         setFlash('error', 'Invalid email or password.');
@@ -82,5 +78,5 @@ try {
     setFlash('error', 'A system error occurred. Please try again later.');
 }
 
-header("Location: " . LOGIN_PAGE);
+header("Location: " . Routes::LOGIN);
 exit();

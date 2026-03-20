@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>The Rolling Dice - Board Game Caf&eacute;</title>
+    <title>The Rolling Dice - Board Game Cafe&eacute;</title>
     <?php include_once "inc/head.inc.php"; ?>
 </head>
 

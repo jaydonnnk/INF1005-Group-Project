@@ -10,11 +10,11 @@ session_start();
 require_once "helpers.php";
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: ../register.php");
+    header("Location: " . Routes::REGISTER);
     exit();
 }
 
-validateCsrf('../register.php');
+validateCsrf(Routes::REGISTER);
 
 // ============================================
 // 1. VALIDATE & SANITIZE EACH FIELD
@@ -122,9 +122,9 @@ if ($success) {
 
             $token_stmt = $pdo->prepare(
                 "UPDATE members
-                 SET verification_token = :token,
-                     verification_expires = DATE_ADD(NOW(), INTERVAL 24 HOUR)
-                 WHERE member_id = :id"
+                SET verification_token = :token,
+                verification_expires = DATE_ADD(NOW(), INTERVAL 24 HOUR)
+                WHERE member_id = :id"
             );
             $token_stmt->execute([':token' => $token, ':id' => $new_member_id]);
 

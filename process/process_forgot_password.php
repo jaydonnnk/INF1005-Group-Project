@@ -14,17 +14,17 @@ require_once "send_email.php";
 define('FORGOT_PAGE', '../forgot_password.php');
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: " . FORGOT_PAGE);
+    header("Location: " . Routes::FORGOT_PW);
     exit();
 }
 
-validateCsrf(FORGOT_PAGE);
+validateCsrf(Routes::FORGOT_PW);
 
 $email = trim($_POST["email"] ?? "");
 
 if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
     setFlash('error', 'Please enter a valid email address.');
-    header("Location: " . FORGOT_PAGE);
+    header("Location: " . Routes::FORGOT_PW);
     exit();
 }
 
@@ -74,5 +74,5 @@ try {
     setFlash('success', 'If an account exists with that email, a password reset link has been sent. Please check your inbox.');
 }
 
-header("Location: " . FORGOT_PAGE);
+header("Location: " . Routes::FORGOT_PW);
 exit();

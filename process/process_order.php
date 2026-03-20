@@ -10,21 +10,17 @@
 session_start();
 require_once "helpers.php";
 
-define('ORDERS_PAGE', '../orders.php');
-define('MENU_PAGE', '../menu.php');
-define('LOGIN_PAGE', '../login.php');
-
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: " . ORDERS_PAGE);
+    header("Location: " . Routes::ORDERS);
     exit();
 }
 
 if (!isset($_SESSION["member_id"])) {
-    header("Location: " . LOGIN_PAGE);
+    header("Location: " . Routes::LOGIN);
     exit();
 }
 
-validateCsrf(MENU_PAGE);
+validateCsrf(Routes::MENU);
 
 $member_id = $_SESSION["member_id"];
 require_once "db.php";
@@ -38,7 +34,7 @@ switch ($action) {
         $item_id = (int) ($_POST["item_id"] ?? 0);
         if ($item_id <= 0) {
             setFlash('error', 'Invalid item.');
-            header("Location: " . MENU_PAGE);
+            header("Location: " . Routes::MENU);
             exit();
         }
 
@@ -49,7 +45,7 @@ switch ($action) {
 
         if (!$menu_item) {
             setFlash('error', 'Item not available.');
-            header("Location: " . MENU_PAGE);
+            header("Location: " . Routes::MENU);
             exit();
         }
 
@@ -100,7 +96,7 @@ switch ($action) {
             $pdo->rollBack();
             error_log("Order error: " . $e->getMessage());
             setFlash('error', 'Failed to add item. Please try again.');
-            header("Location: " . MENU_PAGE);
+            header("Location: " . Routes::MENU);
             exit();
         }
 
@@ -119,10 +115,10 @@ switch ($action) {
         $stmt->execute([':oid' => $order_id, ':mid' => $member_id]);
 
         setFlash('success', 'Order cancelled.');
-        header("Location: " . ORDERS_PAGE);
+        header("Location: " . Routes::ORDERS);
         exit();
 
     default:
-        header("Location: " . ORDERS_PAGE);
+        header("Location: " . Routes::ORDERS);
         exit();
 }

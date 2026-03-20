@@ -1,11 +1,13 @@
 <?php
 session_start();
+require_once "process/helpers.php";
+require_once "process/db.php";
+
 if (!isset($_SESSION["member_id"])) {
-    header("Location: login.php");
+    header("Location: " . Routes::ROOT_LOGIN);
     exit();
 }
 $member_id = $_SESSION["member_id"];
-require_once "process/db.php";
 
 // Determine if we're showing the new/edit form or the list
 $show_form = isset($_GET['action']) && in_array($_GET['action'], ['new', 'edit']);
@@ -14,7 +16,7 @@ $booking_data = null;
 
 // Time slots used by both new and edit forms
 $slots = ['11:00 AM - 1:00 PM', '1:00 PM - 3:00 PM', '3:00 PM - 5:00 PM',
-          '5:00 PM - 7:00 PM', '7:00 PM - 9:00 PM', '9:00 PM - 11:00 PM'];
+        '5:00 PM - 7:00 PM', '7:00 PM - 9:00 PM', '9:00 PM - 11:00 PM'];
 
 // Fetch booking data for editing
 if ($show_form && $_GET['action'] === 'edit' && $edit_id > 0) {
@@ -23,7 +25,7 @@ if ($show_form && $_GET['action'] === 'edit' && $edit_id > 0) {
     $booking_data = $stmt->fetch();
     if (!$booking_data) {
         setFlash('error', 'Booking not found.');
-        header("Location: bookings.php");
+        header("Location: " . Routes::ROOT_BOOKINGS);
         exit();
     }
 }

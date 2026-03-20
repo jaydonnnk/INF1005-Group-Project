@@ -7,21 +7,17 @@
 session_start();
 require_once "helpers.php";
 
-define('WISHLIST_PAGE', '../wishlist.php');
-define('GAMES_PAGE', '../games.php');
-define('LOGIN_PAGE', '../login.php');
-
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: " . WISHLIST_PAGE);
+    header("Location: " . Routes::WISHLIST);
     exit();
 }
 
 if (!isset($_SESSION["member_id"])) {
-    header("Location: " . LOGIN_PAGE);
+    header("Location: " . Routes::LOGIN);
     exit();
 }
 
-validateCsrf(GAMES_PAGE);
+validateCsrf(Routes::GAMES);
 
 $member_id = $_SESSION["member_id"];
 require_once "db.php";
@@ -35,7 +31,7 @@ switch ($action) {
         $game_id = (int) ($_POST["game_id"] ?? 0);
         if ($game_id <= 0) {
             setFlash('error', 'Invalid game.');
-            header("Location: " . GAMES_PAGE);
+            header("Location: " . Routes::GAMES);
             exit();
         }
 
@@ -45,7 +41,7 @@ switch ($action) {
 
         if ($check->rowCount() > 0) {
             setFlash('success', 'This game is already in your wishlist!');
-            header("Location: " . GAMES_PAGE);
+            header("Location: " . Routes::GAMES);
             exit();
         }
 
@@ -53,7 +49,7 @@ switch ($action) {
         $stmt->execute([':mid' => $member_id, ':gid' => $game_id]);
 
         setFlash('success', 'Added to your wishlist!');
-        header("Location: " . GAMES_PAGE);
+        header("Location: " . Routes::GAMES);
         exit();
 
     // ---- REMOVE FROM WISHLIST ----
@@ -63,10 +59,10 @@ switch ($action) {
         $stmt->execute([':wid' => $wishlist_id, ':mid' => $member_id]);
 
         setFlash('success', 'Removed from wishlist.');
-        header("Location: " . WISHLIST_PAGE);
+        header("Location: " . Routes::WISHLIST);
         exit();
 
     default:
-        header("Location: " . WISHLIST_PAGE);
+        header("Location: " . Routes::WISHLIST);
         exit();
 }

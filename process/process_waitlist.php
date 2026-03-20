@@ -1,7 +1,7 @@
 <?php
 /**
  * Process Waitlist Actions
- * 
+ *
  *
  * Handles: join waitlist, cancel waitlist entry.
  */
@@ -9,8 +9,10 @@
 session_start();
 require_once "helpers.php";
 
+define('WAITLIST_PAGE', '../waitlist.php');
+
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: ../waitlist.php");
+    header("Location: " . WAITLIST_PAGE);
     exit();
 }
 
@@ -101,7 +103,7 @@ switch ($action) {
         $position = $pos_stmt->fetchColumn();
 
         setFlash('success', "You've been added to the waitlist! You are number {$position} in the queue.");
-        header("Location: ../waitlist.php");
+        header("Location: " . WAITLIST_PAGE);
         exit();
 
     // ---- CANCEL WAITLIST ENTRY ----
@@ -115,10 +117,10 @@ switch ($action) {
         $stmt->execute([':wid' => $waitlist_id, ':mid' => $member_id]);
 
         setFlash('success', "You've been removed from the waitlist.");
-        header("Location: ../waitlist.php");
+        header("Location: " . WAITLIST_PAGE);
         exit();
 
     default:
-        header("Location: ../waitlist.php");
+        header("Location: " . WAITLIST_PAGE);
         exit();
 }

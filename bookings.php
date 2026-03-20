@@ -150,16 +150,16 @@ if ($show_form && $booking_data) {
                     <input type="hidden" name="booking_id" value="<?php echo $booking_data['booking_id']; ?>">
 
                     <div class="mb-3">
-                        <label for="booking_date" class="form-label">Date: <span class="text-danger">*</span></label>
-                        <input type="date" id="booking_date" name="booking_date" class="form-control" required
+                        <label for="edit_booking_date" class="form-label">Date: <span class="text-danger">*</span></label>
+                        <input type="date" id="edit_booking_date" name="booking_date" class="form-control" required
                             min="<?php echo date('Y-m-d'); ?>"
                             value="<?php echo htmlspecialchars($booking_data['booking_date']); ?>">
                         <div class="invalid-feedback">Please select a date.</div>
                     </div>
 
                     <div class="mb-3">
-                        <label for="time_slot" class="form-label">Time Slot: <span class="text-danger">*</span></label>
-                        <select id="time_slot" name="time_slot" class="form-select" required>
+                        <label for="edit_time_slot" class="form-label">Time Slot: <span class="text-danger">*</span></label>
+                        <select id="edit_time_slot" name="time_slot" class="form-select" required>
                             <option value="">Select a time slot</option>
                             <?php
                             foreach ($slots as $s) {
@@ -172,16 +172,16 @@ if ($show_form && $booking_data) {
                     </div>
 
                     <div class="mb-3">
-                        <label for="party_size" class="form-label">Party Size: <span class="text-danger">*</span></label>
-                        <input type="number" id="party_size" name="party_size" class="form-control"
+                        <label for="edit_party_size" class="form-label">Party Size: <span class="text-danger">*</span></label>
+                        <input type="number" id="edit_party_size" name="party_size" class="form-control"
                             min="1" max="12" required
                             value="<?php echo htmlspecialchars($booking_data['party_size']); ?>">
                         <div class="invalid-feedback">Enter a party size between 1 and 12.</div>
                     </div>
 
                     <div class="mb-3">
-                        <label for="game_id" class="form-label">Pre-select a Game (optional):</label>
-                        <select id="game_id" name="game_id" class="form-select">
+                        <label for="edit_game_id" class="form-label">Pre-select a Game (optional):</label>
+                        <select id="edit_game_id" name="game_id" class="form-select">
                             <option value="">We'll pick when we arrive</option>
                             <?php foreach ($all_games as $g): ?>
                                 <option value="<?php echo $g['game_id']; ?>"
@@ -193,8 +193,8 @@ if ($show_form && $booking_data) {
                     </div>
 
                     <div class="mb-3">
-                        <label for="notes" class="form-label">Special Requests:</label>
-                        <textarea id="notes" name="notes" class="form-control" rows="3"
+                        <label for="edit_notes" class="form-label">Special Requests:</label>
+                        <textarea id="edit_notes" name="notes" class="form-control" rows="3"
                                 maxlength="500" placeholder="Birthday decorations, highchair needed, etc."><?php echo htmlspecialchars($booking_data['notes']); ?></textarea>
                     </div>
 

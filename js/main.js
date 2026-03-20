@@ -69,12 +69,12 @@ function registerImagePopups() {
             });
 
             // Close popup on Escape key
-            const self = this;
+            const button = this;
             function handleEscape(e) {
                 if (e.key === "Escape") {
                     popup.remove();
                     document.removeEventListener("keydown", handleEscape);
-                    self.focus();
+                    button.focus();
                 }
             }
             document.addEventListener("keydown", handleEscape);
@@ -88,9 +88,9 @@ function registerImagePopups() {
 }
 
 /* ----------------------------------------
-   Booking Form: Load Available Games via AJAX
-   When date + time slot are both selected,
-   fetches games with available copies.
+Booking Form: Load Available Games via AJAX
+When date + time slot are both selected,
+fetches games with available copies.
    ---------------------------------------- */
 function registerBookingGameLoader() {
     const dateInput = document.getElementById("booking_date");
@@ -129,9 +129,9 @@ function registerBookingGameLoader() {
                 gameSelect.innerHTML = '<option value="">-- Select a game --</option>';
 
                 games.forEach(function (game) {
-                    var option = document.createElement("option");
+                    const option = document.createElement("option");
                     option.value = game.game_id;
-                    var copies = parseInt(game.available_copies, 10);
+                    const copies = Number.parseInt(game.available_copies, 10);
 
                     if (copies > 0) {
                         option.textContent = game.title + " (" + copies + " available)";

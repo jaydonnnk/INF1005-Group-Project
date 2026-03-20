@@ -1,7 +1,7 @@
 <?php
 /**
  * Process Login Form
- * 
+ *
  *
  * Validates credentials using password_verify() against the stored bcrypt hash.
  * On success, creates a session. On failure, redirects back with a flash error.
@@ -50,7 +50,7 @@ try {
         // Check email verification
         if (empty($member['email_verified'])) {
             setFlash('error', 'Please verify your email address first. Check your inbox for the verification link.');
-            header("Location: ../login.php");
+            header("Location: " . LOGIN_PAGE);
             exit();
         }
 
@@ -81,5 +81,5 @@ try {
     setFlash('error', 'A system error occurred. Please try again later.');
 }
 
-header("Location: ../login.php");
+header("Location: " . LOGIN_PAGE);
 exit();

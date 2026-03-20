@@ -1,14 +1,17 @@
 <?php
 /**
  * Process Wishlist CRUD Operations
- * 
+ *
  */
 
 session_start();
 require_once "helpers.php";
 
+define('WISHLIST_PAGE', '../wishlist.php');
+define('GAMES_PAGE', '../games.php');
+
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: ../wishlist.php");
+    header("Location: " . WISHLIST_PAGE);
     exit();
 }
 
@@ -17,7 +20,7 @@ if (!isset($_SESSION["member_id"])) {
     exit();
 }
 
-validateCsrf('../games.php');
+validateCsrf(GAMES_PAGE);
 
 $member_id = $_SESSION["member_id"];
 require_once "db.php";
@@ -31,7 +34,7 @@ switch ($action) {
         $game_id = (int) ($_POST["game_id"] ?? 0);
         if ($game_id <= 0) {
             setFlash('error', 'Invalid game.');
-            header("Location: ../games.php");
+            header("Location: " . GAMES_PAGE);
             exit();
         }
 
@@ -41,7 +44,7 @@ switch ($action) {
 
         if ($check->rowCount() > 0) {
             setFlash('success', 'This game is already in your wishlist!');
-            header("Location: ../games.php");
+            header("Location: " . GAMES_PAGE);
             exit();
         }
 
@@ -49,7 +52,7 @@ switch ($action) {
         $stmt->execute([':mid' => $member_id, ':gid' => $game_id]);
 
         setFlash('success', 'Added to your wishlist!');
-        header("Location: ../games.php");
+        header("Location: " . GAMES_PAGE);
         exit();
 
     // ---- REMOVE FROM WISHLIST ----
@@ -59,10 +62,10 @@ switch ($action) {
         $stmt->execute([':wid' => $wishlist_id, ':mid' => $member_id]);
 
         setFlash('success', 'Removed from wishlist.');
-        header("Location: ../wishlist.php");
+        header("Location: " . WISHLIST_PAGE);
         exit();
 
     default:
-        header("Location: ../wishlist.php");
+        header("Location: " . WISHLIST_PAGE);
         exit();
 }

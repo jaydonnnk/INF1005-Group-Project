@@ -34,8 +34,9 @@
                     $stmt->execute([':cat' => $cat]);
                     $items = $stmt->fetchAll();
 
-                    if (count($items) === 0)
+                    if (count($items) === 0) {
                         continue;
+                    }
                     ?>
 
                     <section class="mb-5">

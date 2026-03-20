@@ -1,18 +1,22 @@
 <?php
 /**
  * Database Connection Script (PDO)
- * 
+ *
  *
  * Configured for LAMP stack on Google Cloud Compute Engine.
  * MySQL runs on the same VM as Apache/PHP, so we connect via localhost.
  * Uses PDO with prepared statements to prevent SQL injection.
  */
 
+// Load environment variables for sensitive credentials
+require_once __DIR__ . "/env_loader.php";
+loadEnv(__DIR__ . '/../.env');
+
 // Database configuration (LAMP — MySQL on same server)
 $db_host = "localhost";
 $db_name = "rolling_dice_db";
 $db_user = "rolling_dice_user";     // Created during MySQL setup
-$db_pass = "Student@s1t";    // Set during MySQL setup
+$db_pass = $_ENV['DB_PASSWORD'] ?? '';
 $db_charset = "utf8mb4";
 
 // DSN (Data Source Name)

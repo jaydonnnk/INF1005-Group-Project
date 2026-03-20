@@ -1,7 +1,7 @@
 <?php
 /**
  * Process Order CRUD Operations
- * 
+ *
  *
  * add_item: Adds an item to the member's current pending order (creates one if none exists).
  * cancel:   Cancels a pending order.
@@ -10,8 +10,11 @@
 session_start();
 require_once "helpers.php";
 
+define('ORDERS_PAGE', '../orders.php');
+define('MENU_PAGE', '../menu.php');
+
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: ../orders.php");
+    header("Location: " . ORDERS_PAGE);
     exit();
 }
 
@@ -34,7 +37,7 @@ switch ($action) {
         $item_id = (int) ($_POST["item_id"] ?? 0);
         if ($item_id <= 0) {
             setFlash('error', 'Invalid item.');
-            header("Location: ../menu.php");
+            header("Location: " . MENU_PAGE);
             exit();
         }
 
@@ -45,7 +48,7 @@ switch ($action) {
 
         if (!$menu_item) {
             setFlash('error', 'Item not available.');
-            header("Location: ../menu.php");
+            header("Location: " . MENU_PAGE);
             exit();
         }
 
@@ -96,7 +99,7 @@ switch ($action) {
             $pdo->rollBack();
             error_log("Order error: " . $e->getMessage());
             setFlash('error', 'Failed to add item. Please try again.');
-            header("Location: ../menu.php");
+            header("Location: " . MENU_PAGE);
             exit();
         }
 
@@ -115,10 +118,10 @@ switch ($action) {
         $stmt->execute([':oid' => $order_id, ':mid' => $member_id]);
 
         setFlash('success', 'Order cancelled.');
-        header("Location: ../orders.php");
+        header("Location: " . ORDERS_PAGE);
         exit();
 
     default:
-        header("Location: ../orders.php");
+        header("Location: " . ORDERS_PAGE);
         exit();
 }

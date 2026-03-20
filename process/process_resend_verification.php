@@ -1,7 +1,7 @@
 <?php
 /**
  * Process Resend Verification Email
- * 
+ *
  *
  * Generates a new verification token and sends the email.
  * Uses a generic success message to avoid revealing whether the email exists.
@@ -13,18 +13,20 @@ require_once "env_loader.php";
 loadEnv(__DIR__ . '/../.env');
 require_once "send_email.php";
 
+define('RESEND_PAGE', '../resend_verification.php');
+
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: ../resend_verification.php");
+    header("Location: " . RESEND_PAGE);
     exit();
 }
 
-validateCsrf('../resend_verification.php');
+validateCsrf(RESEND_PAGE);
 
 $email = trim($_POST["email"] ?? "");
 
 if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
     setFlash('error', 'Please enter a valid email address.');
-    header("Location: ../resend_verification.php");
+    header("Location: " . RESEND_PAGE);
     exit();
 }
 
@@ -71,5 +73,5 @@ try {
     setFlash('success', 'If an account exists with that email, a verification link has been sent. Please check your inbox.');
 }
 
-header("Location: ../resend_verification.php");
+header("Location: " . RESEND_PAGE);
 exit();

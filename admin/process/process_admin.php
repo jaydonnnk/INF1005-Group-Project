@@ -1,7 +1,7 @@
 <?php
 /**
  * Admin CRUD Actions
- * 
+ *
  *
  * Handles all admin POST actions: games, menu items, bookings, orders, members.
  */
@@ -10,6 +10,10 @@ session_start();
 require_once __DIR__ . "/../../process/helpers.php";
 require_once __DIR__ . "/../../process/db.php";
 
+define('ADMIN_HOME', '../index.php');
+define('ADMIN_GAMES', '../games.php');
+define('ADMIN_MENU', '../menu.php');
+
 // Must be admin
 if (!isset($_SESSION['member_id']) || empty($_SESSION['is_admin'])) {
     header("Location: ../../dashboard.php");
@@ -17,11 +21,11 @@ if (!isset($_SESSION['member_id']) || empty($_SESSION['is_admin'])) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: ../index.php");
+    header("Location: " . ADMIN_HOME);
     exit();
 }
 
-validateCsrf('../index.php');
+validateCsrf(ADMIN_HOME);
 
 $action = $_POST['action'] ?? '';
 
@@ -43,7 +47,7 @@ try {
 
             if (empty($title)) {
                 setFlash('error', 'Game title is required.');
-                header("Location: ../games.php");
+                header("Location: " . ADMIN_GAMES);
                 exit();
             }
 
@@ -59,7 +63,7 @@ try {
                 ':qty' => $quantity, ':stripe' => $stripe_price_id
             ]);
             setFlash('success', 'Game added successfully.');
-            header("Location: ../games.php");
+            header("Location: " . ADMIN_GAMES);
             exit();
 
         case 'edit_game':
@@ -77,7 +81,7 @@ try {
 
             if ($game_id <= 0 || empty($title)) {
                 setFlash('error', 'Invalid game data.');
-                header("Location: ../games.php");
+                header("Location: " . ADMIN_GAMES);
                 exit();
             }
 
@@ -96,7 +100,7 @@ try {
                 ':id' => $game_id
             ]);
             setFlash('success', 'Game updated successfully.');
-            header("Location: ../games.php");
+            header("Location: " . ADMIN_GAMES);
             exit();
 
         case 'delete_game':
@@ -106,7 +110,7 @@ try {
                 $stmt->execute([':id' => $game_id]);
                 setFlash('success', 'Game deleted.');
             }
-            header("Location: ../games.php");
+            header("Location: " . ADMIN_GAMES);
             exit();
 
         // Menu Items
@@ -120,7 +124,7 @@ try {
 
             if (empty($name) || $price <= 0) {
                 setFlash('error', 'Name and valid price are required.');
-                header("Location: ../menu.php");
+                header("Location: " . ADMIN_MENU);
                 exit();
             }
 
@@ -133,7 +137,7 @@ try {
                 ':cat' => $category, ':img' => $image_url, ':stripe' => $stripe_price_id
             ]);
             setFlash('success', 'Menu item added.');
-            header("Location: ../menu.php");
+            header("Location: " . ADMIN_MENU);
             exit();
 
         case 'edit_menu_item':
@@ -148,7 +152,7 @@ try {
 
             if ($item_id <= 0 || empty($name)) {
                 setFlash('error', 'Invalid menu item data.');
-                header("Location: ../menu.php");
+                header("Location: " . ADMIN_MENU);
                 exit();
             }
 
@@ -163,7 +167,7 @@ try {
                 ':stripe' => $stripe_price_id, ':id' => $item_id
             ]);
             setFlash('success', 'Menu item updated.');
-            header("Location: ../menu.php");
+            header("Location: " . ADMIN_MENU);
             exit();
 
         case 'delete_menu_item':
@@ -173,7 +177,7 @@ try {
                 $stmt->execute([':id' => $item_id]);
                 setFlash('success', 'Menu item deleted.');
             }
-            header("Location: ../menu.php");
+            header("Location: " . ADMIN_MENU);
             exit();
 
         // Bookings
@@ -226,12 +230,12 @@ try {
 
         default:
             setFlash('error', 'Unknown action.');
-            header("Location: ../index.php");
+            header("Location: " . ADMIN_HOME);
             exit();
     }
 } catch (PDOException $e) {
     error_log("Admin error: " . $e->getMessage());
     setFlash('error', 'A database error occurred.');
-    header("Location: ../index.php");
+    header("Location: " . ADMIN_HOME);
     exit();
 }

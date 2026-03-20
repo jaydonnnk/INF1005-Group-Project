@@ -1,7 +1,7 @@
 <?php
 /**
  * Create Stripe Checkout Session
- * 
+ *
  *
  * Handles both booking and order checkout flows.
  */
@@ -10,6 +10,8 @@ session_start();
 require_once "helpers.php";
 require_once "stripe_config.php";
 require_once "db.php";
+
+define('CHECKOUT_FAIL_PAGE', '../bookings.php?action=new');
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: ../index.php");
@@ -41,36 +43,36 @@ try {
 
             if (empty($booking_date) || empty($time_slot)) {
                 setFlash('error', 'Date and time slot are required.');
-                header("Location: ../bookings.php?action=new");
+                header("Location: " . CHECKOUT_FAIL_PAGE);
                 exit();
             }
             // Validate date format and reject past dates
             $parsed_date = date_create_from_format('Y-m-d', $booking_date);
             if (!$parsed_date || $parsed_date->format('Y-m-d') !== $booking_date) {
                 setFlash('error', 'Invalid date format.');
-                header("Location: ../bookings.php?action=new");
+                header("Location: " . CHECKOUT_FAIL_PAGE);
                 exit();
             }
             if ($booking_date < date('Y-m-d')) {
                 setFlash('error', 'Cannot book a date in the past.');
-                header("Location: ../bookings.php?action=new");
+                header("Location: " . CHECKOUT_FAIL_PAGE);
                 exit();
             }
             if ($party_size < 1 || $party_size > 12) {
                 setFlash('error', 'Party size must be between 1 and 12.');
-                header("Location: ../bookings.php?action=new");
+                header("Location: " . CHECKOUT_FAIL_PAGE);
                 exit();
             }
             if ($rental_hours < 1 || $rental_hours > 6) {
                 setFlash('error', 'Rental hours must be between 1 and 6.');
-                header("Location: ../bookings.php?action=new");
+                header("Location: " . CHECKOUT_FAIL_PAGE);
                 exit();
             }
 
             // A game must be selected to proceed with payment
             if (!$game_id) {
                 setFlash('error', 'Please select a game to book.');
-                header("Location: ../bookings.php?action=new");
+                header("Location: " . CHECKOUT_FAIL_PAGE);
                 exit();
             }
 
@@ -91,7 +93,7 @@ try {
 
             if (!$game_avail || $game_avail['available_copies'] <= 0) {
                 setFlash('error', 'Sorry, that game is no longer available for the selected date and time.');
-                header("Location: ../bookings.php?action=new");
+                header("Location: " . CHECKOUT_FAIL_PAGE);
                 exit();
             }
 

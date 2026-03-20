@@ -1,7 +1,7 @@
 <?php
 /**
  * Process Booking Update & Cancel Operations
- * 
+ *
  *
  * Note: Booking creation now goes through Stripe Checkout
  * (create_checkout.php → payment_success.php).
@@ -10,8 +10,10 @@
 session_start();
 require_once "helpers.php";
 
+define('BOOKINGS_PAGE', '../bookings.php');
+
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: ../bookings.php");
+    header("Location: " . BOOKINGS_PAGE);
     exit();
 }
 
@@ -20,7 +22,7 @@ if (!isset($_SESSION["member_id"])) {
     exit();
 }
 
-validateCsrf('../bookings.php');
+validateCsrf(BOOKINGS_PAGE);
 
 $member_id = $_SESSION["member_id"];
 require_once "db.php";
@@ -56,7 +58,7 @@ switch ($action) {
         ]);
 
         setFlash('success', 'Booking updated.');
-        header("Location: ../bookings.php");
+        header("Location: " . BOOKINGS_PAGE);
         exit();
 
     // ---- DELETE (Cancel) ----
@@ -84,11 +86,11 @@ switch ($action) {
         }
 
         setFlash('success', 'Booking cancelled.');
-        header("Location: ../bookings.php");
+        header("Location: " . BOOKINGS_PAGE);
         exit();
 
     default:
-        header("Location: ../bookings.php");
+        header("Location: " . BOOKINGS_PAGE);
         exit();
 }
 

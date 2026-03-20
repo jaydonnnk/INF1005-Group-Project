@@ -1,7 +1,7 @@
 <?php
 /**
  * Admin Authentication Check
- * 
+ *
  *
  * include_once this at the top of every admin page.
  * Redirects non-admin users to the member dashboard.

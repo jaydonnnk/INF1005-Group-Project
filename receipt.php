@@ -1,4 +1,15 @@
 <?php
+/**
+ * receipt.php — Printable Receipt / Invoice
+ * The Rolling Dice - Board Game Café
+ * INF1005 Web Systems and Technologies
+ *
+ * Session-protected page that displays a formatted receipt for
+ * a completed booking or order. Fetches transaction details and
+ * the associated Stripe payment reference. Includes a print button
+ * that triggers the browser's native print dialog.
+ */
+
 session_start();
 if (!isset($_SESSION["member_id"])) {
     header("Location: login.php");
@@ -6,6 +17,9 @@ if (!isset($_SESSION["member_id"])) {
 }
 $member_id = $_SESSION["member_id"];
 require_once "process/db.php";
+
+define('DATE_FORMAT_LONG',  'd M Y, g:i A');
+define('DATE_FORMAT_SHORT', 'd M Y');
 
 $type = $_GET["type"] ?? "";
 $error = "";
@@ -126,7 +140,7 @@ if ($type === 'order') {
                             <div class="row mb-3">
                                 <div class="col-6">
                                     <strong>Order #<?php echo $o['order_id']; ?></strong><br>
-                                    <span class="text-muted small"><?php echo date('d M Y, g:i A', strtotime($o['order_date'])); ?></span>
+                                    <span class="text-muted small"><?php echo date(DATE_FORMAT_LONG, strtotime($o['order_date'])); ?></span>
                                 </div>
                                 <div class="col-6 text-end">
                                     <strong><?php echo htmlspecialchars($o['fname'] . ' ' . $o['lname']); ?></strong><br>
@@ -168,7 +182,7 @@ if ($type === 'order') {
                                     <strong>Payment Reference:</strong> <?php echo htmlspecialchars($pay['stripe_session_id']); ?>
                                 </p>
                                 <p class="small text-muted mb-0">
-                                    <strong>Paid on:</strong> <?php echo date('d M Y, g:i A', strtotime($pay['created_at'])); ?>
+                                    <strong>Paid on:</strong> <?php echo date(DATE_FORMAT_LONG, strtotime($pay['created_at'])); ?>
                                 </p>
                             <?php endif; ?>
                         </div>
@@ -184,7 +198,7 @@ if ($type === 'order') {
                 <?php elseif ($receipt['type'] === 'booking'): ?>
                     <?php $b = $receipt['booking']; $pay = $receipt['payment']; ?>
 
-                    <div class="card" id="receipt-card">
+                    <div class="card" id="receipt-card-booking">
                         <div class="card-body">
                             <div class="text-center mb-4">
                                 <h1 class="h4">The Rolling Dice</h1>
@@ -197,7 +211,7 @@ if ($type === 'order') {
                             <div class="row mb-3">
                                 <div class="col-6">
                                     <strong>Booking #<?php echo $b['booking_id']; ?></strong><br>
-                                    <span class="text-muted small"><?php echo date('d M Y', strtotime($b['booking_date'])); ?></span>
+                                    <span class="text-muted small"><?php echo date(DATE_FORMAT_SHORT, strtotime($b['booking_date'])); ?></span>
                                 </div>
                                 <div class="col-6 text-end">
                                     <strong><?php echo htmlspecialchars($b['fname'] . ' ' . $b['lname']); ?></strong><br>
@@ -206,8 +220,14 @@ if ($type === 'order') {
                             </div>
 
                             <table class="table table-sm" aria-label="Booking receipt details">
+                                <thead class="visually-hidden">
+                                    <tr>
+                                        <th scope="col">Detail</th>
+                                        <th scope="col">Value</th>
+                                    </tr>
+                                </thead>
                                 <tbody>
-                                    <tr><th scope="row">Date</th><td><?php echo date('d M Y', strtotime($b['booking_date'])); ?></td></tr>
+                                    <tr><th scope="row">Date</th><td><?php echo date(DATE_FORMAT_SHORT, strtotime($b['booking_date'])); ?></td></tr>
                                     <tr><th scope="row">Time Slot</th><td><?php echo htmlspecialchars($b['time_slot']); ?></td></tr>
                                     <tr><th scope="row">Party Size</th><td><?php echo $b['party_size']; ?> pax</td></tr>
                                     <tr><th scope="row">Game</th><td><?php echo $b['game_title'] ? htmlspecialchars($b['game_title']) : 'None selected'; ?></td></tr>
@@ -241,7 +261,7 @@ if ($type === 'order') {
                                     <strong>Payment Reference:</strong> <?php echo htmlspecialchars($pay['stripe_session_id']); ?>
                                 </p>
                                 <p class="small text-muted mb-0">
-                                    <strong>Paid on:</strong> <?php echo date('d M Y, g:i A', strtotime($pay['created_at'])); ?>
+                                    <strong>Paid on:</strong> <?php echo date(DATE_FORMAT_LONG, strtotime($pay['created_at'])); ?>
                                 </p>
                             <?php endif; ?>
                         </div>

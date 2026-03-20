@@ -1,7 +1,7 @@
 <?php
 /**
  * Get Available Games (JSON endpoint)
- * 
+ *
  *
  * Returns games with available copies for a given date + time slot.
  */

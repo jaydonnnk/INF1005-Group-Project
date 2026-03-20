@@ -75,7 +75,7 @@ if (empty($session_id)) {
                         $g_stmt = $pdo->prepare("SELECT title FROM games WHERE game_id = :gid");
                         $g_stmt->execute([':gid' => $b['game_id']]);
                         $g = $g_stmt->fetch();
-                        if ($g) $game_title = $g['title'];
+                        if ($g) { $game_title = $g['title']; }
                     }
 
                     $booking_summary = [
@@ -140,11 +140,11 @@ if (empty($session_id)) {
             }
         }
     } catch (\Stripe\Exception\ApiErrorException $e) {
-        if ($pdo->inTransaction()) $pdo->rollBack();
+        if ($pdo->inTransaction()) { $pdo->rollBack(); }
         error_log("Stripe verification error: " . $e->getMessage());
         $error = "Could not verify payment. Please contact us if you were charged.";
     } catch (Exception $e) {
-        if ($pdo->inTransaction()) $pdo->rollBack();
+        if ($pdo->inTransaction()) { $pdo->rollBack(); }
         error_log("Payment processing error: " . $e->getMessage());
         $error = "An error occurred while processing your payment. Please contact us.";
     }

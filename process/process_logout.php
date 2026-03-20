@@ -1,7 +1,7 @@
 <?php
 /**
  * Process Logout
- * 
+ *
  *
  * Destroys the current session and redirects to the home page.
  */

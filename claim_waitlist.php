@@ -1,7 +1,7 @@
 <?php
 /**
  * Claim Waitlist Spot
- * 
+ *
  *
  * Members land here from the email link. If the token is valid and
  * within the 1-hour window, they are redirected to the booking form
@@ -14,11 +14,13 @@ require_once "process/db.php";
 require_once "process/helpers.php";
 require_once "process/waitlist_notifier.php";
 
+define('HOME_PAGE', 'index.php');
+
 $token = trim($_GET['token'] ?? '');
 
 if (empty($token)) {
     setFlash('error', 'Invalid claim link.');
-    header("Location: index.php");
+    header("Location: " . HOME_PAGE);
     exit();
 }
 
@@ -28,9 +30,9 @@ expireWaitlistNotifications($pdo);
 // Look up the token
 $stmt = $pdo->prepare(
     "SELECT w.*, m.fname, m.email
-     FROM waitlist w
-     JOIN members m ON w.member_id = m.member_id
-     WHERE w.claim_token = :token"
+    FROM waitlist w
+    JOIN members m ON w.member_id = m.member_id
+    WHERE w.claim_token = :token"
 );
 $stmt->execute([':token' => $token]);
 $entry = $stmt->fetch();
@@ -38,7 +40,7 @@ $entry = $stmt->fetch();
 // Token not found
 if (!$entry) {
     setFlash('error', 'This claim link is invalid or has already been used.');
-    header("Location: index.php");
+    header("Location: " . HOME_PAGE);
     exit();
 }
 
@@ -52,14 +54,14 @@ if ($entry['status'] === 'Expired' || strtotime($entry['claim_expires_at']) < ti
         notifyWaitlist($pdo, $entry['booking_date'], $entry['time_slot']);
     }
     setFlash('error', 'Sorry — your 1-hour claim window has expired. The spot has been offered to the next person on the waitlist.');
-    header("Location: index.php");
+    header("Location: " . HOME_PAGE);
     exit();
 }
 
 // Already claimed
 if ($entry['status'] === 'Claimed') {
     setFlash('error', 'This spot has already been claimed.');
-    header("Location: index.php");
+    header("Location: " . HOME_PAGE);
     exit();
 }
 

@@ -1,14 +1,16 @@
 <?php
 /**
  * Process Review CRUD Operations
- * 
+ *
  */
 
 session_start();
 require_once "helpers.php";
 
+define('REVIEWS_PAGE', '../reviews.php');
+
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: ../reviews.php");
+    header("Location: " . REVIEWS_PAGE);
     exit();
 }
 
@@ -17,7 +19,7 @@ if (!isset($_SESSION["member_id"])) {
     exit();
 }
 
-validateCsrf('../reviews.php');
+validateCsrf(REVIEWS_PAGE);
 
 $member_id = $_SESSION["member_id"];
 require_once "db.php";
@@ -43,7 +45,7 @@ switch ($action) {
         $check->execute([':mid' => $member_id, ':gid' => $game_id]);
         if ($check->rowCount() > 0) {
             setFlash('error', "You've already reviewed this game. Edit your existing review instead.");
-            header("Location: ../reviews.php");
+            header("Location: " . REVIEWS_PAGE);
             exit();
         }
 
@@ -59,7 +61,7 @@ switch ($action) {
         ]);
 
         setFlash('success', 'Review submitted!');
-        header("Location: ../reviews.php");
+        header("Location: " . REVIEWS_PAGE);
         exit();
 
     // ---- UPDATE ----
@@ -88,7 +90,7 @@ switch ($action) {
         ]);
 
         setFlash('success', 'Review updated.');
-        header("Location: ../reviews.php");
+        header("Location: " . REVIEWS_PAGE);
         exit();
 
     // ---- DELETE ----
@@ -98,10 +100,10 @@ switch ($action) {
         $stmt->execute([':rid' => $review_id, ':mid' => $member_id]);
 
         setFlash('success', 'Review deleted.');
-        header("Location: ../reviews.php");
+        header("Location: " . REVIEWS_PAGE);
         exit();
 
     default:
-        header("Location: ../reviews.php");
+        header("Location: " . REVIEWS_PAGE);
         exit();
 }

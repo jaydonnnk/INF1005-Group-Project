@@ -1,8 +1,6 @@
 <?php
 /**
  * Waitlist Notifier
- * 
- *
  * Call notifyWaitlist($pdo, $booking_date, $time_slot) after any booking
  * cancellation. Finds the first Pending entry for that slot, generates a
  * 1-hour claim token, and emails the member.

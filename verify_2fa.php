@@ -44,8 +44,8 @@ if (empty($_SESSION['2fa_pending']) || empty($_SESSION['2fa_member_data'])) {
                         <p>Open your authenticator app and enter the 6-digit code shown for <strong>The Rolling Dice</strong>.</p>
 
                         <form action="process/process_verify_2fa.php" method="post"
-                              class="needs-validation" novalidate
-                              aria-label="Two-factor verification form">
+                            class="needs-validation" novalidate
+                            aria-label="Two-factor verification form">
 
                             <?php echo csrfField(); ?>
 

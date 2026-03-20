@@ -38,10 +38,10 @@ if ($show_form && $booking_data) {
 <html lang="en">
 <head>
     <title>My Bookings - The Rolling Dice</title>
-    <?php include "inc/head.inc.php"; ?>
+    <?php include_once "inc/head.inc.php"; ?>
 </head>
 <body>
-    <?php include "inc/nav.inc.php"; ?>
+    <?php include_once "inc/nav.inc.php"; ?>
 
     <main id="main-content" class="container section-padding">
 
@@ -293,6 +293,6 @@ if ($show_form && $booking_data) {
 
     </main>
 
-    <?php include "inc/footer.inc.php"; ?>
+    <?php include_once "inc/footer.inc.php"; ?>
 </body>
 </html>

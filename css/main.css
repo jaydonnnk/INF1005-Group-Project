@@ -1,10 +1,10 @@
-/* ============================================
-   The Rolling Dice - Board Game Café
-   Custom Stylesheet
-   Aesthetic: Warm & Cozy / Inviting
-   ============================================ */
+/* 
 
-/* ---------- CSS Variables ---------- */
+Custom Stylesheet
+Aesthetic: Warm & Cozy / Inviting
+ */
+
+/* CSS Variables  */
 :root {
     --color-cream:       #FFF8F0;
     --color-warm-white:  #FFFDF9;
@@ -28,7 +28,7 @@
     --radius-lg:     20px;
 }
 
-/* ---------- Base Styles ---------- */
+/*  Base Styles  */
 body {
     font-family: var(--font-body);
     color: var(--color-text);
@@ -64,7 +64,7 @@ a:hover {
     color: var(--color-caramel);
 }
 
-/* ---------- Navigation ---------- */
+/*  Navigation  */
 .navbar {
     background-color: var(--color-espresso) !important;
     box-shadow: var(--shadow-medium);
@@ -98,7 +98,7 @@ a:hover {
     font-size: 1.6rem;
 }
 
-/* ---------- Hero / Jumbotron ---------- */
+/*  Hero / Jumbotron  */
 .hero-section {
     background: linear-gradient(135deg, var(--color-espresso) 0%, var(--color-walnut) 100%);
     color: var(--color-cream);
@@ -139,7 +139,7 @@ a:hover {
     box-shadow: 0 6px 20px rgba(232, 168, 73, 0.4);
 }
 
-/* ---------- Cards (Games, Menu) ---------- */
+/*  Cards (Games, Menu)  */
 .card {
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
@@ -165,7 +165,7 @@ a:hover {
     color: var(--color-espresso);
 }
 
-/* ---------- Badge Styles ---------- */
+/*  Badge Styles  */
 .badge-difficulty-easy   { background-color: var(--color-sage); }
 .badge-difficulty-medium { background-color: var(--color-caramel); }
 .badge-difficulty-hard   { background-color: var(--color-berry); }
@@ -175,7 +175,7 @@ a:hover {
     font-size: 0.75rem;
 }
 
-/* ---------- Forms ---------- */
+/*  Forms  */
 .form-control:focus,
 .form-select:focus {
     border-color: var(--color-caramel);
@@ -206,7 +206,7 @@ a:hover {
     color: #fff;
 }
 
-/* ---------- Image Thumbnails ---------- */
+/*  Image Thumbnails  */
 .img-thumbnail {
     border: 3px double var(--color-border);
     border-radius: var(--radius-sm);
@@ -226,7 +226,7 @@ figcaption {
     margin-top: 0.3rem;
 }
 
-/* ---------- Image Popup (JS driven) ---------- */
+/*  Image Popup (JS driven)  */
 .img-popup {
     position: fixed;
     top: 50%;
@@ -248,7 +248,7 @@ figcaption {
     border-radius: var(--radius-sm);
 }
 
-/* ---------- Dashboard ---------- */
+/*  Dashboard  */
 .dashboard-card {
     background-color: var(--color-warm-white);
     border: 1px solid var(--color-border);
@@ -269,7 +269,7 @@ figcaption {
     margin-bottom: 0.5rem;
 }
 
-/* ---------- Star Ratings ---------- */
+/*  Star Ratings  */
 .star-rating .material-icons {
     color: var(--color-honey);
     font-size: 1.2rem;
@@ -279,7 +279,7 @@ figcaption {
     color: var(--color-border);
 }
 
-/* ---------- Footer ---------- */
+/*  Footer  */
 .site-footer {
     background-color: var(--color-espresso);
     color: var(--color-cream);
@@ -329,7 +329,7 @@ figcaption {
     margin-bottom: 0;
 }
 
-/* ---------- Utility ---------- */
+/*  Utility  */
 .section-padding {
     padding: 2.5rem 0;
 }
@@ -339,13 +339,13 @@ figcaption {
 .text-honey    { color: var(--color-honey); }
 .bg-warm-white { background-color: var(--color-warm-white); }
 
-/* ---------- Heading Size Overrides ---------- */
+/*  Heading Size Overrides  */
 /* h3 used for proper heading hierarchy; sized to match card context */
 .card-title, .dashboard-card h3 {
     font-size: 1.25rem;
 }
 
-/* ---------- Print Styles (Receipts) ---------- */
+/*  Print Styles (Receipts)  */
 @media print {
     .navbar, .site-footer, .no-print {
         display: none !important;

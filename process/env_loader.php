@@ -1,7 +1,7 @@
 <?php
 /**
  * Simple .env File Loader
- * The Rolling Dice - Board Game Café
+ * 
  *
  * Parses KEY=VALUE lines from a .env file and sets them
  * via putenv() and $_ENV. No external libraries required.

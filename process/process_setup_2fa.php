@@ -1,7 +1,7 @@
 <?php
 /**
  * Process 2FA Setup — Verify Code & Enable
- * The Rolling Dice - Board Game Café
+ * 
  *
  * Validates the TOTP code against the pending secret.
  * If valid, saves the secret to the database and enables 2FA.

@@ -1,7 +1,7 @@
 <?php
 /**
  * Process Booking Update & Cancel Operations
- * The Rolling Dice - Board Game Café
+ * 
  *
  * Note: Booking creation now goes through Stripe Checkout
  * (create_checkout.php → payment_success.php).

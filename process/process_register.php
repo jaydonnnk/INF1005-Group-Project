@@ -1,7 +1,7 @@
 <?php
 /**
  * Process Registration Form
- * The Rolling Dice - Board Game Cafe
+ * 
  *
  * Validates and sanitizes all input, hashes the password,
  * and inserts the new member into the database using PDO prepared statements.
@@ -165,11 +165,11 @@ if ($success) {
 <head>
     <title>Registration Result - The Rolling Dice</title>
     <base href="../">
-    <?php include "../inc/head.inc.php"; ?>
+    <?php include_once "../inc/head.inc.php"; ?>
 </head>
 
 <body>
-    <?php include "../inc/nav.inc.php"; ?>
+    <?php include_once "../inc/nav.inc.php"; ?>
 
     <main class="container section-padding">
         <div class="row justify-content-center">
@@ -217,7 +217,7 @@ if ($success) {
         </div>
     </main>
 
-    <?php include "../inc/footer.inc.php"; ?>
+    <?php include_once "../inc/footer.inc.php"; ?>
 </body>
 
 </html>

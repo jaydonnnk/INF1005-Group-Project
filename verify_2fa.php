@@ -1,7 +1,7 @@
 <?php
 /**
  * Two-Factor Authentication Verification (Login)
- * The Rolling Dice - Board Game Café
+ * 
  *
  * Shown during login when a member has 2FA enabled.
  * The member enters their 6-digit TOTP code to complete sign-in.
@@ -21,11 +21,11 @@ if (empty($_SESSION['2fa_pending']) || empty($_SESSION['2fa_member_data'])) {
 
 <head>
     <title>Two-Factor Verification - The Rolling Dice</title>
-    <?php include "inc/head.inc.php"; ?>
+    <?php include_once "inc/head.inc.php"; ?>
 </head>
 
 <body>
-    <?php include "inc/nav.inc.php"; ?>
+    <?php include_once "inc/nav.inc.php"; ?>
 
     <main id="main-content" class="container section-padding">
         <div class="row justify-content-center">
@@ -75,7 +75,7 @@ if (empty($_SESSION['2fa_pending']) || empty($_SESSION['2fa_member_data'])) {
         </div>
     </main>
 
-    <?php include "inc/footer.inc.php"; ?>
+    <?php include_once "inc/footer.inc.php"; ?>
 </body>
 
 </html>

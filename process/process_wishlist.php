@@ -1,7 +1,7 @@
 <?php
 /**
  * Process Wishlist CRUD Operations
- * The Rolling Dice - Board Game Cafe
+ * 
  */
 
 session_start();

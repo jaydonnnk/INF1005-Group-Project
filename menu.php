@@ -3,11 +3,11 @@
 
 <head>
     <title>Menu - The Rolling Dice</title>
-    <?php include "inc/head.inc.php"; ?>
+    <?php include_once "inc/head.inc.php"; ?>
 </head>
 
 <body>
-    <?php include "inc/nav.inc.php"; ?>
+    <?php include_once "inc/nav.inc.php"; ?>
 
     <main id="main-content">
 
@@ -96,7 +96,7 @@
 
     </main>
 
-    <?php include "inc/footer.inc.php"; ?>
+    <?php include_once "inc/footer.inc.php"; ?>
 </body>
 
 </html>

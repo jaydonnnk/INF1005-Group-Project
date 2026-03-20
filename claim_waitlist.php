@@ -1,7 +1,7 @@
 <?php
 /**
  * Claim Waitlist Spot
- * The Rolling Dice - Board Game Café
+ * 
  *
  * Members land here from the email link. If the token is valid and
  * within the 1-hour window, they are redirected to the booking form

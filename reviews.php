@@ -37,11 +37,11 @@ $all_games = $pdo->query("SELECT game_id, title FROM games ORDER BY title ASC")-
 
 <head>
     <title>My Reviews - The Rolling Dice</title>
-    <?php include "inc/head.inc.php"; ?>
+    <?php include_once "inc/head.inc.php"; ?>
 </head>
 
 <body>
-    <?php include "inc/nav.inc.php"; ?>
+    <?php include_once "inc/nav.inc.php"; ?>
 
     <main id="main-content" class="container section-padding">
 
@@ -177,7 +177,7 @@ $all_games = $pdo->query("SELECT game_id, title FROM games ORDER BY title ASC")-
 
     </main>
 
-    <?php include "inc/footer.inc.php"; ?>
+    <?php include_once "inc/footer.inc.php"; ?>
 </body>
 
 </html>

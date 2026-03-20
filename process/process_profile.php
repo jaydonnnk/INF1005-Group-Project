@@ -1,7 +1,7 @@
 <?php
 /**
  * Process Profile Updates
- * The Rolling Dice - Board Game Café
+ * 
  *
  * Handles two actions:
  *   update_profile  — update name, email, phone

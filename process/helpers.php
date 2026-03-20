@@ -1,7 +1,7 @@
 <?php
 /**
  * Shared Helper Functions
- * The Rolling Dice - Board Game Cafe
+ * 
  *
  * Centralised utility functions used across process scripts and page templates.
  */

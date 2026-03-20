@@ -1,7 +1,7 @@
 <?php
 /**
  * Process Disable 2FA
- * The Rolling Dice - Board Game Café
+ * 
  *
  * Verifies the member's current password before disabling 2FA.
  */

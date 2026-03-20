@@ -1,7 +1,7 @@
 <?php
 /**
  * Process 2FA Verification (Login)
- * The Rolling Dice - Board Game Café
+ * 
  *
  * Validates the TOTP code during login and completes the sign-in.
  */

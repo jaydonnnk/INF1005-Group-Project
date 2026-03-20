@@ -1,7 +1,7 @@
 <?php
 /**
  * Member Profile Page
- * The Rolling Dice - Board Game Café
+ * 
  *
  * Allows logged-in members to update their name, email, phone,
  * and change their password (with current password verification).
@@ -28,11 +28,11 @@ $member = $stmt->fetch();
 
 <head>
     <title>My Profile - The Rolling Dice</title>
-    <?php include "inc/head.inc.php"; ?>
+    <?php include_once "inc/head.inc.php"; ?>
 </head>
 
 <body>
-    <?php include "inc/nav.inc.php"; ?>
+    <?php include_once "inc/nav.inc.php"; ?>
 
     <main id="main-content" class="container section-padding">
 
@@ -251,7 +251,7 @@ $member = $stmt->fetch();
 
     </main>
 
-    <?php include "inc/footer.inc.php"; ?>
+    <?php include_once "inc/footer.inc.php"; ?>
 </body>
 
 </html>

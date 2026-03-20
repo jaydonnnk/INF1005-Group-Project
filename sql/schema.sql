@@ -1,5 +1,4 @@
 -- ============================================
--- The Rolling Dice - Board Game Café
 -- Database Schema for INF1005 Project
 -- ============================================
 -- Run this script as the MySQL root user on your GCP LAMP VM:

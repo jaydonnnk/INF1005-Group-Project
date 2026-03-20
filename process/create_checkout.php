@@ -1,7 +1,7 @@
 <?php
 /**
  * Create Stripe Checkout Session
- * The Rolling Dice - Board Game Café
+ * 
  *
  * Handles both booking and order checkout flows.
  */
@@ -29,9 +29,7 @@ $checkout_type = $_POST["checkout_type"] ?? "";
 try {
     switch ($checkout_type) {
 
-        // ============================================
         // BOOKING CHECKOUT
-        // ============================================
         case "booking":
             // Validate required fields
             $booking_date = $_POST["booking_date"] ?? "";
@@ -130,9 +128,7 @@ try {
             header("Location: " . $session->url);
             exit();
 
-        // ============================================
         // ORDER CHECKOUT
-        // ============================================
         case "order":
             $order_id = (int) ($_POST["order_id"] ?? 0);
 

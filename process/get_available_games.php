@@ -1,7 +1,7 @@
 <?php
 /**
  * Get Available Games (JSON endpoint)
- * The Rolling Dice - Board Game Café
+ * 
  *
  * Returns games with available copies for a given date + time slot.
  */

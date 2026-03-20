@@ -1,7 +1,7 @@
 <?php
 /**
  * Email Verification Page
- * The Rolling Dice - Board Game Café
+ * 
  *
  * Validates the token from the verification link and activates the account.
  */
@@ -35,10 +35,10 @@ if (!empty($token) && strlen($token) === 64 && ctype_xdigit($token)) {
 <html lang="en">
 <head>
     <title>Email Verification - The Rolling Dice</title>
-    <?php include "inc/head.inc.php"; ?>
+    <?php include_once "inc/head.inc.php"; ?>
 </head>
 <body>
-    <?php include "inc/nav.inc.php"; ?>
+    <?php include_once "inc/nav.inc.php"; ?>
 
     <main id="main-content" class="container section-padding">
         <div class="row justify-content-center">
@@ -64,6 +64,6 @@ if (!empty($token) && strlen($token) === 64 && ctype_xdigit($token)) {
         </div>
     </main>
 
-    <?php include "inc/footer.inc.php"; ?>
+    <?php include_once "inc/footer.inc.php"; ?>
 </body>
 </html>

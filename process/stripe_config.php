@@ -1,7 +1,7 @@
 <?php
 /**
  * Stripe Configuration
- * The Rolling Dice - Board Game Café
+ * 
  *
  * Loads API keys from .env file — never hardcode secrets in source code.
  */

@@ -1,7 +1,7 @@
 <?php
 /**
  * Email Helper
- * The Rolling Dice - Board Game Café
+ * 
  *
  * Sends emails via Gmail SMTP using PHPMailer.
  * Assumes env is already loaded by the calling script.

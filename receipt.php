@@ -93,10 +93,10 @@ if ($type === 'order') {
 <html lang="en">
 <head>
     <title>Receipt - The Rolling Dice</title>
-    <?php include "inc/head.inc.php"; ?>
+    <?php include_once "inc/head.inc.php"; ?>
 </head>
 <body>
-    <?php include "inc/nav.inc.php"; ?>
+    <?php include_once "inc/nav.inc.php"; ?>
 
     <main id="main-content" class="container section-padding">
         <div class="row justify-content-center">
@@ -260,6 +260,6 @@ if ($type === 'order') {
         </div>
     </main>
 
-    <?php include "inc/footer.inc.php"; ?>
+    <?php include_once "inc/footer.inc.php"; ?>
 </body>
 </html>

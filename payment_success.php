@@ -154,10 +154,10 @@ if (empty($session_id)) {
 <html lang="en">
 <head>
     <title>Payment <?php echo $error ? 'Error' : 'Success'; ?> - The Rolling Dice</title>
-    <?php include "inc/head.inc.php"; ?>
+    <?php include_once "inc/head.inc.php"; ?>
 </head>
 <body>
-    <?php include "inc/nav.inc.php"; ?>
+    <?php include_once "inc/nav.inc.php"; ?>
 
     <main id="main-content" class="container section-padding">
         <div class="row justify-content-center">
@@ -220,6 +220,6 @@ if (empty($session_id)) {
         </div>
     </main>
 
-    <?php include "inc/footer.inc.php"; ?>
+    <?php include_once "inc/footer.inc.php"; ?>
 </body>
 </html>

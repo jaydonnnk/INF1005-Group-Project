@@ -1,9 +1,9 @@
 <?php
 /**
  * Admin Authentication Check
- * The Rolling Dice - Board Game Café
+ * 
  *
- * Include this at the top of every admin page.
+ * include_once this at the top of every admin page.
  * Redirects non-admin users to the member dashboard.
  */
 

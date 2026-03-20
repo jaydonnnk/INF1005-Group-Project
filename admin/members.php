@@ -11,10 +11,10 @@ $members = $pdo->query(
 <head>
     <base href="../">
     <title>Manage Members - Admin - The Rolling Dice</title>
-    <?php include __DIR__ . "/../inc/head.inc.php"; ?>
+    <?php include_once __DIR__ . "/../inc/head.inc.php"; ?>
 </head>
 <body>
-    <?php include __DIR__ . "/../inc/nav.inc.php"; ?>
+    <?php include_once __DIR__ . "/../inc/nav.inc.php"; ?>
 
     <main id="main-content" class="container section-padding">
         <div class="d-flex justify-content-between align-items-center mb-4">
@@ -79,6 +79,6 @@ $members = $pdo->query(
 
     </main>
 
-    <?php include __DIR__ . "/../inc/footer.inc.php"; ?>
+    <?php include_once __DIR__ . "/../inc/footer.inc.php"; ?>
 </body>
 </html>

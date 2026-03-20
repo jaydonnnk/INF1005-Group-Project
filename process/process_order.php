@@ -1,7 +1,7 @@
 <?php
 /**
  * Process Order CRUD Operations
- * The Rolling Dice - Board Game Cafe
+ * 
  *
  * add_item: Adds an item to the member's current pending order (creates one if none exists).
  * cancel:   Cancels a pending order.

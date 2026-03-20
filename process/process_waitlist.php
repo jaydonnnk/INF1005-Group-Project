@@ -1,7 +1,7 @@
 <?php
 /**
  * Process Waitlist Actions
- * The Rolling Dice - Board Game Café
+ * 
  *
  * Handles: join waitlist, cancel waitlist entry.
  */

@@ -14,10 +14,10 @@ $total_menu = $pdo->query("SELECT COUNT(*) FROM menu_items")->fetchColumn();
 <head>
     <base href="../">
     <title>Admin Panel - The Rolling Dice</title>
-    <?php include __DIR__ . "/../inc/head.inc.php"; ?>
+    <?php include_once __DIR__ . "/../inc/head.inc.php"; ?>
 </head>
 <body>
-    <?php include __DIR__ . "/../inc/nav.inc.php"; ?>
+    <?php include_once __DIR__ . "/../inc/nav.inc.php"; ?>
 
     <main id="main-content" class="container section-padding">
         <h1>Admin Panel</h1>
@@ -83,6 +83,6 @@ $total_menu = $pdo->query("SELECT COUNT(*) FROM menu_items")->fetchColumn();
 
     </main>
 
-    <?php include __DIR__ . "/../inc/footer.inc.php"; ?>
+    <?php include_once __DIR__ . "/../inc/footer.inc.php"; ?>
 </body>
 </html>

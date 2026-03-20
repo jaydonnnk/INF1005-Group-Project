@@ -1,7 +1,7 @@
 <?php
 /**
  * Two-Factor Authentication Setup
- * The Rolling Dice - Board Game Café
+ * 
  *
  * Generates a TOTP secret, displays a QR code, and asks the user
  * to verify with a 6-digit code before enabling 2FA.
@@ -46,11 +46,11 @@ $secretDisplay = chunk_split($secret, 4, ' ');
 
 <head>
     <title>Set Up 2FA - The Rolling Dice</title>
-    <?php include "inc/head.inc.php"; ?>
+    <?php include_once "inc/head.inc.php"; ?>
 </head>
 
 <body>
-    <?php include "inc/nav.inc.php"; ?>
+    <?php include_once "inc/nav.inc.php"; ?>
 
     <main id="main-content" class="container section-padding">
         <div class="row justify-content-center">
@@ -115,7 +115,7 @@ $secretDisplay = chunk_split($secret, 4, ' ');
         </div>
     </main>
 
-    <?php include "inc/footer.inc.php"; ?>
+    <?php include_once "inc/footer.inc.php"; ?>
 </body>
 
 </html>

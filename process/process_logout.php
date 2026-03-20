@@ -1,7 +1,7 @@
 <?php
 /**
  * Process Logout
- * The Rolling Dice - Board Game Café
+ * 
  *
  * Destroys the current session and redirects to the home page.
  */

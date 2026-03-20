@@ -1,7 +1,7 @@
 <?php
 /**
  * Admin CRUD Actions
- * The Rolling Dice - Board Game Café
+ * 
  *
  * Handles all admin POST actions: games, menu items, bookings, orders, members.
  */
@@ -28,9 +28,7 @@ $action = $_POST['action'] ?? '';
 try {
     switch ($action) {
 
-        // ============================================
-        // GAMES
-        // ============================================
+        // Games
         case 'add_game':
             $title = sanitizeInput($_POST['title'] ?? '');
             $description = sanitizeInput($_POST['description'] ?? '');
@@ -111,9 +109,7 @@ try {
             header("Location: ../games.php");
             exit();
 
-        // ============================================
-        // MENU ITEMS
-        // ============================================
+        // Menu Items
         case 'add_menu_item':
             $name = sanitizeInput($_POST['name'] ?? '');
             $description = sanitizeInput($_POST['description'] ?? '');
@@ -180,9 +176,7 @@ try {
             header("Location: ../menu.php");
             exit();
 
-        // ============================================
-        // BOOKINGS
-        // ============================================
+        // Bookings
         case 'update_booking_status':
             $booking_id = (int)($_POST['booking_id'] ?? 0);
             $status = $_POST['status'] ?? '';
@@ -196,9 +190,7 @@ try {
             header("Location: ../bookings.php");
             exit();
 
-        // ============================================
-        // ORDERS
-        // ============================================
+        // Orders
         case 'update_order_status':
             $order_id = (int)($_POST['order_id'] ?? 0);
             $status = $_POST['status'] ?? '';
@@ -212,9 +204,7 @@ try {
             header("Location: ../orders.php");
             exit();
 
-        // ============================================
-        // MEMBERS
-        // ============================================
+        // Members
         case 'toggle_admin':
             $target_id = (int)($_POST['member_id'] ?? 0);
             $new_val = (int)($_POST['is_admin'] ?? 0);

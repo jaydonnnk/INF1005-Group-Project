@@ -1,5 +1,5 @@
 /**
- * The Rolling Dice - Board Game Café
+ * 
  * Custom JavaScript
  */
 

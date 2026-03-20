@@ -1,7 +1,7 @@
 <?php
 /**
  * Booking Waitlist Page
- * The Rolling Dice - Board Game Café
+ * 
  */
 
 session_start();
@@ -58,10 +58,10 @@ $entries = $entries_stmt->fetchAll();
 <html lang="en">
 <head>
     <title>Waitlist - The Rolling Dice</title>
-    <?php include "inc/head.inc.php"; ?>
+    <?php include_once "inc/head.inc.php"; ?>
 </head>
 <body>
-    <?php include "inc/nav.inc.php"; ?>
+    <?php include_once "inc/nav.inc.php"; ?>
 
     <main id="main-content" class="container section-padding">
 
@@ -292,6 +292,6 @@ $entries = $entries_stmt->fetchAll();
 
     </main>
 
-    <?php include "inc/footer.inc.php"; ?>
+    <?php include_once "inc/footer.inc.php"; ?>
 </body>
 </html>

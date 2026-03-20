@@ -18,7 +18,7 @@ require_once "process/db.php";
 
 // Fetch current member data
 $stmt = $pdo->prepare(
-    "SELECT fname, lname, email, phone FROM members WHERE member_id = :id"
+    "SELECT fname, lname, email, phone, totp_enabled FROM members WHERE member_id = :id"
 );
 $stmt->execute([':id' => $member_id]);
 $member = $stmt->fetch();
@@ -187,6 +187,68 @@ $member = $stmt->fetch();
             </div>
 
         </div>
+
+        <!-- ── Two-Factor Authentication ── -->
+        <div class="row g-4 mt-1">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="h5 mb-3">
+                            <span class="material-icons align-middle text-caramel me-2"
+                                aria-hidden="true">security</span>Two-Factor Authentication
+                        </h2>
+
+                        <?php if (empty($member['totp_enabled'])): ?>
+                            <p class="mb-2">
+                                <span class="badge bg-secondary">Disabled</span>
+                            </p>
+                            <p>Add an extra layer of security to your account. Use an authenticator app like Google Authenticator or Authy.</p>
+                            <a href="setup_2fa.php" class="btn btn-primary">
+                                <span class="material-icons align-middle me-1" aria-hidden="true">lock</span>Enable 2FA
+                            </a>
+                        <?php else: ?>
+                            <p class="mb-2">
+                                <span class="badge bg-success">Enabled</span>
+                            </p>
+                            <p>Two-factor authentication is active on your account.</p>
+                            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#disable2faModal">
+                                <span class="material-icons align-middle me-1" aria-hidden="true">lock_open</span>Disable 2FA
+                            </button>
+
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <?php if (!empty($member['totp_enabled'])): ?>
+        <!-- Disable 2FA Confirmation Modal -->
+        <div class="modal fade" id="disable2faModal" tabindex="-1" aria-labelledby="disable2faModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <form action="process/process_disable_2fa.php" method="post">
+                        <?php echo csrfField(); ?>
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="disable2faModalLabel">Disable Two-Factor Authentication</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to disable two-factor authentication? This will make your account less secure.</p>
+                            <div class="mb-3">
+                                <label for="disable_pwd" class="form-label">Enter your current password to confirm:</label>
+                                <input type="password" id="disable_pwd" name="current_pwd" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-danger">Disable 2FA</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
+
     </main>
 
     <?php include "inc/footer.inc.php"; ?>

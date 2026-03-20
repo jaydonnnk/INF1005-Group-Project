@@ -42,7 +42,7 @@ $pwd = $_POST["pwd"]; // Do NOT sanitize passwords
 try {
     require_once "db.php";
 
-    $stmt = $pdo->prepare("SELECT member_id, fname, lname, email, password_hash, is_admin, email_verified FROM members WHERE email = :email");
+    $stmt = $pdo->prepare("SELECT member_id, fname, lname, email, password_hash, is_admin, email_verified, totp_secret, totp_enabled FROM members WHERE email = :email");
     $stmt->execute([":email" => $email]);
     $member = $stmt->fetch();
 
@@ -51,6 +51,14 @@ try {
         if (empty($member['email_verified'])) {
             setFlash('error', 'Please verify your email address first. Check your inbox for the verification link.');
             header("Location: ../login.php");
+            exit();
+        }
+
+        // Check if 2FA is enabled — redirect to TOTP verification
+        if (!empty($member['totp_enabled'])) {
+            $_SESSION['2fa_pending'] = true;
+            $_SESSION['2fa_member_data'] = $member;
+            header("Location: ../verify_2fa.php");
             exit();
         }
 

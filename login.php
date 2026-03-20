@@ -44,6 +44,10 @@
                         <div class="invalid-feedback">Please enter your password.</div>
                     </div>
 
+                    <div class="text-end mb-2">
+                        <a href="forgot_password.php" class="small">Forgot Password?</a>
+                    </div>
+
                     <!-- Submit -->
                     <div class="mb-3">
                         <button type="submit" class="btn btn-primary w-100">

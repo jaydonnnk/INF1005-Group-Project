@@ -236,6 +236,12 @@ if ($type === 'order') {
                             </table>
 
                             <table class="table table-sm" aria-label="Booking cost breakdown">
+                                <thead class="visually-hidden">
+                                    <tr>
+                                        <th scope="col">Description</th>
+                                        <th scope="col">Amount</th>
+                                    </tr>
+                                </thead>
                                 <tbody>
                                     <?php if ($b['game_title']): ?>
                                     <tr>

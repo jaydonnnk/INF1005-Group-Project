@@ -1,5 +1,5 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) session_start();
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
 $is_logged_in = isset($_SESSION["member_id"]);
 $is_admin     = !empty($_SESSION["is_admin"]);
 
@@ -20,14 +20,14 @@ try {
             mp.is_urgent AS urgent, mp.created_at,
             COALESCE(mi.interest_count,0) AS interest_count,
             EXISTS(SELECT 1 FROM matchmaking_sessions ms
-                   WHERE ms.member_id=mp.member_id
-                     AND ms.last_active >= DATE_SUB(NOW(), INTERVAL 15 MINUTE)) AS is_online
-         FROM matchmaking_posts mp
-         JOIN members m ON mp.member_id=m.member_id
-         LEFT JOIN (SELECT post_id, COUNT(*) AS interest_count FROM matchmaking_interests GROUP BY post_id) mi
-              ON mi.post_id=mp.post_id
-         WHERE mp.status='Open' AND mp.session_date >= CURDATE()
-         ORDER BY mp.created_at DESC"
+            WHERE ms.member_id=mp.member_id
+            AND ms.last_active >= DATE_SUB(NOW(), INTERVAL 15 MINUTE)) AS is_online
+            FROM matchmaking_posts mp
+            JOIN members m ON mp.member_id=m.member_id
+            LEFT JOIN (SELECT post_id, COUNT(*) AS interest_count FROM matchmaking_interests GROUP BY post_id) mi
+            ON mi.post_id=mp.post_id
+            WHERE mp.status='Open' AND mp.session_date >= CURDATE()
+            ORDER BY mp.created_at DESC"
     )->fetchAll();
 
     $total_posts      = count($posts);
@@ -52,16 +52,23 @@ $my_joins = $my_joins ?? [];
 
 function timeAgo(string $dt): string {
     $d = time() - strtotime($dt);
-    if ($d < 60)     return "Just now";
-    if ($d < 3600)   return floor($d/60)." min ago";
-    if ($d < 86400)  return floor($d/3600)." hr ago";
-    if ($d < 172800) return "1 day ago";
-    return floor($d/86400)." days ago";
+    $result = floor($d/86400)." days ago";
+    if ($d < 60) { $result = "Just now"; }
+    elseif ($d < 3600) { $result = floor($d/60)." min ago"; }
+    elseif ($d < 86400) { $result = floor($d/3600)." hr ago"; }
+    elseif ($d < 172800) { $result = "1 day ago"; }
+    return $result;
 }
 
 function fmtDate(string $date, string $time): string {
     $diff = strtotime($date) - strtotime(date('Y-m-d'));
-    $lbl  = $diff === 0 ? "Today" : ($diff === 86400 ? "Tomorrow" : date('D, d M', strtotime($date)));
+    if ($diff === 0) {
+        $lbl = "Today";
+    } elseif ($diff === 86400) {
+        $lbl = "Tomorrow";
+    } else {
+        $lbl = date('D, d M', strtotime($date));
+    }
     $slots = [
         '11:00' => '11:00 AM – 1:00 PM',
         '13:00' => '1:00 PM – 3:00 PM',
@@ -81,7 +88,7 @@ $skill_badge = ["Beginner"=>"badge-difficulty-easy","Intermediate"=>"badge-diffi
 <html lang="en">
 <head>
     <title>Find a Player – The Rolling Dice</title>
-    <?php include "inc/head.inc.php"; ?>
+    <?php include_once "inc/head.inc.php"; ?>
     <style>
         .active-filters { display:flex; flex-wrap:wrap; gap:.4rem; align-items:center; margin-bottom:1rem; min-height:2rem; }
         .filter-tag { background:rgba(198,139,89,.15); color:var(--color-walnut); border:1px solid rgba(198,139,89,.4); border-radius:20px; padding:.2rem .7rem; font-size:.78rem; font-weight:600; display:flex; align-items:center; gap:.3rem; }
@@ -128,7 +135,7 @@ $skill_badge = ["Beginner"=>"badge-difficulty-easy","Intermediate"=>"badge-diffi
     </style>
 </head>
 <body>
-<?php include "inc/nav.inc.php"; ?>
+<?php include_once "inc/nav.inc.php"; ?>
 <main id="main-content">
 
 <header class="hero-section">
@@ -166,7 +173,7 @@ $skill_badge = ["Beginner"=>"badge-difficulty-easy","Intermediate"=>"badge-diffi
     <div class="card mb-3 p-3">
         <h2 class="h6 mb-3"><span class="material-icons align-middle me-1 text-caramel" style="font-size:1rem;">circle</span>Online Now</h2>
         <div class="online-strip">
-            <?php $shown=0; foreach($posts as $p): if(!$p['is_online']) continue; $shown++; ?>
+            <?php $shown=0; foreach($posts as $p): if(!$p['is_online']) { continue; } $shown++; ?>
                 <span class="online-chip"><span class="green-dot"></span><?php echo htmlspecialchars($p['author']); ?></span>
             <?php endforeach; if(!$shown): ?><span class="text-muted small">No one online right now.</span><?php endif; ?>
         </div>
@@ -193,15 +200,15 @@ $skill_badge = ["Beginner"=>"badge-difficulty-easy","Intermediate"=>"badge-diffi
             </select>
         </div>
 
-        <div class="mb-3">
-            <label class="form-label small fw-bold d-block">Skill Level</label>
-            <div class="d-flex flex-wrap gap-1" id="filterSkill" role="group">
+        <fieldset class="mb-3">
+            <legend class="form-label small fw-bold d-block">Skill Level</legend>
+            <div class="d-flex flex-wrap gap-1" id="filterSkill">
                 <button class="sort-pill active" data-skill="">Any</button>
                 <button class="sort-pill skill-beginner" data-skill="Beginner">Beginner</button>
                 <button class="sort-pill skill-intermediate" data-skill="Intermediate">Intermediate</button>
                 <button class="sort-pill skill-advanced" data-skill="Advanced">Advanced</button>
             </div>
-        </div>
+        </fieldset>
 
         <div class="mb-3">
             <label for="filterStyle" class="form-label small fw-bold">Play Style</label>
@@ -220,7 +227,7 @@ $skill_badge = ["Beginner"=>"badge-difficulty-easy","Intermediate"=>"badge-diffi
         </div>
 
         <div class="mb-3">
-            <label class="form-label small fw-bold">Host Age Range: <span id="ageDisplay" class="text-caramel">All ages</span></label>
+            <label for="filterAgeMin" class="form-label small fw-bold">Host Age Range: <span id="ageDisplay" class="text-caramel">All ages</span></label>
             <div class="row g-2 align-items-center">
                 <div class="col"><input type="number" id="filterAgeMin" class="form-control form-control-sm" placeholder="Min" min="13" max="80"></div>
                 <div class="col-auto text-muted">–</div>
@@ -388,11 +395,11 @@ $skill_badge = ["Beginner"=>"badge-difficulty-easy","Intermediate"=>"badge-diffi
 
     </div><!-- /postsContainer -->
 
-    <div class="empty-state d-none" id="emptyState" role="status" aria-live="polite">
+    <output class="empty-state d-none" id="emptyState" aria-live="polite">
         <span class="material-icons">search_off</span>
         <h3 class="h5 mt-2">No sessions match your filters</h3>
         <p>Try adjusting your filters or <button class="btn btn-link p-0 align-baseline" id="emptyReset">reset them all</button>.</p>
-    </div>
+    </output>
 
 </div><!-- /feed col -->
 </div><!-- /row -->
@@ -402,7 +409,7 @@ $skill_badge = ["Beginner"=>"badge-difficulty-easy","Intermediate"=>"badge-diffi
 <?php if ($is_logged_in): ?>
 
 <!-- Create / Edit modal -->
-<div class="modal-overlay" id="postModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+<dialog class="modal-overlay" id="postModal" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal-box">
         <button class="btn-close position-absolute top-0 end-0 m-3" id="closeModal" aria-label="Close"></button>
         <h2 id="modalTitle" class="mb-4" style="color:var(--color-espresso);">
@@ -508,7 +515,7 @@ $skill_badge = ["Beginner"=>"badge-difficulty-easy","Intermediate"=>"badge-diffi
             </button>
         </form>
     </div>
-</div>
+</dialog>
 
 <!-- Hidden delete form (submitted via JS) -->
 <form id="deleteForm" method="post" action="process/process_matchmaking.php" style="display:none;">
@@ -519,9 +526,9 @@ $skill_badge = ["Beginner"=>"badge-difficulty-easy","Intermediate"=>"badge-diffi
 
 <?php endif; ?>
 
-<div class="toast-custom" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+<output class="toast-custom" id="toast" aria-live="polite" aria-atomic="true"></output>
 
-<?php include "inc/footer.inc.php"; ?>
+<?php include_once "inc/footer.inc.php"; ?>
 
 <script>
 (() => {

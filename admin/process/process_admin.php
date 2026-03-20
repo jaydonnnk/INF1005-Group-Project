@@ -10,13 +10,17 @@ session_start();
 require_once __DIR__ . "/../../process/helpers.php";
 require_once __DIR__ . "/../../process/db.php";
 
+define('ADMIN_DASHBOARD', '../../dashboard.php');
 define('ADMIN_HOME', '../index.php');
 define('ADMIN_GAMES', '../games.php');
 define('ADMIN_MENU', '../menu.php');
+define('ADMIN_BOOKINGS', '../bookings.php');
+define('ADMIN_ORDERS', '../orders.php');
+define('ADMIN_MEMBERS', '../members.php');
 
 // Must be admin
 if (!isset($_SESSION['member_id']) || empty($_SESSION['is_admin'])) {
-    header("Location: ../../dashboard.php");
+    header("Location: " . ADMIN_DASHBOARD);
     exit();
 }
 
@@ -191,7 +195,7 @@ try {
                 $stmt->execute([':status' => $status, ':id' => $booking_id]);
                 setFlash('success', 'Booking status updated.');
             }
-            header("Location: ../bookings.php");
+            header("Location: " . ADMIN_BOOKINGS);
             exit();
 
         // Orders
@@ -205,7 +209,7 @@ try {
                 $stmt->execute([':status' => $status, ':id' => $order_id]);
                 setFlash('success', 'Order status updated.');
             }
-            header("Location: ../orders.php");
+            header("Location: " . ADMIN_ORDERS);
             exit();
 
         // Members
@@ -216,7 +220,7 @@ try {
             // Prevent removing own admin
             if ($target_id === (int)$_SESSION['member_id']) {
                 setFlash('error', 'You cannot change your own admin status.');
-                header("Location: ../members.php");
+                header("Location: " . ADMIN_MEMBERS);
                 exit();
             }
 
@@ -225,7 +229,7 @@ try {
                 $stmt->execute([':val' => $new_val ? 1 : 0, ':id' => $target_id]);
                 setFlash('success', 'Member admin status updated.');
             }
-            header("Location: ../members.php");
+            header("Location: " . ADMIN_MEMBERS);
             exit();
 
         default:

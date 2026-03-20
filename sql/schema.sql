@@ -161,6 +161,19 @@ CREATE TABLE IF NOT EXISTS waitlist (
     UNIQUE KEY unique_claim_token (claim_token)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+-- ----------------------------------------
+-- Password Resets table
+-- ----------------------------------------
+CREATE TABLE IF NOT EXISTS password_resets (
+    reset_id    INT AUTO_INCREMENT PRIMARY KEY,
+    email       VARCHAR(100) NOT NULL,
+    token       VARCHAR(64) NOT NULL UNIQUE,
+    expires_at  DATETIME NOT NULL,
+    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
 -- ============================================
 -- Sample Data
 -- ============================================

@@ -47,12 +47,12 @@ foreach ($orders as $order) {
 
         <?php echo displayFlash(); ?>
 
-        <?php if (count($orders) === 0): ?>
+        <?php if (empty($orders)): ?>
             <p class="text-muted">You have no orders yet. Head to the <a href="menu.php">menu</a> to start ordering!</p>
         <?php else: ?>
 
             <!-- CURRENT ORDERS (Pending / Preparing) -->
-            <?php if (count($current_orders) > 0): ?>
+            <?php if (!empty($current_orders)): ?>
                 <h2 class="h5 mb-3">Current Orders</h2>
                 <?php foreach ($current_orders as $order): ?>
                     <div class="card mb-4">
@@ -138,7 +138,7 @@ foreach ($orders as $order) {
             <?php endif; ?>
 
             <!-- ORDER HISTORY (Completed / Cancelled) -->
-            <?php if (count($history_orders) > 0): ?>
+            <?php if (!empty($history_orders)): ?>
                 <h2 class="h5 mb-3 mt-4">Order History</h2>
                 <?php foreach ($history_orders as $order): ?>
                     <div class="card mb-4">

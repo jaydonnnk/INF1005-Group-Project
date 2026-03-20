@@ -15,8 +15,8 @@ require_once "process/db.php";
 // Passively expire past-date waitlist entries
 $pdo->prepare(
     "UPDATE waitlist SET status = 'Expired'
-     WHERE status IN ('Pending', 'Notified')
-     AND booking_date < CURDATE()"
+    WHERE status IN ('Pending', 'Notified')
+    AND booking_date < CURDATE()"
 )->execute();
 
 $show_form = isset($_GET['action']) && $_GET['action'] === 'new';
@@ -41,14 +41,14 @@ $entries_stmt = $pdo->prepare(
             SELECT COUNT(*)
             FROM waitlist w2
             WHERE w2.booking_date = w.booking_date
-              AND w2.time_slot    = w.time_slot
-              AND w2.status       IN ('Pending', 'Notified')
-              AND w2.created_at  <= w.created_at
+            AND w2.time_slot    = w.time_slot
+            AND w2.status       IN ('Pending', 'Notified')
+            AND w2.created_at  <= w.created_at
         ) AS queue_position
-     FROM waitlist w
-     LEFT JOIN games g ON w.game_id = g.game_id
-     WHERE w.member_id = :mid
-     ORDER BY w.booking_date ASC, w.time_slot ASC, w.created_at ASC"
+        FROM waitlist w
+        LEFT JOIN games g ON w.game_id = g.game_id
+        WHERE w.member_id = :mid
+        ORDER BY w.booking_date ASC, w.time_slot ASC, w.created_at ASC"
 );
 $entries_stmt->execute([':mid' => $member_id]);
 $entries = $entries_stmt->fetchAll();

@@ -11,6 +11,7 @@ session_start();
 require_once "helpers.php";
 
 define('LOGIN_PAGE', '../login.php');
+define('DASHBOARD_PAGE', '../dashboard.php');
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: " . LOGIN_PAGE);
@@ -71,7 +72,7 @@ try {
         // Regenerate session ID to prevent session fixation
         session_regenerate_id(true);
 
-        header("Location: ../dashboard.php");
+        header("Location: " . DASHBOARD_PAGE);
         exit();
     } else {
         setFlash('error', 'Invalid email or password.');

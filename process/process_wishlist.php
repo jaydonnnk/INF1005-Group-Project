@@ -9,6 +9,7 @@ require_once "helpers.php";
 
 define('WISHLIST_PAGE', '../wishlist.php');
 define('GAMES_PAGE', '../games.php');
+define('LOGIN_PAGE', '../login.php');
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: " . WISHLIST_PAGE);
@@ -16,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 }
 
 if (!isset($_SESSION["member_id"])) {
-    header("Location: ../login.php");
+    header("Location: " . LOGIN_PAGE);
     exit();
 }
 

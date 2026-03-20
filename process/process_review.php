@@ -8,6 +8,7 @@ session_start();
 require_once "helpers.php";
 
 define('REVIEWS_PAGE', '../reviews.php');
+define('LOGIN_PAGE', '../login.php');
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: " . REVIEWS_PAGE);
@@ -15,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 }
 
 if (!isset($_SESSION["member_id"])) {
-    header("Location: ../login.php");
+    header("Location: " . LOGIN_PAGE);
     exit();
 }
 
@@ -36,7 +37,7 @@ switch ($action) {
 
         if ($game_id <= 0 || $rating < 1 || $rating > 5) {
             setFlash('error', 'Please select a game and rating.');
-            header("Location: ../reviews.php?action=new");
+            header("Location: " . REVIEWS_PAGE . "?action=new");
             exit();
         }
 
@@ -73,7 +74,7 @@ switch ($action) {
 
         if ($game_id <= 0 || $rating < 1 || $rating > 5) {
             setFlash('error', 'Invalid input.');
-            header("Location: ../reviews.php?action=edit&review_id=$review_id");
+            header("Location: " . REVIEWS_PAGE . "?action=edit&review_id=$review_id");
             exit();
         }
 

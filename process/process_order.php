@@ -12,6 +12,7 @@ require_once "helpers.php";
 
 define('ORDERS_PAGE', '../orders.php');
 define('MENU_PAGE', '../menu.php');
+define('LOGIN_PAGE', '../login.php');
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: " . ORDERS_PAGE);
@@ -19,11 +20,11 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 }
 
 if (!isset($_SESSION["member_id"])) {
-    header("Location: ../login.php");
+    header("Location: " . LOGIN_PAGE);
     exit();
 }
 
-validateCsrf('../menu.php');
+validateCsrf(MENU_PAGE);
 
 $member_id = $_SESSION["member_id"];
 require_once "db.php";

@@ -1,8 +1,6 @@
 <?php
 /**
  * Process Booking Update & Cancel Operations
- *
- *
  * Note: Booking creation now goes through Stripe Checkout
  * (create_checkout.php → payment_success.php).
  */
@@ -11,6 +9,7 @@ session_start();
 require_once "helpers.php";
 
 define('BOOKINGS_PAGE', '../bookings.php');
+define('LOGIN_PAGE', '../login.php');
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: " . BOOKINGS_PAGE);
@@ -18,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 }
 
 if (!isset($_SESSION["member_id"])) {
-    header("Location: ../login.php");
+    header("Location: " . LOGIN_PAGE);
     exit();
 }
 
@@ -37,7 +36,7 @@ switch ($action) {
         $errors = validateBookingInput();
         if (!empty($errors)) {
             setFlash('error', implode(" ", $errors));
-            header("Location: ../bookings.php?action=edit&id=$booking_id");
+            header("Location: " . BOOKINGS_PAGE . "?action=edit&id=$booking_id");
             exit();
         }
 
@@ -68,7 +67,7 @@ switch ($action) {
         // Fetch date and slot before cancelling (needed for waitlist notification)
         $slot_stmt = $pdo->prepare(
             "SELECT booking_date, time_slot FROM bookings
-         WHERE booking_id = :bid AND member_id = :mid"
+            WHERE booking_id = :bid AND member_id = :mid"
         );
         $slot_stmt->execute([':bid' => $booking_id, ':mid' => $member_id]);
         $cancelled_booking = $slot_stmt->fetch();

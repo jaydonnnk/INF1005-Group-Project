@@ -8,9 +8,9 @@
 CREATE DATABASE IF NOT EXISTS rolling_dice_db;
 USE rolling_dice_db;
 
--- ----------------------------------------
+
 -- Members table (User accounts)
--- ----------------------------------------
+
 CREATE TABLE IF NOT EXISTS members (
     member_id   INT AUTO_INCREMENT PRIMARY KEY,
     fname       VARCHAR(45),
@@ -22,9 +22,9 @@ CREATE TABLE IF NOT EXISTS members (
     created_at  DATETIME DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- ----------------------------------------
+
 -- Games table (Board game library)
--- ----------------------------------------
+
 CREATE TABLE IF NOT EXISTS games (
     game_id       INT AUTO_INCREMENT PRIMARY KEY,
     title         VARCHAR(100) NOT NULL,
@@ -39,9 +39,9 @@ CREATE TABLE IF NOT EXISTS games (
     stripe_price_id VARCHAR(100)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- ----------------------------------------
+
 -- Menu Items table (Food & drinks)
--- ----------------------------------------
+
 CREATE TABLE IF NOT EXISTS menu_items (
     item_id     INT AUTO_INCREMENT PRIMARY KEY,
     name        VARCHAR(100) NOT NULL,
@@ -53,9 +53,9 @@ CREATE TABLE IF NOT EXISTS menu_items (
     stripe_price_id VARCHAR(100)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- ----------------------------------------
+
 -- Bookings table (Table reservations)
--- ----------------------------------------
+
 CREATE TABLE IF NOT EXISTS bookings (
     booking_id   INT AUTO_INCREMENT PRIMARY KEY,
     member_id    INT NOT NULL,
@@ -71,9 +71,9 @@ CREATE TABLE IF NOT EXISTS bookings (
     FOREIGN KEY (game_id) REFERENCES games(game_id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- ----------------------------------------
+
 -- Orders table (Food & drink orders)
--- ----------------------------------------
+
 CREATE TABLE IF NOT EXISTS orders (
     order_id     INT AUTO_INCREMENT PRIMARY KEY,
     member_id    INT NOT NULL,
@@ -83,9 +83,9 @@ CREATE TABLE IF NOT EXISTS orders (
     FOREIGN KEY (member_id) REFERENCES members(member_id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- ----------------------------------------
+
 -- Order Items table (Line items per order)
--- ----------------------------------------
+
 CREATE TABLE IF NOT EXISTS order_items (
     order_item_id INT AUTO_INCREMENT PRIMARY KEY,
     order_id      INT NOT NULL,
@@ -96,9 +96,8 @@ CREATE TABLE IF NOT EXISTS order_items (
     FOREIGN KEY (item_id) REFERENCES menu_items(item_id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- ----------------------------------------
 -- Payments table (Stripe payment records)
--- ----------------------------------------
+
 CREATE TABLE IF NOT EXISTS payments (
     payment_id       INT AUTO_INCREMENT PRIMARY KEY,
     member_id        INT NOT NULL,
@@ -112,9 +111,9 @@ CREATE TABLE IF NOT EXISTS payments (
     FOREIGN KEY (member_id) REFERENCES members(member_id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- ----------------------------------------
+
 -- Reviews table (Game reviews)
--- ----------------------------------------
+
 CREATE TABLE IF NOT EXISTS reviews (
     review_id   INT AUTO_INCREMENT PRIMARY KEY,
     member_id   INT NOT NULL,
@@ -127,9 +126,9 @@ CREATE TABLE IF NOT EXISTS reviews (
     UNIQUE KEY unique_review (member_id, game_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- ----------------------------------------
+
 -- Wishlists table (Favourite games)
--- ----------------------------------------
+
 CREATE TABLE IF NOT EXISTS wishlists (
     wishlist_id INT AUTO_INCREMENT PRIMARY KEY,
     member_id   INT NOT NULL,
@@ -141,9 +140,9 @@ CREATE TABLE IF NOT EXISTS wishlists (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
--- ----------------------------------------
+
 -- Waitlist table (Booking waitlist)
--- ----------------------------------------
+
 CREATE TABLE IF NOT EXISTS waitlist (
     waitlist_id       INT AUTO_INCREMENT PRIMARY KEY,
     member_id         INT NOT NULL,
@@ -196,6 +195,67 @@ INSERT INTO menu_items (name, description, price, category, image_url, stripe_pr
 ('Espresso', 'Double shot of single-origin espresso.', 5.00, 'Drinks', 'images/espresso.jpg', 'price_1TAjcYFYrHzcVFcrgZ1LROI4'),
 ('Warm Brownie Sundae', 'Fudge brownie with vanilla ice cream and chocolate sauce.', 11.90, 'Desserts', 'images/brownie.jpg', 'price_1TAjdnFYrHzcVFcr9cxqUjP7'),
 ('Churros', 'Golden churros dusted with cinnamon sugar, served with dipping sauce.', 8.90, 'Desserts', 'images/churros.jpg', 'price_1TAjdFFYrHzcVFcrklzmtT60');
+
+
+-- Matchmaking Posts table
+
+CREATE TABLE IF NOT EXISTS matchmaking_posts (
+    post_id      INT AUTO_INCREMENT PRIMARY KEY,
+    member_id    INT NOT NULL,
+    title        VARCHAR(80) NOT NULL,
+    body         TEXT,
+    game_name    VARCHAR(100) NOT NULL,
+    game_type    ENUM('Strategy','Party','Cooperative','Deck-Building','Role-Playing','Trivia','Word') NOT NULL,
+    skill_level  ENUM('Beginner','Intermediate','Advanced') NOT NULL,
+    play_style   ENUM('Casual','Competitive','Story-driven') DEFAULT NULL,
+    spots_total  INT NOT NULL DEFAULT 1,
+    spots_filled INT NOT NULL DEFAULT 0,
+    session_date DATE NOT NULL,
+    session_time TIME NOT NULL,
+    pref_gender  ENUM('Any','Male','Female','Non-binary') NOT NULL DEFAULT 'Any',
+    pref_skill   ENUM('Any','Beginner','Intermediate','Advanced','Intermediate+') NOT NULL DEFAULT 'Any',
+    pref_age     VARCHAR(20) DEFAULT NULL,
+    is_urgent    TINYINT(1) NOT NULL DEFAULT 0,
+    status       ENUM('Open','Closed','Cancelled') NOT NULL DEFAULT 'Open',
+    created_at   DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (member_id) REFERENCES members(member_id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+-- Matchmaking Interests table
+
+CREATE TABLE IF NOT EXISTS matchmaking_interests (
+    interest_id INT AUTO_INCREMENT PRIMARY KEY,
+    post_id     INT NOT NULL,
+    member_id   INT NOT NULL,
+    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (post_id)   REFERENCES matchmaking_posts(post_id)   ON DELETE CASCADE,
+    FOREIGN KEY (member_id) REFERENCES members(member_id)           ON DELETE CASCADE,
+    UNIQUE KEY unique_interest (post_id, member_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+-- Matchmaking Joins table
+
+CREATE TABLE IF NOT EXISTS matchmaking_joins (
+    join_id    INT AUTO_INCREMENT PRIMARY KEY,
+    post_id    INT NOT NULL,
+    member_id  INT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (post_id)   REFERENCES matchmaking_posts(post_id) ON DELETE CASCADE,
+    FOREIGN KEY (member_id) REFERENCES members(member_id)         ON DELETE CASCADE,
+    UNIQUE KEY unique_join (post_id, member_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+-- Matchmaking Sessions table
+
+CREATE TABLE IF NOT EXISTS matchmaking_sessions (
+    session_id  INT AUTO_INCREMENT PRIMARY KEY,
+    member_id   INT NOT NULL UNIQUE,
+    last_active DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (member_id) REFERENCES members(member_id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ============================================
 -- Database User (for PHP application)

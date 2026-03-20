@@ -1,8 +1,6 @@
 <?php
 /**
  * Two-Factor Authentication Verification (Login)
- * 
- *
  * Shown during login when a member has 2FA enabled.
  * The member enters their 6-digit TOTP code to complete sign-in.
  */

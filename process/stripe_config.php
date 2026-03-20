@@ -1,8 +1,6 @@
 <?php
 /**
  * Stripe Configuration
- * 
- *
  * Loads API keys from .env file — never hardcode secrets in source code.
  */
 

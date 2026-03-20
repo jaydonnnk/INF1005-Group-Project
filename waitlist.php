@@ -1,7 +1,6 @@
 <?php
 /**
  * Booking Waitlist Page
- * 
  */
 
 session_start();

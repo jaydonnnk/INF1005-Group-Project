@@ -1,8 +1,6 @@
 <?php
 /**
  * Shared Helper Functions
- * 
- *
  * Centralised utility functions used across process scripts and page templates.
  */
 

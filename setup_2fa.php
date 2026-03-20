@@ -1,8 +1,6 @@
 <?php
 /**
  * Two-Factor Authentication Setup
- * 
- *
  * Generates a TOTP secret, displays a QR code, and asks the user
  * to verify with a 6-digit code before enabling 2FA.
  */

@@ -46,6 +46,12 @@ if (!defined('ARIA_CURRENT_PAGE')) {
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link <?php echo ($current_page === 'matchmaking.php') ? 'active' : ''; ?>" href="matchmaking.php"
+                    <?php echo ($current_page === 'matchmaking.php') ? 'aria-current="page"' : ''; ?>>
+                        <span class="material-icons align-middle me-1" aria-hidden="true">group_add</span>Find a Player
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link <?php echo ($current_page === 'menu.php') ? 'active' : ''; ?>" href="menu.php"
                     <?php echo ($current_page === 'menu.php') ? ARIA_CURRENT_PAGE : ''; ?>>
                         <span class="material-icons align-middle me-1" aria-hidden="true">restaurant</span>Menu

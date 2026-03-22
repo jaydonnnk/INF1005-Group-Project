@@ -27,7 +27,7 @@ try {
         </div>
     </header>
 
-    <main class="container section-padding">
+    <main id="main-content" class="container section-padding">
 
         <?php echo displayFlash(); ?>
 
@@ -108,7 +108,7 @@ try {
                                 <img src="<?php echo htmlspecialchars($game['image_url']); ?>" class="card-img-top"
                                     alt="<?php echo htmlspecialchars($game['title']); ?>">
                                 <div class="card-body d-flex flex-column">
-                                    <h3 class="card-title"><?php echo htmlspecialchars($game['title']); ?></h5>
+                                    <h2 class="card-title"><?php echo htmlspecialchars($game['title']); ?></h2>
                                         <div class="mb-2">
                                             <span class="badge badge-genre"><?php echo htmlspecialchars($game['genre']); ?></span>
                                             <span

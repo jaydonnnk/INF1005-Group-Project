@@ -57,7 +57,7 @@ require_once "process/db.php";
                             <img src="<?php echo htmlspecialchars($item['image_url']); ?>" class="card-img-top"
                                 alt="<?php echo htmlspecialchars($item['title']); ?>">
                             <div class="card-body d-flex flex-column">
-                                <h3 class="card-title"><?php echo htmlspecialchars($item['title']); ?></h5>
+                                <h2 class="card-title"><?php echo htmlspecialchars($item['title']); ?></h2>
                                     <div class="mb-2">
                                         <span class="badge badge-genre"><?php echo htmlspecialchars($item['genre']); ?></span>
                                         <span class="badge badge-difficulty-<?php echo strtolower($item['difficulty']); ?>">

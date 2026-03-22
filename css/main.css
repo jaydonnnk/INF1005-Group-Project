@@ -10,9 +10,9 @@ Aesthetic: Warm & Cozy / Inviting
     --color-warm-white:  #FFFDF9;
     --color-espresso:    #3C2415;
     --color-walnut:      #5C3D2E;
-    --color-caramel:     #C68B59;
+    --color-caramel:     #996633;
     --color-honey:       #E8A849;
-    --color-sage:        #8FAE7E;
+    --color-sage:        #5A7A4A;
     --color-berry:       #A45A52;
     --color-text:        #3E2C23;
     --color-text-light:  #7A6960;
@@ -179,7 +179,7 @@ a:hover {
 .form-control:focus,
 .form-select:focus {
     border-color: var(--color-caramel);
-    box-shadow: 0 0 0 0.2rem rgba(198, 139, 89, 0.25);
+    box-shadow: 0 0 0 0.2rem rgba(153, 102, 51, 0.25);
 }
 
 .btn-primary {
@@ -287,9 +287,11 @@ figcaption {
     margin-top: 3rem;
 }
 
-.site-footer h5 {
-    color: var(--color-honey);
+.site-footer .footer-heading {
     font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--color-honey);
+    font-size: 1.25rem;
     margin-bottom: 1rem;
 }
 
@@ -341,9 +343,15 @@ figcaption {
 
 /*  Heading Size Overrides  */
 /* h3 used for proper heading hierarchy; sized to match card context */
-.card-title, .dashboard-card h3 {
+.card-title, .dashboard-card h2 {
     font-size: 1.25rem;
 }
+
+/*  Contrast Overrides (WCAG 2.1 AA)  */
+.btn-outline-danger { color: #c82333; }
+.btn-outline-danger:hover { color: #fff; }
+.text-success { color: #146c43 !important; }
+code { color: #8b2252; }
 
 /*  Print Styles (Receipts)  */
 @media print {

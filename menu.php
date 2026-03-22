@@ -52,7 +52,7 @@
                                         <img src="<?php echo htmlspecialchars($item['image_url']); ?>" class="card-img-top"
                                             alt="<?php echo htmlspecialchars($item['name']); ?>">
                                         <div class="card-body d-flex flex-column">
-                                            <h3 class="card-title"><?php echo htmlspecialchars($item['name']); ?></h5>
+                                            <h3 class="card-title"><?php echo htmlspecialchars($item['name']); ?></h3>
                                                 <p class="card-text"><?php echo htmlspecialchars($item['description']); ?></p>
                                                 <div class="mt-auto d-flex justify-content-between align-items-center">
                                                     <span

@@ -58,7 +58,7 @@ $member_id = $_SESSION["member_id"];
                     aria-label="Bookings: <?php echo $bookings; ?> active">
                     <div class="dashboard-card">
                         <span class="material-icons" aria-hidden="true">event</span>
-                        <h3>Bookings</h3>
+                        <h2>Bookings</h2>
                         <p class="fs-3 fw-bold text-caramel mb-0"><?php echo $bookings; ?></p>
                         <p class="text-muted">active</p>
                     </div>
@@ -69,7 +69,7 @@ $member_id = $_SESSION["member_id"];
                     aria-label="Orders: <?php echo $orders; ?> in progress">
                     <div class="dashboard-card">
                         <span class="material-icons" aria-hidden="true">receipt_long</span>
-                        <h3>Orders</h3>
+                        <h2>Orders</h2>
                         <p class="fs-3 fw-bold text-caramel mb-0"><?php echo $orders; ?></p>
                         <p class="text-muted">in progress</p>
                     </div>
@@ -80,7 +80,7 @@ $member_id = $_SESSION["member_id"];
                     aria-label="Reviews: <?php echo $reviews; ?> written">
                     <div class="dashboard-card">
                         <span class="material-icons" aria-hidden="true">rate_review</span>
-                        <h3>Reviews</h3>
+                        <h2>Reviews</h2>
                         <p class="fs-3 fw-bold text-caramel mb-0"><?php echo $reviews; ?></p>
                         <p class="text-muted">written</p>
                     </div>
@@ -91,7 +91,7 @@ $member_id = $_SESSION["member_id"];
                     aria-label="Wishlist: <?php echo $wishlists; ?> games saved">
                     <div class="dashboard-card">
                         <span class="material-icons" aria-hidden="true">favorite</span>
-                        <h3>Wishlist</h3>
+                        <h2>Wishlist</h2>
                         <p class="fs-3 fw-bold text-caramel mb-0"><?php echo $wishlists; ?></p>
                         <p class="text-muted">games saved</p>
                     </div>

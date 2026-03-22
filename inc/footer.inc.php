@@ -3,7 +3,7 @@
         <div class="row">
             <!-- About Column -->
             <div class="col-md-4 mb-3">
-                <h5>The Rolling Dice</h5>
+                <p class="footer-heading">The Rolling Dice</p>
                 <p class="footer-tagline">
                     Singapore's cosiest board game caf&eacute;. Good games, great food, and
                     even better company.
@@ -12,7 +12,7 @@
 
             <!-- Quick Links Column -->
             <div class="col-md-4 mb-3">
-                <h5>Quick Links</h5>
+                <p class="footer-heading">Quick Links</p>
                 <ul class="list-unstyled footer-links">
                     <li><a href="games.php">Game Library</a></li>
                     <li><a href="menu.php">Food &amp; Drinks</a></li>
@@ -23,7 +23,7 @@
 
             <!-- Contact Column -->
             <div class="col-md-4 mb-3">
-                <h5>Visit Us</h5>
+                <p class="footer-heading">Visit Us</p>
                 <address class="footer-address">
                     123 Dice Lane, #01-01<br>
                     Singapore 123456<br>

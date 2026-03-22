@@ -31,7 +31,7 @@ $total_menu = $pdo->query("SELECT COUNT(*) FROM menu_items")->fetchColumn();
                 <a href="admin/members.php" class="text-decoration-none">
                     <div class="dashboard-card">
                         <span class="material-icons" aria-hidden="true">people</span>
-                        <h3><?php echo (int)$total_members; ?></h3>
+                        <p class="fs-3 fw-bold mb-0"><?php echo (int)$total_members; ?></p>
                         <p class="text-muted mb-0">Members</p>
                     </div>
                 </a>
@@ -40,7 +40,7 @@ $total_menu = $pdo->query("SELECT COUNT(*) FROM menu_items")->fetchColumn();
                 <a href="admin/games.php" class="text-decoration-none">
                     <div class="dashboard-card">
                         <span class="material-icons" aria-hidden="true">extension</span>
-                        <h3><?php echo (int)$total_games; ?></h3>
+                        <p class="fs-3 fw-bold mb-0"><?php echo (int)$total_games; ?></p>
                         <p class="text-muted mb-0">Games</p>
                     </div>
                 </a>
@@ -49,7 +49,7 @@ $total_menu = $pdo->query("SELECT COUNT(*) FROM menu_items")->fetchColumn();
                 <a href="admin/menu.php" class="text-decoration-none">
                     <div class="dashboard-card">
                         <span class="material-icons" aria-hidden="true">restaurant</span>
-                        <h3><?php echo (int)$total_menu; ?></h3>
+                        <p class="fs-3 fw-bold mb-0"><?php echo (int)$total_menu; ?></p>
                         <p class="text-muted mb-0">Menu Items</p>
                     </div>
                 </a>
@@ -58,7 +58,7 @@ $total_menu = $pdo->query("SELECT COUNT(*) FROM menu_items")->fetchColumn();
                 <a href="admin/bookings.php" class="text-decoration-none">
                     <div class="dashboard-card">
                         <span class="material-icons" aria-hidden="true">event</span>
-                        <h3><?php echo (int)$total_bookings; ?></h3>
+                        <p class="fs-3 fw-bold mb-0"><?php echo (int)$total_bookings; ?></p>
                         <p class="text-muted mb-0">Bookings</p>
                     </div>
                 </a>
@@ -67,7 +67,7 @@ $total_menu = $pdo->query("SELECT COUNT(*) FROM menu_items")->fetchColumn();
                 <a href="admin/orders.php" class="text-decoration-none">
                     <div class="dashboard-card">
                         <span class="material-icons" aria-hidden="true">receipt_long</span>
-                        <h3><?php echo (int)$total_orders; ?></h3>
+                        <p class="fs-3 fw-bold mb-0"><?php echo (int)$total_orders; ?></p>
                         <p class="text-muted mb-0">Orders</p>
                     </div>
                 </a>
@@ -75,7 +75,7 @@ $total_menu = $pdo->query("SELECT COUNT(*) FROM menu_items")->fetchColumn();
             <div class="col-sm-6 col-lg-4">
                 <div class="dashboard-card">
                     <span class="material-icons" aria-hidden="true">rate_review</span>
-                    <h3><?php echo (int)$total_reviews; ?></h3>
+                    <p class="fs-3 fw-bold mb-0"><?php echo (int)$total_reviews; ?></p>
                     <p class="text-muted mb-0">Reviews</p>
                 </div>
             </div>

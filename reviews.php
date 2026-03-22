@@ -139,7 +139,7 @@ $all_games = $pdo->query("SELECT game_id, title FROM games ORDER BY title ASC")-
                         <div class="col-md-6">
                             <div class="card h-100">
                                 <div class="card-body">
-                                    <h3 class="card-title"><?php echo htmlspecialchars($r['game_title']); ?></h5>
+                                    <h3 class="card-title"><?php echo htmlspecialchars($r['game_title']); ?></h3>
                                         <div class="star-rating mb-2">
                                             <?php for ($i = 1; $i <= 5; $i++): ?>
                                                 <span class="material-icons <?php echo $i <= $r['rating'] ? '' : 'empty'; ?>"

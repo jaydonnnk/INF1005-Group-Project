@@ -1,6 +1,9 @@
 <?php
 /**
- * Process Forgot Password
+ * process_forgot_password.php — Process Forgot Password
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
+ *
  * Generates a password reset token and sends the reset email.
  * Uses a generic success message to avoid revealing whether the email exists.
  */

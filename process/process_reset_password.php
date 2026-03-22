@@ -1,7 +1,8 @@
 <?php
 /**
- * Process Reset Password
- *
+ * process_reset_password.php — Process Reset Password
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
  *
  * Validates the reset token and updates the member's password.
  */

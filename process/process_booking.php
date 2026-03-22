@@ -1,6 +1,9 @@
 <?php
 /**
- * Process Booking Update & Cancel Operations
+ * process_booking.php — Process Booking Update & Cancel Operations
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
+ *
  * Note: Booking creation now goes through Stripe Checkout
  * (create_checkout.php → payment_success.php).
  */
@@ -27,7 +30,7 @@ $action = $_POST["action"] ?? "";
 
 switch ($action) {
 
-    // ---- UPDATE ----
+    // UPDATE
     case "update":
         $booking_id = (int) ($_POST["booking_id"] ?? 0);
         $errors = validateBookingInput();
@@ -90,8 +93,12 @@ switch ($action) {
         exit();
 }
 
-// ---- Helper Functions ----
-
+// Helper functions
+/**
+ * Validate the booking form fields from POST data.
+ *
+ * @return array List of validation error messages (empty if valid)
+ */
 function validateBookingInput(): array
 {
     $errors = [];

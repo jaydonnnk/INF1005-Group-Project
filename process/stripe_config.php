@@ -1,6 +1,9 @@
 <?php
 /**
- * Stripe Configuration
+ * stripe_config.php — Stripe Configuration
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
+ *
  * Loads API keys from .env file — never hardcode secrets in source code.
  */
 

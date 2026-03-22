@@ -1,7 +1,8 @@
 <?php
 /**
- * Database Connection Script (PDO)
- *
+ * db.php — Database Connection Script (PDO)
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
  *
  * Configured for LAMP stack on Google Cloud Compute Engine.
  * MySQL runs on the same VM as Apache/PHP, so we connect via localhost.

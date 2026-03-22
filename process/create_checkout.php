@@ -1,7 +1,8 @@
 <?php
 /**
- * Create Stripe Checkout Session
- *
+ * create_checkout.php — Create Stripe Checkout Session
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
  *
  * Handles both booking and order checkout flows.
  */

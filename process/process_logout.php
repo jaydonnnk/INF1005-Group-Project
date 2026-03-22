@@ -1,7 +1,8 @@
 <?php
 /**
- * Process Logout
- *
+ * process_logout.php — Process Logout
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
  *
  * Destroys the current session and redirects to the home page.
  */

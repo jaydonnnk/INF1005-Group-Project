@@ -1,7 +1,8 @@
 <?php
 /**
- * Process Order CRUD Operations
- *
+ * process_order.php — Process Order CRUD Operations
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
  *
  * add_item: Adds an item to the member's current pending order (creates one if none exists).
  * cancel:   Cancels a pending order.
@@ -29,7 +30,7 @@ $action = $_POST["action"] ?? "";
 
 switch ($action) {
 
-    // ---- ADD ITEM TO ORDER ----
+    // ADD ITEM TO ORDER
     case "add_item":
         $item_id = (int) ($_POST["item_id"] ?? 0);
         if ($item_id <= 0) {
@@ -108,7 +109,7 @@ switch ($action) {
         header("Location: ../$from.php");
         exit();
 
-    // ---- CANCEL ORDER ----
+    // CANCEL ORDER
     case "cancel":
         $order_id = (int) ($_POST["order_id"] ?? 0);
         $stmt = $pdo->prepare("UPDATE orders SET status = 'Cancelled' WHERE order_id = :oid AND member_id = :mid AND status = 'Pending'");

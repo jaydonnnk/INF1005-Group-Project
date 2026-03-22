@@ -1,7 +1,8 @@
 <?php
 /**
- * Centralised Route Constants
- * The Rolling Dice - Board Game Café
+ * process_routes.php — Centralised Route Constants
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
  *
  * Paths are relative to the file that includes this.
  * - Routes::*        → for files in process/         (one level below root, prefix ../)

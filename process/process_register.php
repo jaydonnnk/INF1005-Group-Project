@@ -1,6 +1,8 @@
 <?php
 /**
- * Process Registration Form
+ * process_register.php — Process Registration Form
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
  *
  * Validates and sanitizes all input, hashes the password,
  * and inserts the new member into the database using PDO prepared statements.

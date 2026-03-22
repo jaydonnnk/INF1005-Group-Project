@@ -1,7 +1,8 @@
 <?php
 /**
- * Process Profile Updates
- * 
+ * process_profile.php — Process Profile Updates
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
  *
  * Handles two actions:
  *   update_profile  — update name, email, phone

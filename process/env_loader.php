@@ -1,12 +1,19 @@
 <?php
 /**
- * Simple .env File Loader
- * 
+ * env_loader.php — Simple .env File Loader
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
  *
  * Parses KEY=VALUE lines from a .env file and sets them
  * via putenv() and $_ENV. No external libraries required.
  */
 
+/**
+ * Load environment variables from a .env file into putenv() and $_ENV.
+ *
+ * @param string $path Absolute path to the .env file
+ * @return void
+ */
 function loadEnv(string $path): void
 {
     if (!file_exists($path)) {

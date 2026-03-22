@@ -1,4 +1,10 @@
 <?php
+/**
+ * games.php — Game Library Page
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
+ */
+
 // Load DB early for genre query and game listing
 try {
     require_once "process/db.php";

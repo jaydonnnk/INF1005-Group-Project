@@ -1,7 +1,8 @@
 <?php
 /**
- * Get Available Games (JSON endpoint)
- *
+ * get_available_games.php — Get Available Games (JSON endpoint)
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
  *
  * Returns games with available copies for a given date + time slot.
  */

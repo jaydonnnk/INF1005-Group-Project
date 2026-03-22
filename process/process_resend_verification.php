@@ -1,7 +1,8 @@
 <?php
 /**
- * Process Resend Verification Email
- *
+ * process_resend_verification.php — Process Resend Verification Email
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
  *
  * Generates a new verification token and sends the email.
  * Uses a generic success message to avoid revealing whether the email exists.

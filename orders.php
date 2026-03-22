@@ -1,4 +1,10 @@
 <?php
+/**
+ * orders.php — Order History & Management Page
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
+ */
+
 session_start();
 require_once "process/helpers.php";
 

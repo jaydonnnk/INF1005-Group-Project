@@ -1,6 +1,9 @@
 <?php
 /**
- * Shared Helper Functions
+ * helpers.php — Shared Helper Functions
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
+ *
  * Centralised utility functions used across process scripts and page templates.
  */
 require_once __DIR__ . '/process_routes.php';
@@ -8,6 +11,9 @@ require_once __DIR__ . '/process_routes.php';
 /**
  * Sanitize user input by trimming whitespace.
  * HTML encoding is done at OUTPUT time (in views), NOT at storage time.
+ *
+ * @param string $data Raw user input
+ * @return string Trimmed input
  */
 function sanitizeInput(string $data): string
 {
@@ -16,6 +22,8 @@ function sanitizeInput(string $data): string
 
 /**
  * Generate or retrieve the CSRF token for the current session.
+ *
+ * @return string 64-character hex CSRF token
  */
 function csrfToken(): string
 {
@@ -27,6 +35,8 @@ function csrfToken(): string
 
 /**
  * Output a hidden CSRF input field for use inside forms.
+ *
+ * @return string HTML hidden input element containing the CSRF token
  */
 function csrfField(): string
 {
@@ -36,6 +46,9 @@ function csrfField(): string
 /**
  * Validate the CSRF token submitted via POST.
  * Redirects with a flash error if the token is missing or invalid.
+ *
+ * @param string $redirect_url URL to redirect to on failure
+ * @return void
  */
 function validateCsrf(string $redirect_url = '../index.php'): void
 {
@@ -62,6 +75,8 @@ function setFlash(string $type, string $message): void
 /**
  * Display and clear the flash message (if any).
  * Returns the HTML string for the alert.
+ *
+ * @return string HTML alert div, or empty string if no flash message
  */
 function displayFlash(): string
 {

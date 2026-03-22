@@ -1,7 +1,8 @@
 <?php
 /**
- * Process 2FA Verification (Login)
- * 
+ * process_verify_2fa.php — Process 2FA Verification (Login)
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
  *
  * Validates the TOTP code during login and completes the sign-in.
  */

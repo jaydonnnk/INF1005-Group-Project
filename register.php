@@ -1,3 +1,10 @@
+<?php
+/**
+ * register.php — Member Registration Form
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
+ */
+?>
 <!DOCTYPE html>
 <html lang="en">
 

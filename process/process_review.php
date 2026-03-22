@@ -1,7 +1,8 @@
 <?php
 /**
- * Process Review CRUD Operations
- *
+ * process_review.php — Process Review CRUD Operations
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
  */
 
 session_start();

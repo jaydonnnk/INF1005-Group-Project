@@ -10,11 +10,11 @@ document.addEventListener("DOMContentLoaded", function () {
     registerBookingGameLoader();
 });
 
-/* ----------------------------------------
+/* 
 Active Menu Highlighting
 Sets the 'active' class on the nav link
 matching the current page URL.
-   ---------------------------------------- */
+*/
 function activateMenu() {
     const navLinks = document.querySelectorAll("nav a.nav-link");
     navLinks.forEach(function (link) {
@@ -28,11 +28,11 @@ function activateMenu() {
     });
 }
 
-/* ----------------------------------------
+/* 
 Image Popup on Click
 Clicking a .img-thumbnail image opens a
 larger popup; clicking again closes it.
-   ---------------------------------------- */
+*/
 function registerImagePopups() {
     const thumbnails = document.getElementsByClassName("img-thumbnail");
 
@@ -87,11 +87,11 @@ function registerImagePopups() {
     }
 }
 
-/* ----------------------------------------
+/* 
 Booking Form: Load Available Games via AJAX
 When date + time slot are both selected,
 fetches games with available copies.
-   ---------------------------------------- */
+*/
 function registerBookingGameLoader() {
     const dateInput = document.getElementById("booking_date");
     const slotSelect = document.getElementById("time_slot");
@@ -170,10 +170,10 @@ function registerBookingGameLoader() {
     slotSelect.addEventListener("change", loadAvailableGames);
 }
 
-/* ----------------------------------------
+/* 
 Client-side Form Validation Enhancement
 Adds visual feedback for Bootstrap forms.
-   ---------------------------------------- */
+*/
 function registerFormValidation() {
     const forms = document.querySelectorAll("form.needs-validation");
 

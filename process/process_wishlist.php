@@ -1,7 +1,8 @@
 <?php
 /**
- * Process Wishlist CRUD Operations
- *
+ * process_wishlist.php — Process Wishlist CRUD Operations
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
  */
 
 session_start();

@@ -1,7 +1,8 @@
 <?php
 /**
- * Process Matchmaking Post & Interest Operations
- * The Rolling Dice - Board Game Café
+ * process_matchmaking.php — Process Matchmaking Post & Interest Operations
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
  *
  * Actions:
  *   create   – Insert a new matchmaking post (logged-in only)
@@ -31,10 +32,10 @@ $action = $_POST["action"] ?? "";
 
 switch ($action) {
 
-    // ── CREATE POST ──────────────────────────────────────────────────────────
+    // CREATE POST 
     case "create":
 
-        // --- Validate required fields ---
+        // Validate required fields
         $title = sanitizeInput($_POST["title"] ?? "");
         $game_name = sanitizeInput($_POST["game_name"] ?? "");
         $game_type = sanitizeInput($_POST["game_type"] ?? "");
@@ -88,7 +89,7 @@ switch ($action) {
             exit();
         }
 
-        // --- Optional fields ---
+        // Optional fields 
         $play_style_raw = sanitizeInput($_POST["play_style"] ?? "");
         $valid_styles = ['Casual', 'Competitive', 'Story-driven'];
         $play_style = in_array($play_style_raw, $valid_styles, true) ? $play_style_raw : null;
@@ -109,7 +110,7 @@ switch ($action) {
 
         $is_urgent = isset($_POST["is_urgent"]) ? 1 : 0;
 
-        // --- Insert ---
+        // Insert into database
         try {
             $stmt = $pdo->prepare(
                 "INSERT INTO matchmaking_posts
@@ -155,7 +156,7 @@ switch ($action) {
         exit();
 
 
-    // ── UPDATE POST ──────────────────────────────────────────────────────────
+    // UPDATE POST 
     case "update":
 
         $post_id = (int) ($_POST["post_id"] ?? 0);
@@ -265,7 +266,7 @@ switch ($action) {
         exit();
 
 
-    // ── DELETE POST ──────────────────────────────────────────────────────────
+    // DELETE POST
     case "delete":
 
         $post_id = (int) ($_POST["post_id"] ?? 0);
@@ -300,7 +301,7 @@ switch ($action) {
         exit();
 
 
-    // ── JOIN SESSION ─────────────────────────────────────────────────────────
+    // JOIN SESSION
     case "join":
 
         $post_id = (int) ($_POST["post_id"] ?? 0);
@@ -342,7 +343,7 @@ switch ($action) {
         exit();
 
 
-    // ── UNJOIN SESSION ───────────────────────────────────────────────────────
+    // UNJOIN SESSION
     case "unjoin":
 
         $post_id = (int) ($_POST["post_id"] ?? 0);
@@ -364,7 +365,7 @@ switch ($action) {
         exit();
 
 
-    // ── UNINTEREST ───────────────────────────────────────────────────────────
+    // UNINTEREST 
     case "uninterest":
 
         $post_id = (int) ($_POST["post_id"] ?? 0);
@@ -385,7 +386,7 @@ switch ($action) {
         exit();
 
 
-    // ── TOGGLE INTEREST ──────────────────────────────────────────────────────
+    // TOGGLE INTEREST 
     case "interest":
 
         $post_id = (int) ($_POST["post_id"] ?? 0);
@@ -443,7 +444,7 @@ switch ($action) {
         exit();
 
 
-    // ── ADMIN DELETE (any post) ──────────────────────────────────────────────
+    // ADMIN DELETE (any post)
     case "admin_delete":
 
         // Must be admin

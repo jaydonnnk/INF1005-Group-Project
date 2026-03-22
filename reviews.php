@@ -1,4 +1,10 @@
 <?php
+/**
+ * reviews.php — Game Reviews Page
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
+ */
+
 session_start();
 if (!isset($_SESSION["member_id"])) {
     header("Location: " . Routes::ROOT_LOGIN);

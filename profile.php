@@ -1,8 +1,8 @@
 <?php
 /**
- * Member Profile Page
- * 
- *
+ * profile.php — Member Profile Page
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
  * Allows logged-in members to update their name, email, phone,
  * and change their password (with current password verification).
  */

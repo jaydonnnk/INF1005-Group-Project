@@ -1,6 +1,9 @@
 <?php
 /**
- * Process Login Form
+ * process_login.php — Process Login Form
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
+ *
  * Validates credentials using password_verify() against the stored bcrypt hash.
  * On success, creates a session. On failure, redirects back with a flash error.
  */

@@ -162,9 +162,9 @@ CREATE TABLE IF NOT EXISTS waitlist (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
--- ----------------------------------------
+-- ========================================
 -- Password Resets table
--- ----------------------------------------
+-- ========================================
 CREATE TABLE IF NOT EXISTS password_resets (
     reset_id    INT AUTO_INCREMENT PRIMARY KEY,
     email       VARCHAR(100) NOT NULL,

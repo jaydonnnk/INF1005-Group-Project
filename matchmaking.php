@@ -1,4 +1,10 @@
 <?php
+/**
+ * matchmaking.php — Player Matchmaking Page
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
+ */
+
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 $is_logged_in = isset($_SESSION["member_id"]);
 $is_admin     = !empty($_SESSION["is_admin"]);
@@ -281,14 +287,14 @@ $skill_badge = ["Beginner"=>"badge-difficulty-easy","Intermediate"=>"badge-diffi
         $joined=in_array($p['post_id'], $my_joins);
     ?>
     <article class="card post-card mb-3 <?php echo $urgent?'urgent-card':''; ?>"
-             data-game-type="<?php echo htmlspecialchars($p['game_type']); ?>"
-             data-skill="<?php echo htmlspecialchars($p['skill']); ?>"
-             data-style="<?php echo htmlspecialchars($p['play_style']); ?>"
-             data-gender="<?php echo htmlspecialchars($p['pref_gender']??''); ?>"
-             data-age="0" data-online="<?php echo $online?'1':'0'; ?>"
-             data-spots-left="<?php echo $left; ?>" data-urgent="<?php echo $urgent?'1':'0'; ?>"
-             data-total="<?php echo $total; ?>"
-             data-title="<?php echo htmlspecialchars(strtolower($p['title'].' '.$p['game_name'].' '.$p['author'])); ?>">
+            data-game-type="<?php echo htmlspecialchars($p['game_type']); ?>"
+            data-skill="<?php echo htmlspecialchars($p['skill']); ?>"
+            data-style="<?php echo htmlspecialchars($p['play_style']); ?>"
+            data-gender="<?php echo htmlspecialchars($p['pref_gender']??''); ?>"
+            data-age="0" data-online="<?php echo $online?'1':'0'; ?>"
+            data-spots-left="<?php echo $left; ?>" data-urgent="<?php echo $urgent?'1':'0'; ?>"
+            data-total="<?php echo $total; ?>"
+            data-title="<?php echo htmlspecialchars(strtolower($p['title'].' '.$p['game_name'].' '.$p['author'])); ?>">
         <div class="card-body">
 
             <div class="d-flex align-items-start gap-3 mb-2">

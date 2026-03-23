@@ -1,4 +1,10 @@
 <?php
+/**
+ * admin/games.php — Admin Game Management Page
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
+ */
+
 require_once "auth_check.php";
 require_once __DIR__ . "/../process/db.php";
 

@@ -1,7 +1,8 @@
 <?php
 /**
- * Admin CRUD Actions
- *
+ * process_admin.php — Admin CRUD Actions
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
  *
  * Handles all admin POST actions: games, menu items, bookings, orders, members.
  */

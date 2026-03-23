@@ -1,7 +1,14 @@
 <?php
+/**
+ * admin/bookings.php — Admin Booking Management Page
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
+ */
+
 require_once "auth_check.php";
 require_once __DIR__ . "/../process/db.php";
 
+// Fetch all bookings with game title and member details
 $stmt = $pdo->query(
     "SELECT b.*, g.title AS game_title, m.fname, m.lname, m.email
     FROM bookings b
@@ -9,6 +16,7 @@ $stmt = $pdo->query(
     JOIN members m ON b.member_id = m.member_id
     ORDER BY b.booking_date DESC, b.time_slot ASC"
 );
+
 $bookings = $stmt->fetchAll();
 ?>
 <!DOCTYPE html>

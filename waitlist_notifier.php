@@ -1,6 +1,9 @@
 <?php
 /**
- * Waitlist Notifier
+ * waitlist_notifier.php — Waitlist Notification Helper
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
+ *
  * Call notifyWaitlist($pdo, $booking_date, $time_slot) after any booking
  * cancellation. Finds the first Pending entry for that slot, generates a
  * 1-hour claim token, and emails the member.
@@ -12,6 +15,9 @@
 /**
  * Expire any Notified entries whose 1-hour window has passed,
  * then notify the next Pending member in each affected slot.
+ *
+ * @param PDO $pdo Database connection
+ * @return void
  */
 function expireWaitlistNotifications(PDO $pdo): void
 {
@@ -47,6 +53,11 @@ function expireWaitlistNotifications(PDO $pdo): void
 
 /**
  * Find the first Pending waitlist entry for a slot and send a claim email.
+ *
+ * @param PDO $pdo Database connection
+ * @param string $booking_date Date of the booking slot (YYYY-MM-DD)
+ * @param string $time_slot Time slot label (e.g. '11:00 AM - 1:00 PM')
+ * @return void
  */
 function notifyWaitlist(PDO $pdo, string $booking_date, string $time_slot): void
 {
@@ -133,6 +144,13 @@ function notifyWaitlist(PDO $pdo, string $booking_date, string $time_slot): void
 
 /**
  * Send the "a spot opened up — claim it within 1 hour" email.
+ *
+ * @param string $to Recipient email address
+ * @param string $fname Recipient first name
+ * @param string $booking_date Date of the available slot
+ * @param string $time_slot Time slot label
+ * @param string $token Secure claim token for the URL
+ * @return void
  */
 function sendClaimEmail(
     string $to,
@@ -165,6 +183,12 @@ function sendClaimEmail(
 
 /**
  * Send the "sorry, your 1-hour window has expired" email.
+ *
+ * @param string $to Recipient email address
+ * @param string $fname Recipient first name
+ * @param string $booking_date Date of the expired slot
+ * @param string $time_slot Time slot label
+ * @return void
  */
 function sendExpiredEmail(
     string $to,
@@ -190,7 +214,9 @@ function sendExpiredEmail(
 }
 
 /**
- * Determine the base URL dynamically.
+ * Determine the base URL dynamically from the current request.
+ *
+ * @return string Protocol and host (e.g. 'https://example.com')
  */
 function getBaseUrl(): string
 {

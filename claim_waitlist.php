@@ -1,7 +1,8 @@
 <?php
 /**
- * Claim Waitlist Spot
- *
+ * claim_waitlist.php — Claim Waitlist Spot
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
  *
  * Members land here from the email link. If the token is valid and
  * within the 1-hour window, they are redirected to the booking form

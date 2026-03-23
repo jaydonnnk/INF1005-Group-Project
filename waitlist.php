@@ -1,6 +1,8 @@
 <?php
 /**
- * Booking Waitlist Page
+ * waitlist.php — Booking Waitlist Page
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
  */
 
 session_start();

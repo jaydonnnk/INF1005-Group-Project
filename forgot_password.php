@@ -1,7 +1,8 @@
 <?php
 /**
- * Forgot Password Page
- *
+ * forgot_password.php — Forgot Password Page
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
  */
 ?>
 <!DOCTYPE html>

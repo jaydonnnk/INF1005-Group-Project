@@ -1,4 +1,13 @@
 <?php
+/**
+ * payment_success.php — Stripe Payment Success Handler
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
+ *
+ * Retrieves the Stripe Checkout Session, creates the booking or
+ * confirms the order in the database, and displays a success receipt.
+ */
+
 session_start();
 require_once "process/helpers.php";
 

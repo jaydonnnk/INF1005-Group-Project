@@ -56,6 +56,12 @@ try {
 }
 $my_joins = $my_joins ?? [];
 
+/**
+ * Convert a datetime string into a human-readable relative time label.
+ *
+ * @param string $dt Datetime string (e.g. '2026-03-23 14:30:00')
+ * @return string Relative time (e.g. 'Just now', '5 min ago', '1 day ago')
+ */
 function timeAgo(string $dt): string {
     $d = time() - strtotime($dt);
     $result = floor($d/86400)." days ago";
@@ -66,6 +72,13 @@ function timeAgo(string $dt): string {
     return $result;
 }
 
+/**
+ * Format a session date and time into a user-friendly label.
+ *
+ * @param string $date Session date (YYYY-MM-DD)
+ * @param string $time Session start time (HH:MM)
+ * @return string Formatted label (e.g. 'Today, 11:00 AM – 1:00 PM')
+ */
 function fmtDate(string $date, string $time): string {
     $diff = strtotime($date) - strtotime(date('Y-m-d'));
     if ($diff === 0) {

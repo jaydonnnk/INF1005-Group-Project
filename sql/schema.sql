@@ -1,5 +1,7 @@
 -- ============================================
--- Database Schema for INF1005 Project
+-- schema.sql — Database Schema
+-- The Rolling Dice - Board Game Cafe
+-- INF1005 Web Systems and Technologies
 -- ============================================
 -- Run this script as the MySQL root user on your GCP LAMP VM:
 --   mysql -u root -p < schema.sql
@@ -62,7 +64,7 @@ CREATE TABLE IF NOT EXISTS bookings (
     booking_date DATE NOT NULL,
     time_slot    VARCHAR(20) NOT NULL,
     party_size   INT NOT NULL DEFAULT 2,
-    game_id      INT,
+    game_id      INT,                                                         -- NULL = no game selected
     rental_hours INT NOT NULL DEFAULT 2,
     notes        TEXT,
     status       ENUM('Confirmed', 'Cancelled', 'Completed') NOT NULL DEFAULT 'Confirmed',
@@ -105,7 +107,7 @@ CREATE TABLE IF NOT EXISTS payments (
     amount           DECIMAL(8,2) NOT NULL,
     currency         VARCHAR(10) NOT NULL DEFAULT 'sgd',
     payment_type     ENUM('booking', 'order') NOT NULL,
-    reference_id     INT NOT NULL,
+    reference_id     INT NOT NULL,                                              -- booking_id or order_id depending on payment_type
     status           ENUM('pending', 'completed', 'failed') NOT NULL DEFAULT 'pending',
     created_at       DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (member_id) REFERENCES members(member_id) ON DELETE CASCADE
@@ -152,9 +154,9 @@ CREATE TABLE IF NOT EXISTS waitlist (
     game_id           INT DEFAULT NULL,
     notes             TEXT,
     status            ENUM('Pending', 'Notified', 'Claimed', 'Expired', 'Cancelled') NOT NULL DEFAULT 'Pending',
-    claim_token       VARCHAR(64)  DEFAULT NULL,
-    notified_at       DATETIME     DEFAULT NULL,
-    claim_expires_at  DATETIME     DEFAULT NULL,
+    claim_token       VARCHAR(64)  DEFAULT NULL,                                -- NULL = not yet notified
+    notified_at       DATETIME     DEFAULT NULL,                                -- When the claim email was sent
+    claim_expires_at  DATETIME     DEFAULT NULL,                                -- 1 hour after notified_at
     created_at        DATETIME     DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (member_id) REFERENCES members(member_id) ON DELETE CASCADE,
     FOREIGN KEY (game_id)   REFERENCES games(game_id)     ON DELETE SET NULL,
@@ -284,5 +286,5 @@ FLUSH PRIVILEGES;
 -- ALTER TABLE members ADD COLUMN email_verified TINYINT(1) NOT NULL DEFAULT 0 AFTER is_admin;
 -- ALTER TABLE members ADD COLUMN verification_token VARCHAR(64) DEFAULT NULL AFTER email_verified;
 -- ALTER TABLE members ADD COLUMN verification_expires DATETIME DEFAULT NULL AFTER verification_token;
--- ALTER TABLE members ADD COLUMN totp_secret VARCHAR(64) DEFAULT NULL AFTER verification_expires;
+-- ALTER TABLE members ADD COLUMN totp_secret VARCHAR(64) DEFAULT NULL AFTER verification_expires;  -- NULL = 2FA not configured
 -- ALTER TABLE members ADD COLUMN totp_enabled TINYINT(1) NOT NULL DEFAULT 0 AFTER totp_secret;

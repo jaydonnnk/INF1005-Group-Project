@@ -1,7 +1,8 @@
 <?php
 /**
- * Resend Verification Email Page
- * 
+ * resend_verification.php — Resend Verification Email Page
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
  */
 ?>
 <!DOCTYPE html>

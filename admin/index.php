@@ -1,7 +1,14 @@
 <?php
+/**
+ * admin/index.php — Admin Dashboard
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
+ */
+
 require_once "auth_check.php";
 require_once __DIR__ . "/../process/db.php";
 
+// Aggregate counts for dashboard stats
 $total_members = $pdo->query("SELECT COUNT(*) FROM members")->fetchColumn();
 $total_bookings = $pdo->query("SELECT COUNT(*) FROM bookings")->fetchColumn();
 $total_orders = $pdo->query("SELECT COUNT(*) FROM orders")->fetchColumn();

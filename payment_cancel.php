@@ -1,4 +1,12 @@
 <?php
+/**
+ * payment_cancel.php — Stripe Payment Cancellation Page
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
+ *
+ * Shown when a member cancels during Stripe Checkout.
+ */
+
 session_start();
 $type = $_GET["type"] ?? "booking";
 ?>

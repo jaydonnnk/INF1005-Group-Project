@@ -1,7 +1,8 @@
 <?php
 /**
- * Admin Authentication Check
- *
+ * auth_check.php — Admin Authentication Guard
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
  *
  * include_once this at the top of every admin page.
  * Redirects non-admin users to the member dashboard.

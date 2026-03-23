@@ -1,3 +1,4 @@
+<!-- head.inc.php — Common <head> assets (fonts, CSS, icons) -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 

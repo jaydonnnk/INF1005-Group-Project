@@ -1,7 +1,8 @@
 <?php
 /**
- * Reset Password Page
- *
+ * reset_password.php — Reset Password Page
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
  *
  * Validates the token from the reset link and shows the password reset form.
  */

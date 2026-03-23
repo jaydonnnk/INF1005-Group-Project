@@ -1,6 +1,10 @@
 /**
- * 
- * Custom JavaScript
+ * main.js — Custom JavaScript
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
+ *
+ * Handles: active nav highlighting, image popups,
+ * AJAX game loading on booking form, client-side form validation.
  */
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -10,11 +14,10 @@ document.addEventListener("DOMContentLoaded", function () {
     registerBookingGameLoader();
 });
 
-/* 
-Active Menu Highlighting
-Sets the 'active' class on the nav link
-matching the current page URL.
-*/
+/**
+ * Highlight the nav link matching the current page URL.
+ * @returns {void}
+ */
 function activateMenu() {
     const navLinks = document.querySelectorAll("nav a.nav-link");
     navLinks.forEach(function (link) {
@@ -28,11 +31,11 @@ function activateMenu() {
     });
 }
 
-/* 
-Image Popup on Click
-Clicking a .img-thumbnail image opens a
-larger popup; clicking again closes it.
-*/
+/**
+ * Register click-to-enlarge popups on all .img-thumbnail elements.
+ * Supports keyboard dismissal (Escape) and returns focus to the thumbnail.
+ * @returns {void}
+ */
 function registerImagePopups() {
     const thumbnails = document.getElementsByClassName("img-thumbnail");
 
@@ -87,11 +90,11 @@ function registerImagePopups() {
     }
 }
 
-/* 
-Booking Form: Load Available Games via AJAX
-When date + time slot are both selected,
-fetches games with available copies.
-*/
+/**
+ * Load available games via AJAX when both date and time slot are selected.
+ * Populates the game dropdown and handles pre-selection from URL params.
+ * @returns {void}
+ */
 function registerBookingGameLoader() {
     const dateInput = document.getElementById("booking_date");
     const slotSelect = document.getElementById("time_slot");
@@ -170,10 +173,10 @@ function registerBookingGameLoader() {
     slotSelect.addEventListener("change", loadAvailableGames);
 }
 
-/* 
-Client-side Form Validation Enhancement
-Adds visual feedback for Bootstrap forms.
-*/
+/**
+ * Add Bootstrap validation feedback and password-match checking on form submit.
+ * @returns {void}
+ */
 function registerFormValidation() {
     const forms = document.querySelectorAll("form.needs-validation");
 

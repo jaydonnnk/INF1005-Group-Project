@@ -1,6 +1,9 @@
 <?php
 /**
- * Two-Factor Authentication Setup
+ * setup_2fa.php — Two-Factor Authentication Setup
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
+ *
  * Generates a TOTP secret, displays a QR code, and asks the user
  * to verify with a 6-digit code before enabling 2FA.
  */

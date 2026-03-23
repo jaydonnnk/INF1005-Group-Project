@@ -1,6 +1,9 @@
 <?php
 /**
- * Two-Factor Authentication Verification (Login)
+ * verify_2fa.php — Two-Factor Authentication Verification (Login)
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
+ *
  * Shown during login when a member has 2FA enabled.
  * The member enters their 6-digit TOTP code to complete sign-in.
  */

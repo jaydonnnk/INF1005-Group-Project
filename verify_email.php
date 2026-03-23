@@ -1,7 +1,8 @@
 <?php
 /**
- * Email Verification Page
- * 
+ * verify_email.php — Email Verification Page
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
  *
  * Validates the token from the verification link and activates the account.
  */

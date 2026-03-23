@@ -1,3 +1,4 @@
+<!-- footer.inc.php — Site-wide footer with links and contact info -->
 <footer class="site-footer">
     <div class="container">
         <div class="row">

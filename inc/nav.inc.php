@@ -1,4 +1,10 @@
 <?php
+/**
+ * nav.inc.php — Main Navigation Bar
+ * The Rolling Dice - Board Game Cafe
+ * INF1005 Web Systems and Technologies
+ */
+
 // Start session if not already started (needed for login state)
 if (session_status() === PHP_SESSION_NONE) {
     session_start();

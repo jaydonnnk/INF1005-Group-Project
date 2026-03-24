@@ -43,7 +43,7 @@ if (isset($_GET['edit'])) {
                 <strong><?php echo $edit_item ? 'Edit Menu Item' : 'Add New Menu Item'; ?></strong>
             </div>
             <div class="card-body">
-                <form method="post" action="admin/process/process_admin.php" class="row g-3">
+                <form method="post" action="admin/process/process_admin.php" enctype="multipart/form-data" class="row g-3">
                     <?php echo csrfField(); ?>
                     <input type="hidden" name="action" value="<?php echo $edit_item ? 'edit_menu_item' : 'add_menu_item'; ?>">
                     <?php if ($edit_item): ?>
@@ -84,9 +84,13 @@ if (isset($_GET['edit'])) {
                         <textarea id="description" name="description" class="form-control" rows="2"><?php echo $edit_item ? htmlspecialchars($edit_item['description']) : ''; ?></textarea>
                     </div>
                     <div class="col-md-5">
-                        <label for="image_url" class="form-label">Image URL</label>
-                        <input type="text" id="image_url" name="image_url" class="form-control"
-                            value="<?php echo $edit_item ? htmlspecialchars($edit_item['image_url']) : ''; ?>">
+                        <label for="image_file" class="form-label">Item Image</label>
+                        <?php if ($edit_item && !empty($edit_item['image_url'])): ?>
+                            <small class="d-block text-muted mb-1">Current: <?php echo htmlspecialchars($edit_item['image_url']); ?></small>
+                        <?php endif; ?>
+                        <input type="file" id="image_file" name="image_file" class="form-control"
+                            accept="image/jpeg,image/png,image/webp,image/gif">
+                        <div class="form-text">Accepted: JPG, PNG, WEBP, GIF · Max 2 MB</div>
                     </div>
                     <div class="col-md-5">
                         <label for="stripe_price_id" class="form-label">Stripe Price ID</label>

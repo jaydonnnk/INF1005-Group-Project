@@ -44,7 +44,7 @@ if (isset($_GET['edit'])) {
                 <strong><?php echo $edit_game ? 'Edit Game' : 'Add New Game'; ?></strong>
             </div>
             <div class="card-body">
-                <form method="post" action="admin/process/process_admin.php" class="row g-3">
+                <form method="post" action="admin/process/process_admin.php" enctype="multipart/form-data" class="row g-3">
                     <?php echo csrfField(); ?>
                     <input type="hidden" name="action" value="<?php echo $edit_game ? 'edit_game' : 'add_game'; ?>">
                     <?php if ($edit_game): ?>
@@ -96,9 +96,13 @@ if (isset($_GET['edit'])) {
                             value="<?php echo $edit_game ? (int)$edit_game['quantity'] : 3; ?>">
                     </div>
                     <div class="col-md-4">
-                        <label for="image_url" class="form-label">Image URL</label>
-                        <input type="text" id="image_url" name="image_url" class="form-control"
-                            value="<?php echo $edit_game ? htmlspecialchars($edit_game['image_url']) : ''; ?>">
+                        <label for="image_file" class="form-label">Game Image</label>
+                        <?php if ($edit_game && !empty($edit_game['image_url'])): ?>
+                            <small class="d-block text-muted mb-1">Current: <?php echo htmlspecialchars($edit_game['image_url']); ?></small>
+                        <?php endif; ?>
+                        <input type="file" id="image_file" name="image_file" class="form-control"
+                            accept="image/jpeg,image/png,image/webp,image/gif">
+                        <div class="form-text">Accepted: JPG, PNG, WEBP, GIF · Max 2 MB</div>
                     </div>
                     <div class="col-md-6">
                         <label for="stripe_price_id" class="form-label">Stripe Price ID</label>

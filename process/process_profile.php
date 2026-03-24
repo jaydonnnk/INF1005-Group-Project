@@ -147,6 +147,42 @@ switch ($action) {
         header("Location: " . Routes::PROFILE);
         exit();
 
+    // DISABLE ACCOUNT
+    case "disable_account":
+        $confirm_pwd = $_POST["confirm_pwd"] ?? "";  // Do NOT sanitize passwords
+
+        if (empty($confirm_pwd)) {
+            setFlash('error', 'Please enter your password to confirm.');
+            header("Location: " . Routes::PROFILE);
+            exit();
+        }
+
+        // Fetch stored hash and verify password
+        $stmt = $pdo->prepare(
+            "SELECT password_hash FROM members WHERE member_id = :id"
+        );
+        $stmt->execute([':id' => $member_id]);
+        $row = $stmt->fetch();
+
+        if (!$row || !password_verify($confirm_pwd, $row["password_hash"])) {
+            setFlash('error', 'Incorrect password. Account was not disabled.');
+            header("Location: " . Routes::PROFILE);
+            exit();
+        }
+
+        // Mark account as disabled
+        $update = $pdo->prepare(
+            "UPDATE members SET account_status = 'disabled' WHERE member_id = :id"
+        );
+        $update->execute([':id' => $member_id]);
+
+        // Destroy session immediately — user is now locked out
+        $_SESSION = [];
+        session_destroy();
+
+        header("Location: " . Routes::LOGIN . "?disabled=1");
+        exit();
+        
     default:
         header("Location: " . Routes::PROFILE);
         exit();

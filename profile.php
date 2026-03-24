@@ -20,7 +20,7 @@ require_once "process/db.php";
 
 // Fetch current member data
 $stmt = $pdo->prepare(
-    "SELECT fname, lname, email, phone, totp_enabled FROM members WHERE member_id = :id"
+    "SELECT fname, lname, email, phone, totp_enabled, account_status FROM members WHERE member_id = :id"
 );
 $stmt->execute([':id' => $member_id]);
 $member = $stmt->fetch();
@@ -250,6 +250,82 @@ $member = $stmt->fetch();
             </div>
         </div>
         <?php endif; ?>
+
+        <!-- ── Disable Account ── -->
+        <div class="row g-4 mt-1">
+            <div class="col-12">
+                <div class="card border-danger">
+                    <div class="card-body">
+                        <h2 class="h5 mb-3">
+                            <span class="material-icons align-middle text-danger me-2"
+                                aria-hidden="true">block</span>Disable Account
+                        </h2>
+                        <p class="text-muted mb-3">
+                            Disabling your account will immediately sign you out and prevent future logins.
+                            Your data will not be deleted. Contact us to reactivate your account.
+                        </p>
+ 
+                        <button type="button" class="btn btn-outline-danger"
+                            data-bs-toggle="modal" data-bs-target="#disableAccountModal">
+                            <span class="material-icons align-middle me-1"
+                                aria-hidden="true">block</span>Disable My Account
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+ 
+        <!-- Disable Account Confirmation Modal -->
+        <div class="modal fade" id="disableAccountModal" tabindex="-1"
+            aria-labelledby="disableAccountModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <form action="process/process_profile.php" method="post"
+                        class="needs-validation" novalidate>
+                        <?php echo csrfField(); ?>
+                        <input type="hidden" name="action" value="disable_account">
+ 
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="disableAccountModalLabel">
+                                Disable Account
+                            </h5>
+                            <button type="button" class="btn-close"
+                                data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+ 
+                        <div class="modal-body">
+                            <div class="alert alert-warning d-flex align-items-start gap-2" role="alert">
+                                <span class="material-icons mt-1" aria-hidden="true">warning</span>
+                                <div>
+                                    <strong>This action cannot be undone by yourself.</strong>
+                                    You will be logged out immediately and will not be able to
+                                    sign in until an admin reactivates your account.
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="disable_account_pwd" class="form-label">
+                                    Enter your password to confirm:
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input type="password" id="disable_account_pwd"
+                                    name="confirm_pwd" class="form-control"
+                                    placeholder="Your current password" required>
+                                <div class="invalid-feedback">Password is required.</div>
+                            </div>
+                        </div>
+ 
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-primary"
+                                data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-danger">
+                                <span class="material-icons align-middle me-1"
+                                    aria-hidden="true">block</span>Yes, Disable My Account
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
     </main>
 

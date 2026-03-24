@@ -42,7 +42,7 @@ $pwd = $_POST["pwd"]; // Do NOT sanitize passwords
 try {
     require_once "db.php";
 
-    $stmt = $pdo->prepare("SELECT member_id, fname, lname, email, password_hash, is_admin, email_verified, totp_secret, totp_enabled FROM members WHERE email = :email");
+    $stmt = $pdo->prepare("SELECT member_id, fname, lname, email, password_hash, is_admin, account_status, email_verified, totp_secret, totp_enabled FROM members WHERE email = :email");
     $stmt->execute([":email" => $email]);
     $member = $stmt->fetch();
 
@@ -50,6 +50,13 @@ try {
         // Check email verification
         if (empty($member['email_verified'])) {
             setFlash('error', 'Please verify your email address first. Check your inbox for the verification link.');
+            header("Location: " . Routes::LOGIN);
+            exit();
+        }
+
+        // Check if account is disabled
+        if (isset($member['account_status']) && $member['account_status'] === 'disabled') {
+            setFlash('error', 'This account has been disabled. Please contact us to reactivate.');
             header("Location: " . Routes::LOGIN);
             exit();
         }

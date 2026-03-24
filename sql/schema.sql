@@ -296,3 +296,12 @@ FLUSH PRIVILEGES;
 -- ============================================
 -- ALTER TABLE matchmaking_posts ADD COLUMN booking_id INT DEFAULT NULL AFTER member_id;
 -- ALTER TABLE matchmaking_posts ADD CONSTRAINT fk_mp_booking FOREIGN KEY (booking_id) REFERENCES bookings(booking_id) ON DELETE SET NULL;
+
+-- ============================================
+-- Disable Account Column
+-- Run on your live DB (GCP VM):
+--   mysql -u root -p rolling_dice_db < add_account_status.sql
+-- ============================================
+ALTER TABLE members
+    ADD COLUMN account_status ENUM('active', 'disabled') NOT NULL DEFAULT 'active'
+    AFTER is_admin;

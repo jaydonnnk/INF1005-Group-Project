@@ -53,17 +53,17 @@ try {
         // Fetch user's confirmed bookings for the "link to booking" dropdown
         $s3 = $pdo->prepare(
             "SELECT b.booking_id, b.booking_date, b.time_slot
-             FROM bookings b
-             WHERE b.member_id = :mid AND b.status = 'Confirmed'
-               AND CONCAT(b.booking_date, ' ', CASE b.time_slot
-                   WHEN '11:00 AM - 1:00 PM' THEN '11:00:00'
-                   WHEN '1:00 PM - 3:00 PM'  THEN '13:00:00'
-                   WHEN '3:00 PM - 5:00 PM'  THEN '15:00:00'
-                   WHEN '5:00 PM - 7:00 PM'  THEN '17:00:00'
-                   WHEN '7:00 PM - 9:00 PM'  THEN '19:00:00'
-                   WHEN '9:00 PM - 11:00 PM' THEN '21:00:00'
-                   ELSE '00:00:00' END) >= NOW()
-             ORDER BY b.booking_date ASC, b.time_slot ASC"
+            FROM bookings b
+            WHERE b.member_id = :mid AND b.status = 'Confirmed'
+            AND CONCAT(b.booking_date, ' ', CASE b.time_slot
+                WHEN '11:00 AM - 1:00 PM' THEN '11:00:00'
+                WHEN '1:00 PM - 3:00 PM'  THEN '13:00:00'
+                WHEN '3:00 PM - 5:00 PM'  THEN '15:00:00'
+                WHEN '5:00 PM - 7:00 PM'  THEN '17:00:00'
+                WHEN '7:00 PM - 9:00 PM'  THEN '19:00:00'
+                WHEN '9:00 PM - 11:00 PM' THEN '21:00:00'
+                ELSE '00:00:00' END) >= NOW()
+            ORDER BY b.booking_date ASC, b.time_slot ASC"
         );
         $s3->execute([':mid' => $_SESSION['member_id']]);
         $my_bookings = $s3->fetchAll();

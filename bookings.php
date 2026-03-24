@@ -244,7 +244,7 @@ if ($show_form && $booking_data) {
                 // Find a linked matchmaking post for this booking
                 $mp_stmt = $pdo->prepare(
                     "SELECT post_id, spots_total, spots_filled FROM matchmaking_posts
-                     WHERE booking_id = :bid AND status != 'Cancelled' LIMIT 1"
+                    WHERE booking_id = :bid AND status != 'Cancelled' LIMIT 1"
                 );
                 $mp_stmt->execute([':bid' => $b['booking_id']]);
                 $mp = $mp_stmt->fetch();
@@ -258,9 +258,9 @@ if ($show_form && $booking_data) {
                 // Fetch joiners' contact details
                 $j_stmt = $pdo->prepare(
                     "SELECT m.fname, m.lname, m.email, m.phone
-                     FROM matchmaking_joins mj
-                     JOIN members m ON mj.member_id = m.member_id
-                     WHERE mj.post_id = :pid"
+                    FROM matchmaking_joins mj
+                    JOIN members m ON mj.member_id = m.member_id
+                    WHERE mj.post_id = :pid"
                 );
                 $j_stmt->execute([':pid' => $mp['post_id']]);
                 $joiners = $j_stmt->fetchAll();

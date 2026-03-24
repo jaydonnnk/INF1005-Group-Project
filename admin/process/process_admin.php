@@ -10,6 +10,7 @@
 session_start();
 require_once __DIR__ . "/../../process/helpers.php";
 require_once __DIR__ . "/../../process/db.php";
+require_once __DIR__ . "/../../process/booking_emails.php";
 
 // Must be admin
 if (!isset($_SESSION['member_id']) || empty($_SESSION['is_admin'])) {
@@ -279,6 +280,18 @@ try {
             if ($booking_id > 0 && in_array($status, $valid_statuses, true)) {
                 $stmt = $pdo->prepare("UPDATE bookings SET status = :status WHERE booking_id = :id");
                 $stmt->execute([':status' => $status, ':id' => $booking_id]);
+
+                // Send appropriate booking email (failure is non-blocking)
+                try {
+                    if ($status === 'Cancelled') {
+                        sendBookingCancellation($pdo, $booking_id);
+                    } else {
+                        sendBookingUpdate($pdo, $booking_id);
+                    }
+                } catch (Exception $e) {
+                    error_log("Admin booking email failed: " . $e->getMessage());
+                }
+
                 setFlash('success', 'Booking status updated.');
             }
             header("Location: " . Routes::ADMIN_BOOKINGS);

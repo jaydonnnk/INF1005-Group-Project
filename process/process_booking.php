@@ -25,6 +25,7 @@ validateCsrf(Routes::BOOKINGS);
 
 $member_id = $_SESSION["member_id"];
 require_once "db.php";
+require_once "booking_emails.php";
 
 $action = $_POST["action"] ?? "";
 
@@ -56,6 +57,11 @@ switch ($action) {
             ':mid' => $member_id,
         ]);
 
+        // Send booking update email (failure is non-blocking)
+        try { sendBookingUpdate($pdo, $booking_id); } catch (Exception $e) {
+            error_log("Booking update email failed: " . $e->getMessage());
+        }
+
         setFlash('success', 'Booking updated.');
         header("Location: " . Routes::BOOKINGS);
         exit();
@@ -77,6 +83,11 @@ switch ($action) {
         WHERE booking_id = :bid AND member_id = :mid"
         );
         $stmt->execute([':bid' => $booking_id, ':mid' => $member_id]);
+
+        // Send booking cancellation email (failure is non-blocking)
+        try { sendBookingCancellation($pdo, $booking_id); } catch (Exception $e) {
+            error_log("Booking cancellation email failed: " . $e->getMessage());
+        }
 
         // Notify the first person on the waitlist for this slot
         if ($cancelled_booking) {

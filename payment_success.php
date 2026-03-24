@@ -19,6 +19,7 @@ $member_id = $_SESSION["member_id"];
 
 require_once "process/stripe_config.php";
 require_once "process/db.php";
+require_once "process/booking_emails.php";
 
 $session_id = $_GET["session_id"] ?? "";
 $error = "";
@@ -98,6 +99,11 @@ if (empty($session_id)) {
                         'rental_hours' => $b['rental_hours'],
                         'amount' => $amount_paid,
                     ];
+
+                    // Send booking confirmation email (failure is non-blocking)
+                    try { sendBookingConfirmation($pdo, $booking_id); } catch (Exception $e) {
+                        error_log("Booking confirmation email failed: " . $e->getMessage());
+                    }
 
                     unset($_SESSION['pending_booking']);
                     $success_type = 'booking';

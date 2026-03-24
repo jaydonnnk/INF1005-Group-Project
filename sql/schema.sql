@@ -217,6 +217,7 @@ INSERT INTO menu_items (name, description, price, category, image_url, stripe_pr
 CREATE TABLE IF NOT EXISTS matchmaking_posts (
     post_id      INT AUTO_INCREMENT PRIMARY KEY,
     member_id    INT NOT NULL,
+    booking_id   INT DEFAULT NULL,
     title        VARCHAR(80) NOT NULL,
     body         TEXT,
     game_name    VARCHAR(100) NOT NULL,
@@ -233,7 +234,8 @@ CREATE TABLE IF NOT EXISTS matchmaking_posts (
     is_urgent    TINYINT(1) NOT NULL DEFAULT 0,
     status       ENUM('Open','Closed','Cancelled') NOT NULL DEFAULT 'Open',
     created_at   DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (member_id) REFERENCES members(member_id) ON DELETE CASCADE
+    FOREIGN KEY (member_id)  REFERENCES members(member_id)  ON DELETE CASCADE,
+    FOREIGN KEY (booking_id) REFERENCES bookings(booking_id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
@@ -288,3 +290,9 @@ FLUSH PRIVILEGES;
 -- ALTER TABLE members ADD COLUMN verification_expires DATETIME DEFAULT NULL AFTER verification_token;
 -- ALTER TABLE members ADD COLUMN totp_secret VARCHAR(64) DEFAULT NULL AFTER verification_expires;  -- NULL = 2FA not configured
 -- ALTER TABLE members ADD COLUMN totp_enabled TINYINT(1) NOT NULL DEFAULT 0 AFTER totp_secret;
+
+-- ============================================
+-- Matchmaking booking_id column (run on existing DB if matchmaking_posts already exists)
+-- ============================================
+-- ALTER TABLE matchmaking_posts ADD COLUMN booking_id INT DEFAULT NULL AFTER member_id;
+-- ALTER TABLE matchmaking_posts ADD CONSTRAINT fk_mp_booking FOREIGN KEY (booking_id) REFERENCES bookings(booking_id) ON DELETE SET NULL;

@@ -229,6 +229,50 @@ if ($show_form && $booking_data) {
         );
         $stmt->execute([':mid' => $member_id]);
         $bookings = $stmt->fetchAll();
+
+        // For each booking, check if it has a linked matchmaking post with joins
+        // Map booking_id => ['post' => [...], 'joiners' => [...], 'locked' => bool]
+        $matchmaking_info = [];
+        if (!empty($bookings)) {
+            // Slot label → 24h hour offset for computing "2 hours before" cutoff
+            $slot_to_hour = [
+                '11:00 AM - 1:00 PM' => 11, '1:00 PM - 3:00 PM' => 13,
+                '3:00 PM - 5:00 PM'  => 15, '5:00 PM - 7:00 PM' => 17,
+                '7:00 PM - 9:00 PM'  => 19, '9:00 PM - 11:00 PM'=> 21,
+            ];
+            foreach ($bookings as $b) {
+                // Find a linked matchmaking post for this booking
+                $mp_stmt = $pdo->prepare(
+                    "SELECT post_id, spots_total, spots_filled FROM matchmaking_posts
+                     WHERE booking_id = :bid AND status != 'Cancelled' LIMIT 1"
+                );
+                $mp_stmt->execute([':bid' => $b['booking_id']]);
+                $mp = $mp_stmt->fetch();
+                if (!$mp) { continue; }
+
+                // Is the session finalised? (within 2 hours of start time)
+                $start_hour = $slot_to_hour[$b['time_slot']] ?? 0;
+                $session_start = strtotime($b['booking_date'] . " {$start_hour}:00:00");
+                $locked = (time() >= $session_start - 2 * 3600);
+
+                // Fetch joiners' contact details
+                $j_stmt = $pdo->prepare(
+                    "SELECT m.fname, m.lname, m.email, m.phone
+                     FROM matchmaking_joins mj
+                     JOIN members m ON mj.member_id = m.member_id
+                     WHERE mj.post_id = :pid"
+                );
+                $j_stmt->execute([':pid' => $mp['post_id']]);
+                $joiners = $j_stmt->fetchAll();
+
+                $matchmaking_info[$b['booking_id']] = [
+                    'spots_total'  => (int)$mp['spots_total'],
+                    'spots_filled' => (int)$mp['spots_filled'],
+                    'locked'       => $locked,
+                    'joiners'      => $joiners,
+                ];
+            }
+        }
         ?>
 
         <?php if (count($bookings) === 0): ?>
@@ -244,11 +288,14 @@ if ($show_form && $booking_data) {
                             <th scope="col">Game</th>
                             <th scope="col">Hours</th>
                             <th scope="col">Status</th>
+                            <th scope="col">Spots Filled</th>
                             <th scope="col">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($bookings as $b): ?>
+                        <?php foreach ($bookings as $b):
+                            $mm = $matchmaking_info[$b['booking_id']] ?? null;
+                        ?>
                             <tr>
                                 <td><?php echo htmlspecialchars(date('d M Y', strtotime($b['booking_date']))); ?></td>
                                 <td><?php echo htmlspecialchars($b['time_slot']); ?></td>
@@ -265,6 +312,36 @@ if ($show_form && $booking_data) {
                                     };
                                     ?>
                                     <span class="badge <?php echo $badge; ?>"><?php echo htmlspecialchars($b['status']); ?></span>
+                                </td>
+                                <td>
+                                    <?php if ($mm): ?>
+                                        <?php if ($mm['spots_filled'] > 0): ?>
+                                            <?php $joiners_json = htmlspecialchars(json_encode($mm['joiners']), ENT_QUOTES, 'UTF-8'); ?>
+                                            <button class="btn btn-sm btn-outline-primary btn-spots-filled"
+                                                    type="button"
+                                                    data-joiners="<?php echo $joiners_json; ?>"
+                                                    data-spots-filled="<?php echo $mm['spots_filled']; ?>"
+                                                    data-spots-total="<?php echo $mm['spots_total']; ?>">
+                                                <span class="material-icons align-middle me-1" style="font-size:1rem;">people</span>
+                                                <?php echo $mm['spots_filled']; ?>/<?php echo $mm['spots_total']; ?> Joined
+                                            </button>
+                                            <?php if ($mm['locked']): ?>
+                                                <span class="badge bg-secondary ms-1 small">Finalised</span>
+                                            <?php endif; ?>
+                                        <?php else: ?>
+                                            <span class="text-muted small">
+                                                <?php if ($mm['locked']): ?>
+                                                    <span class="material-icons align-middle" style="font-size:1rem;">lock</span>
+                                                <?php endif; ?>
+                                                0/<?php echo $mm['spots_total']; ?> joined
+                                            </span>
+                                            <?php if ($mm['locked']): ?>
+                                                <span class="badge bg-secondary ms-1 small">Finalised</span>
+                                            <?php endif; ?>
+                                        <?php endif; ?>
+                                    <?php else: ?>
+                                        <span class="text-muted">—</span>
+                                    <?php endif; ?>
                                 </td>
                                 <td>
                                     <?php if ($b['status'] === 'Confirmed'): ?>
@@ -302,5 +379,81 @@ if ($show_form && $booking_data) {
     </main>
 
     <?php include_once "inc/footer.inc.php"; ?>
+
+    <!-- Joiners Modal — must be after footer so Bootstrap JS is already loaded -->
+    <div class="modal fade" id="joinersModal" tabindex="-1" aria-labelledby="joinersModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="joinersModalLabel">
+                        <span class="material-icons align-middle me-2" style="font-size:1.2rem; vertical-align:middle;">people</span>
+                        Players Who Joined Your Session
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-3">#</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                            </tr>
+                        </thead>
+                        <tbody id="joinersTableBody"></tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('click', function (e) {
+        const btn = e.target.closest('.btn-spots-filled');
+        if (!btn) return;
+
+        const joiners     = JSON.parse(btn.dataset.joiners || '[]');
+        const spotsFilled = btn.dataset.spotsFilled;
+        const spotsTotal  = btn.dataset.spotsTotal;
+
+        // Update title
+        document.getElementById('joinersModalLabel').innerHTML =
+            '<span class="material-icons align-middle me-2" style="font-size:1.2rem;vertical-align:middle;">people</span>' +
+            'Players Who Joined Your Session ' +
+            '<span class="badge bg-secondary ms-1">' + spotsFilled + '/' + spotsTotal + '</span>';
+
+        // Build table rows
+        const tbody = document.getElementById('joinersTableBody');
+        tbody.innerHTML = '';
+        if (joiners.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-3">No joiners yet.</td></tr>';
+        } else {
+            joiners.forEach(function (j, i) {
+                const name  = [j.fname, j.lname].filter(Boolean).join(' ') || '—';
+                const email = j.email  || '—';
+                const phone = j.phone  || '—';
+                const tr = document.createElement('tr');
+                tr.innerHTML =
+                    '<td class="ps-3">' + (i + 1) + '</td>' +
+                    '<td>' + esc(name)  + '</td>' +
+                    '<td>' + esc(email) + '</td>' +
+                    '<td>' + esc(phone) + '</td>';
+                tbody.appendChild(tr);
+            });
+        }
+
+        bootstrap.Modal.getOrCreateInstance(document.getElementById('joinersModal')).show();
+    });
+
+    function esc(s) {
+        return String(s)
+            .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+            .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+    </script>
 </body>
 </html>

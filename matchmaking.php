@@ -49,12 +49,31 @@ try {
         $s2 = $pdo->prepare("SELECT post_id FROM matchmaking_joins WHERE member_id=:mid");
         $s2->execute([':mid' => $_SESSION['member_id']]);
         $my_joins = array_column($s2->fetchAll(), 'post_id');
+
+        // Fetch user's confirmed bookings for the "link to booking" dropdown
+        $s3 = $pdo->prepare(
+            "SELECT b.booking_id, b.booking_date, b.time_slot
+             FROM bookings b
+             WHERE b.member_id = :mid AND b.status = 'Confirmed'
+               AND CONCAT(b.booking_date, ' ', CASE b.time_slot
+                   WHEN '11:00 AM - 1:00 PM' THEN '11:00:00'
+                   WHEN '1:00 PM - 3:00 PM'  THEN '13:00:00'
+                   WHEN '3:00 PM - 5:00 PM'  THEN '15:00:00'
+                   WHEN '5:00 PM - 7:00 PM'  THEN '17:00:00'
+                   WHEN '7:00 PM - 9:00 PM'  THEN '19:00:00'
+                   WHEN '9:00 PM - 11:00 PM' THEN '21:00:00'
+                   ELSE '00:00:00' END) >= NOW()
+             ORDER BY b.booking_date ASC, b.time_slot ASC"
+        );
+        $s3->execute([':mid' => $_SESSION['member_id']]);
+        $my_bookings = $s3->fetchAll();
     }
 } catch (Exception $e) {
     error_log("Matchmaking load error: " . $e->getMessage());
     $pdo_error = true;
 }
-$my_joins = $my_joins ?? [];
+$my_joins    = $my_joins    ?? [];
+$my_bookings = $my_bookings ?? [];
 
 /**
  * Convert a datetime string into a human-readable relative time label.
@@ -102,6 +121,16 @@ function fmtDate(string $date, string $time): string {
 }
 
 $skill_badge = ["Beginner"=>"badge-difficulty-easy","Intermediate"=>"badge-difficulty-medium","Advanced"=>"badge-difficulty-hard"];
+
+// Map booking time_slot labels to the 24h values used by the matchmaking time select
+$slot_label_to_value = [
+    '11:00 AM - 1:00 PM' => '11:00',
+    '1:00 PM - 3:00 PM'  => '13:00',
+    '3:00 PM - 5:00 PM'  => '15:00',
+    '5:00 PM - 7:00 PM'  => '17:00',
+    '7:00 PM - 9:00 PM'  => '19:00',
+    '9:00 PM - 11:00 PM' => '21:00',
+];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -441,6 +470,26 @@ $skill_badge = ["Beginner"=>"badge-difficulty-easy","Intermediate"=>"badge-diffi
             <input type="hidden" name="post_id" id="formPostId" value="">
             <p class="text-muted small mb-3"><span class="text-danger">*</span> Required fields</p>
 
+            <?php if (!empty($my_bookings)): ?>
+            <div class="mb-3">
+                <label for="linkBooking" class="form-label fw-bold">Link to Your Booking <span class="text-muted small fw-normal">(optional)</span></label>
+                <select id="linkBooking" name="booking_id" class="form-select">
+                    <option value="">— No booking, enter date &amp; time manually —</option>
+                    <?php foreach ($my_bookings as $bk):
+                        $bk_date_fmt = date('d M Y', strtotime($bk['booking_date']));
+                        $bk_val = $slot_label_to_value[$bk['time_slot']] ?? '';
+                    ?>
+                    <option value="<?php echo (int)$bk['booking_id']; ?>"
+                            data-date="<?php echo htmlspecialchars($bk['booking_date']); ?>"
+                            data-time="<?php echo htmlspecialchars($bk_val); ?>">
+                        <?php echo htmlspecialchars("$bk_date_fmt — {$bk['time_slot']}"); ?>
+                    </option>
+                    <?php endforeach; ?>
+                </select>
+                <div class="form-text">Selecting a booking will auto-fill the date and time slot below.</div>
+            </div>
+            <?php endif; ?>
+
             <div class="mb-3">
                 <label for="postTitle" class="form-label fw-bold">Title <span class="text-danger">*</span></label>
                 <input type="text" id="postTitle" name="title" class="form-control" maxlength="80" placeholder="e.g. Looking for Catan rivals this Saturday!" required>
@@ -576,6 +625,8 @@ $skill_badge = ["Beginner"=>"badge-difficulty-easy","Intermediate"=>"badge-diffi
         $("postForm").reset();
         $("titleCount").textContent="0";
         $("bodyCount").textContent="0";
+        const dateEl=$("postDate");
+        if(dateEl) dateEl.readOnly=false;
         initDateConstraints();
     }
 
@@ -615,6 +666,28 @@ $skill_badge = ["Beginner"=>"badge-difficulty-easy","Intermediate"=>"badge-diffi
     // Open in CREATE mode
     const openBtn=$("openPostModal");
     if(openBtn) openBtn.addEventListener("click", ()=>{ resetModalToCreate(); openModal(); $("postTitle").focus(); });
+
+    // Booking selector — auto-fills date & time slot when a booking is chosen
+    const linkBooking=$("linkBooking");
+    if(linkBooking) {
+        linkBooking.addEventListener("change", () => {
+            const opt = linkBooking.options[linkBooking.selectedIndex];
+            const dateEl=$("postDate"), timeEl=$("postTime");
+            if(opt.value && opt.dataset.date && opt.dataset.time) {
+                dateEl.value = opt.dataset.date;
+                // Re-run constraints so past slots get disabled first
+                initDateConstraints();
+                // Then set the value (only if option is still enabled)
+                setSelect("postTime", opt.dataset.time);
+                // Lock date/time to prevent manual override when booking is linked
+                dateEl.readOnly = true;
+                timeEl.disabled = false; // keep enabled so it submits
+            } else {
+                dateEl.readOnly = false;
+                initDateConstraints();
+            }
+        });
+    }
 
     // Open in EDIT mode
     document.addEventListener("click", e=>{

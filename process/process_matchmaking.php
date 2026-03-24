@@ -110,20 +110,32 @@ switch ($action) {
 
         $is_urgent = isset($_POST["is_urgent"]) ? 1 : 0;
 
+        // Optional: link to one of the member's confirmed bookings
+        $booking_id = !empty($_POST["booking_id"]) ? (int)$_POST["booking_id"] : null;
+        if ($booking_id !== null) {
+            // Verify this booking belongs to this member and is Confirmed
+            $bk_check = $pdo->prepare("SELECT booking_id FROM bookings WHERE booking_id=:bid AND member_id=:mid AND status='Confirmed'");
+            $bk_check->execute([':bid' => $booking_id, ':mid' => $member_id]);
+            if (!$bk_check->fetch()) {
+                $booking_id = null; // silently ignore invalid booking_id
+            }
+        }
+
         // Insert into database
         try {
             $stmt = $pdo->prepare(
                 "INSERT INTO matchmaking_posts
-                    (member_id, title, body, game_name, game_type, skill_level,
+                    (member_id, booking_id, title, body, game_name, game_type, skill_level,
                     play_style, spots_total, session_date, session_time,
                     pref_gender, pref_skill, pref_age, is_urgent)
                 VALUES
-                    (:mid, :title, :body, :game_name, :game_type, :skill_level,
+                    (:mid, :booking_id, :title, :body, :game_name, :game_type, :skill_level,
                     :play_style, :spots_total, :session_date, :session_time,
                     :pref_gender, :pref_skill, :pref_age, :is_urgent)"
             );
             $stmt->execute([
                 ':mid' => $member_id,
+                ':booking_id' => $booking_id,
                 ':title' => $title,
                 ':body' => $body,
                 ':game_name' => $game_name,
@@ -311,7 +323,10 @@ switch ($action) {
             exit();
         }
 
-        $post = $pdo->prepare("SELECT member_id, spots_total, spots_filled, status FROM matchmaking_posts WHERE post_id=:pid");
+        $post = $pdo->prepare(
+            "SELECT member_id, spots_total, spots_filled, status, session_date, session_time
+             FROM matchmaking_posts WHERE post_id=:pid"
+        );
         $post->execute([':pid' => $post_id]);
         $row = $post->fetch();
 
@@ -327,6 +342,14 @@ switch ($action) {
         }
         if ((int) $row['spots_filled'] >= (int) $row['spots_total']) {
             setFlash('error', 'This session is already full.');
+            header("Location: " . Routes::MATCHMAKING);
+            exit();
+        }
+
+        // Block joining if within 2 hours of session start (spots are finalised)
+        $session_start = strtotime($row['session_date'] . ' ' . $row['session_time']);
+        if (time() >= $session_start - 2 * 3600) {
+            setFlash('error', 'Spots for this session are finalised — joining is closed 2 hours before start.');
             header("Location: " . Routes::MATCHMAKING);
             exit();
         }
@@ -349,6 +372,16 @@ switch ($action) {
         $post_id = (int) ($_POST["post_id"] ?? 0);
         if ($post_id <= 0) {
             setFlash('error', 'Invalid session.');
+            header("Location: " . Routes::MATCHMAKING);
+            exit();
+        }
+
+        // Also enforce the 2-hour cutoff for unjoin
+        $chk = $pdo->prepare("SELECT session_date, session_time FROM matchmaking_posts WHERE post_id=:pid");
+        $chk->execute([':pid' => $post_id]);
+        $chkrow = $chk->fetch();
+        if ($chkrow && time() >= strtotime($chkrow['session_date'] . ' ' . $chkrow['session_time']) - 2 * 3600) {
+            setFlash('error', 'Spots are finalised — you can no longer leave this session 2 hours before start.');
             header("Location: " . Routes::MATCHMAKING);
             exit();
         }

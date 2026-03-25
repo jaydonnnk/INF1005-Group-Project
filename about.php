@@ -21,7 +21,7 @@
         <header class="hero-section">
             <div class="container">
                 <h1>About Us</h1>
-                <p>The story behind Singapore's cosiest board game caf&eacute;.</p>
+                <p>The story behind Singapore's cosiest board game cafe</p>
             </div>
         </header>
 
@@ -32,9 +32,9 @@
                 <div class="row align-items-center">
                     <div class="col-md-7">
                         <p>
-                            The Rolling Dice was born in 2023 from a simple idea: what if there was a place
+                            The Rolling Dice was born in 2026 from a simple idea: what if there was a place
                             where friends could gather, unplug from screens, and reconnect over a shared love
-                            of board games? Nestled in the heart of Singapore, our caf&eacute; offers a warm,
+                            of board games? Nestled in the heart of Singapore, our cafe offers a warm,
                             welcoming space where everyone — from first-timers to seasoned strategists — can
                             discover the joy of tabletop gaming.
                         </p>
@@ -62,7 +62,7 @@
                         <div class="card text-center p-3">
                             <span class="material-icons mx-auto mb-2 text-caramel" style="font-size:3rem;"
                                 aria-hidden="true">person</span>
-                            <h3 class="card-title">Alex Tan</h3>
+                            <h3 class="card-title">Jaydon</h3>
                             <p class="text-muted">Founder &amp; Game Curator</p>
                             <p>Lifelong board game enthusiast with a collection of 500+ titles at home.</p>
                         </div>
@@ -71,7 +71,7 @@
                         <div class="card text-center p-3">
                             <span class="material-icons mx-auto mb-2 text-caramel" style="font-size:3rem;"
                                 aria-hidden="true">person</span>
-                            <h3 class="card-title">Sam Lee</h3>
+                            <h3 class="card-title">Shan Jing</h3>
                             <p class="text-muted">Head Chef</p>
                             <p>Brings comfort food and creative drinks that pair perfectly with game nights.</p>
                         </div>
@@ -80,7 +80,7 @@
                         <div class="card text-center p-3">
                             <span class="material-icons mx-auto mb-2 text-caramel" style="font-size:3rem;"
                                 aria-hidden="true">person</span>
-                            <h3 class="card-title">Jamie Wong</h3>
+                            <h3 class="card-title">Caleb</h3>
                             <p class="text-muted">Community Manager</p>
                             <p>Organises weekly game nights, tournaments, and new player workshops.</p>
                         </div>

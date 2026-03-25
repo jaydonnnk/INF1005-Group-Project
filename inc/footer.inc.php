@@ -6,7 +6,7 @@
             <div class="col-md-4 mb-3">
                 <p class="footer-heading">The Rolling Dice</p>
                 <p class="footer-tagline">
-                    Singapore's cosiest board game caf&eacute;. Good games, great food, and
+                    Singapore's cosiest board game cafe;. Good games, great food, and
                     even better company.
                 </p>
             </div>

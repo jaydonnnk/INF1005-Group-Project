@@ -9,7 +9,7 @@
 <html lang="en">
 
 <head>
-    <title>The Rolling Dice - Board Game Cafe&eacute;</title>
+    <title>The Rolling Dice - Board Game Cafee;</title>
     <?php include_once "inc/head.inc.php"; ?>
 </head>
 
@@ -23,7 +23,7 @@
             <div class="container">
                 <h1 class="display-4">Welcome to The Rolling Dice</h1>
                 <p>
-                    Singapore's cosiest board game caf&eacute;. Grab a seat, pick a game from
+                    Singapore's cosiest board game cafe;. Grab a seat, pick a game from
                     our library of 200+ titles, and fuel up with craft coffee and comfort food.
                 </p>
                 <a href="bookings.php" class="btn btn-hero">
@@ -49,7 +49,7 @@
                     <div class="col-md-4">
                         <div class="dashboard-card">
                             <span class="material-icons" aria-hidden="true">restaurant</span>
-                            <h3>Caf&eacute; &amp; Kitchen</h3>
+                            <h3>Cafe; &amp; Kitchen</h3>
                             <p>Craft coffee, comfort food, and sweet treats to keep the energy high.</p>
                         </div>
                     </div>

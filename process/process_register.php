@@ -225,7 +225,7 @@ if ($success) {
                             A verification email has been sent to your email address.
                             Please check your inbox and click the link to activate your account.
                         </p>
-                        <a href="../login.php" class="btn btn-primary">
+                        <a href="login.php" class="btn btn-primary">
                             <span class="material-icons align-middle me-1" aria-hidden="true">login</span>
                             Sign In
                         </a>
@@ -242,12 +242,12 @@ if ($success) {
                             </ul>
                         </div>
                         <?php if ($email_exists): ?>
-                            <a href="../login.php" class="btn btn-primary me-2">
+                            <a href="login.php" class="btn btn-primary me-2">
                                 <span class="material-icons align-middle me-1" aria-hidden="true">login</span>
                                 Sign In Instead
                             </a>
                         <?php endif; ?>
-                        <a href="../register.php" class="btn btn-outline-primary">
+                        <a href="register.php" class="btn btn-outline-primary">
                             <span class="material-icons align-middle me-1" aria-hidden="true">arrow_back</span>
                             Go Back and Try Again
                         </a>

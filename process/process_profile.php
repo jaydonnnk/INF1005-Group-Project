@@ -38,7 +38,40 @@ switch ($action) {
         $fname = sanitizeInput($_POST["fname"] ?? "");
         $lname = sanitizeInput($_POST["lname"] ?? "");
         $email = sanitizeInput($_POST["email"] ?? "");
-        $phone = sanitizeInput($_POST["phone"] ?? "");
+
+        // Phone: combine country code + number
+        $allowed_codes = ['+65', '+60', '+62', '+63', '+66', '+91', '+44', '+1', '+61', '+81', '+82', '+86'];
+        $country_code = sanitizeInput($_POST["country_code"] ?? "+65");
+        $phone_number = sanitizeInput($_POST["phone_number"] ?? "");
+        $phone = "";
+
+        if (!empty($phone_number)) {
+            if (!in_array($country_code, $allowed_codes)) {
+                $errors[] = "Invalid country code.";
+            } elseif (!preg_match('/^\d+$/', $phone_number)) {
+                $errors[] = "Phone number must contain only digits.";
+            } else {
+                $phone_len = strlen($phone_number);
+                if ($country_code === '+65') {
+                    if ($phone_len !== 8 || !preg_match('/^[689]/', $phone_number)) {
+                        $errors[] = "Singapore numbers must be 8 digits starting with 6, 8, or 9.";
+                    }
+                } elseif ($country_code === '+60') {
+                    if ($phone_len < 9 || $phone_len > 10) {
+                        $errors[] = "Malaysia numbers must be 9-10 digits.";
+                    }
+                } elseif ($country_code === '+1') {
+                    if ($phone_len !== 10) {
+                        $errors[] = "US/Canada numbers must be exactly 10 digits.";
+                    }
+                } else {
+                    if ($phone_len < 7 || $phone_len > 15) {
+                        $errors[] = "Phone number must be 7-15 digits.";
+                    }
+                }
+            }
+            $phone = $country_code . " " . $phone_number;
+        }
 
         if (strlen($fname) > 45) {
             $errors[] = "First name must be 45 characters or fewer.";
@@ -54,10 +87,20 @@ switch ($action) {
             $errors[] = "Email is required.";
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $errors[] = "Invalid email format.";
-        }
-
-        if (!empty($phone) && !preg_match('/^[\d\s\+\-\(\)]+$/', $phone)) {
-            $errors[] = "Invalid phone number format.";
+        } else {
+            $allowed_domains = [
+                'gmail.com', 'yahoo.com', 'yahoo.com.sg', 'hotmail.com', 'outlook.com',
+                'live.com', 'icloud.com', 'me.com', 'mac.com', 'aol.com',
+                'protonmail.com', 'proton.me', 'zoho.com',
+                'sit.singaporetech.edu.sg', 'singaporetech.edu.sg',
+                'u.nus.edu', 'ntu.edu.sg', 'smu.edu.sg', 'sutd.edu.sg',
+                'mymail.sim.edu.sg', 'tp.edu.sg', 'np.edu.sg', 'sp.edu.sg',
+                'rp.edu.sg', 'nyp.edu.sg'
+            ];
+            $email_domain = strtolower(substr(strrchr($email, '@'), 1));
+            if (!in_array($email_domain, $allowed_domains)) {
+                $errors[] = "Please use a valid email provider (Gmail, Yahoo, Outlook, etc.) or your school email.";
+            }
         }
 
         if (!empty($errors)) {
@@ -110,8 +153,20 @@ switch ($action) {
             exit();
         }
 
-        if (strlen($new_pwd) < 8) {
-            setFlash('error', 'New password must be at least 8 characters.');
+        if (strlen($new_pwd) < 12) {
+            setFlash('error', 'New password must be at least 12 characters.');
+            header("Location: " . Routes::PROFILE);
+            exit();
+        }
+
+        if (!preg_match('/[A-Z]/', $new_pwd)) {
+            setFlash('error', 'New password must contain at least one uppercase letter.');
+            header("Location: " . Routes::PROFILE);
+            exit();
+        }
+
+        if (!preg_match('/[!@#$%^&*()_+\-=\[\]{};\':"\\\\|,.<>\/?]/', $new_pwd)) {
+            setFlash('error', 'New password must contain at least one special character.');
             header("Location: " . Routes::PROFILE);
             exit();
         }

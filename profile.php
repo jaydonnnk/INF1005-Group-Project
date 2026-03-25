@@ -106,12 +106,37 @@ $member = $stmt->fetch();
                             </div>
 
                             <!-- Phone -->
+                            <?php
+                            // Split existing phone into country code and number
+                            $existing_phone = $member['phone'] ?? '';
+                            $existing_cc = '+65';
+                            $existing_num = '';
+                            if (!empty($existing_phone) && strpos($existing_phone, ' ') !== false) {
+                                $parts = explode(' ', $existing_phone, 2);
+                                $existing_cc = $parts[0];
+                                $existing_num = $parts[1];
+                            } elseif (!empty($existing_phone)) {
+                                $existing_num = $existing_phone;
+                            }
+                            $cc_options = ['+65'=>'SG','+60'=>'MY','+62'=>'ID','+63'=>'PH','+66'=>'TH','+91'=>'IN','+44'=>'UK','+1'=>'US/CA','+61'=>'AU','+81'=>'JP','+82'=>'KR','+86'=>'CN'];
+                            ?>
                             <div class="mb-3">
-                                <label for="phone" class="form-label">Phone:</label>
-                                <input type="tel" id="phone" name="phone" class="form-control"
-                                    maxlength="20"
-                                    value="<?php echo htmlspecialchars($member['phone'] ?? ''); ?>"
-                                    placeholder="e.g. +65 9123 4567">
+                                <label for="phone_number" class="form-label">Phone:</label>
+                                <div class="row g-2">
+                                    <div class="col-4">
+                                        <select id="country_code" name="country_code" class="form-select" aria-label="Country code">
+                                            <?php foreach ($cc_options as $cc => $label): ?>
+                                                <option value="<?php echo $cc; ?>" <?php echo ($existing_cc === $cc) ? 'selected' : ''; ?>><?php echo $cc; ?> (<?php echo $label; ?>)</option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="text" id="phone_number" name="phone_number" class="form-control"
+                                            inputmode="numeric" pattern="[0-9]+" maxlength="15"
+                                            value="<?php echo htmlspecialchars($existing_num); ?>"
+                                            placeholder="e.g. 91234567">
+                                    </div>
+                                </div>
                             </div>
 
                             <button type="submit" class="btn btn-primary">
@@ -161,10 +186,12 @@ $member = $stmt->fetch();
                                     New Password: <span class="text-danger">*</span>
                                 </label>
                                 <input type="password" id="new_pwd" name="new_pwd"
-                                    class="form-control" minlength="8"
-                                    placeholder="Minimum 8 characters" required>
-                                <div class="form-text">Must be at least 8 characters.</div>
-                                <div class="invalid-feedback">Password must be at least 8 characters.</div>
+                                    class="form-control" minlength="12"
+                                    pattern="(?=.*[A-Z])(?=.*[!@#$%^&amp;*()_+\-=\[\]{};':&quot;\\|,.&lt;&gt;\/?]).{12,}"
+                                    title="At least 12 characters, 1 uppercase letter, and 1 special character"
+                                    placeholder="Minimum 12 characters" required>
+                                <div class="form-text">Must be at least 12 characters, with at least 1 uppercase letter and 1 special character (!@#$%^&amp;* etc.)</div>
+                                <div class="invalid-feedback">Password must meet the requirements above.</div>
                             </div>
 
                             <!-- Confirm New Password -->
@@ -173,7 +200,7 @@ $member = $stmt->fetch();
                                     Confirm New Password: <span class="text-danger">*</span>
                                 </label>
                                 <input type="password" id="pwd_confirm" name="pwd_confirm"
-                                    class="form-control" minlength="8"
+                                    class="form-control" minlength="12"
                                     placeholder="Re-enter new password" required>
                                 <div class="invalid-feedback">Passwords do not match.</div>
                             </div>

@@ -55,15 +55,18 @@ if (!empty($token) && strlen($token) === 64 && ctype_xdigit($token)) {
                         <div class="mb-3">
                             <label for="new_pwd" class="form-label">New Password: <span class="text-danger">*</span></label>
                             <input type="password" id="new_pwd" name="new_pwd" class="form-control"
-                                minlength="8" placeholder="Minimum 8 characters" required>
-                            <div class="form-text">Must be at least 8 characters.</div>
-                            <div class="invalid-feedback">Please enter a new password (minimum 8 characters).</div>
+                                minlength="12"
+                                pattern="(?=.*[A-Z])(?=.*[!@#$%^&amp;*()_+\-=\[\]{};':&quot;\\|,.&lt;&gt;\/?]).{12,}"
+                                title="At least 12 characters, 1 uppercase letter, and 1 special character"
+                                placeholder="Minimum 12 characters" required>
+                            <div class="form-text">Must be at least 12 characters, with at least 1 uppercase letter and 1 special character</div>
+                            <div class="invalid-feedback">Password must meet the requirements above.</div>
                         </div>
 
                         <div class="mb-3">
                             <label for="pwd_confirm" class="form-label">Confirm New Password: <span class="text-danger">*</span></label>
                             <input type="password" id="pwd_confirm" name="pwd_confirm" class="form-control"
-                                minlength="8" placeholder="Re-enter new password" required>
+                                minlength="12" placeholder="Re-enter new password" required>
                             <div class="invalid-feedback">Please confirm your new password.</div>
                         </div>
 

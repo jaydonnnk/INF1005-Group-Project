@@ -35,8 +35,20 @@ if (empty($new_pwd) || empty($pwd_confirm)) {
     exit();
 }
 
-if (strlen($new_pwd) < 8) {
-    setFlash('error', 'Password must be at least 8 characters.');
+if (strlen($new_pwd) < 12) {
+    setFlash('error', 'Password must be at least 12 characters.');
+    header("Location: " . Routes::RESET_PW . "?token=" . urlencode($token));
+    exit();
+}
+
+if (!preg_match('/[A-Z]/', $new_pwd)) {
+    setFlash('error', 'Password must contain at least one uppercase letter.');
+    header("Location: " . Routes::RESET_PW . "?token=" . urlencode($token));
+    exit();
+}
+
+if (!preg_match('/[!@#$%^&*()_+\-=\[\]{};\':"\\\\|,.<>\/?]/', $new_pwd)) {
+    setFlash('error', 'Password must contain at least one special character.');
     header("Location: " . Routes::RESET_PW . "?token=" . urlencode($token));
     exit();
 }

@@ -43,31 +43,76 @@ if (empty($_POST["lname"])) {
     }
 }
 
-// --- Email (required + format check) ---
+// --- Email (required + format check + domain whitelist) ---
 if (empty($_POST["email"])) {
     $errors[] = "Email is required.";
 } else {
     $email = sanitizeInput($_POST["email"]);
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errors[] = "Invalid email format.";
+    } else {
+        $allowed_domains = [
+            'gmail.com', 'yahoo.com', 'yahoo.com.sg', 'hotmail.com', 'outlook.com',
+            'live.com', 'icloud.com', 'me.com', 'mac.com', 'aol.com',
+            'protonmail.com', 'proton.me', 'zoho.com',
+            'sit.singaporetech.edu.sg', 'singaporetech.edu.sg',
+            'u.nus.edu', 'ntu.edu.sg', 'smu.edu.sg', 'sutd.edu.sg',
+            'mymail.sim.edu.sg', 'tp.edu.sg', 'np.edu.sg', 'sp.edu.sg',
+            'rp.edu.sg', 'nyp.edu.sg'
+        ];
+        $email_domain = strtolower(substr(strrchr($email, '@'), 1));
+        if (!in_array($email_domain, $allowed_domains)) {
+            $errors[] = "Please use a valid email provider (Gmail, Yahoo, Outlook, etc.) or your school email.";
+        }
     }
 }
 
-// --- Phone (optional) ---
-if (!empty($_POST["phone"])) {
-    $phone = sanitizeInput($_POST["phone"]);
-    // Allow digits, spaces, +, -, and parentheses
-    if (!preg_match('/^[\d\s\+\-\(\)]+$/', $phone)) {
-        $errors[] = "Invalid phone number format.";
+// --- Phone (optional, country code + number) ---
+$allowed_codes = ['+65', '+60', '+62', '+63', '+66', '+91', '+44', '+1', '+61', '+81', '+82', '+86'];
+$country_code = sanitizeInput($_POST["country_code"] ?? "+65");
+$phone_number = sanitizeInput($_POST["phone_number"] ?? "");
+
+if (!empty($phone_number)) {
+    if (!in_array($country_code, $allowed_codes)) {
+        $errors[] = "Invalid country code.";
+    } elseif (!preg_match('/^\d+$/', $phone_number)) {
+        $errors[] = "Phone number must contain only digits.";
+    } else {
+        $phone_len = strlen($phone_number);
+        if ($country_code === '+65') {
+            if ($phone_len !== 8 || !preg_match('/^[689]/', $phone_number)) {
+                $errors[] = "Singapore numbers must be 8 digits starting with 6, 8, or 9.";
+            }
+        } elseif ($country_code === '+60') {
+            if ($phone_len < 9 || $phone_len > 10) {
+                $errors[] = "Malaysia numbers must be 9-10 digits.";
+            }
+        } elseif ($country_code === '+1') {
+            if ($phone_len !== 10) {
+                $errors[] = "US/Canada numbers must be exactly 10 digits.";
+            }
+        } else {
+            if ($phone_len < 7 || $phone_len > 15) {
+                $errors[] = "Phone number must be 7-15 digits.";
+            }
+        }
     }
+    $phone = $country_code . " " . $phone_number;
 }
 
-// --- Password (required, min 8 chars) ---
+// --- Password (required, min 12 chars, 1 uppercase, 1 special char) ---
 // Note: We do NOT sanitize the password as it may strip intentional special characters.
 if (empty($_POST["pwd"])) {
     $errors[] = "Password is required.";
-} elseif (strlen($_POST["pwd"]) < 8) {
-    $errors[] = "Password must be at least 8 characters.";
+} elseif (strlen($_POST["pwd"]) < 12) {
+    $errors[] = "Password must be at least 12 characters.";
+} else {
+    if (!preg_match('/[A-Z]/', $_POST["pwd"])) {
+        $errors[] = "Password must contain at least one uppercase letter.";
+    }
+    if (!preg_match('/[!@#$%^&*()_+\-=\[\]{};\':"\\\\|,.<>\/?]/', $_POST["pwd"])) {
+        $errors[] = "Password must contain at least one special character.";
+    }
 }
 
 // --- Confirm Password ---
@@ -75,11 +120,6 @@ if (empty($_POST["pwd_confirm"])) {
     $errors[] = "Please confirm your password.";
 } elseif ($_POST["pwd"] !== $_POST["pwd_confirm"]) {
     $errors[] = "Passwords do not match.";
-}
-
-// --- Terms & Conditions Checkbox ---
-if (!isset($_POST["agree"])) {
-    $errors[] = "You must agree to the terms and conditions.";
 }
 
 // ============================================

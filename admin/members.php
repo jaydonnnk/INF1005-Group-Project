@@ -87,7 +87,7 @@ $members = $pdo->query(
 
                                     <!-- Disable / Reactivate -->
                                     <?php if ($m['account_status'] === 'active'): ?>
-                                        <form method="post" action="admin/process/process_admin.php" class="d-inline"
+                                        <form method="post" action="admin/process/process_admin.php" class="d-inline ms-1"
                                             onsubmit="return confirm('Disable this account? The member will not be able to log in.');">
                                             <?php echo csrfField(); ?>
                                             <input type="hidden" name="action" value="disable_member">
@@ -97,7 +97,7 @@ $members = $pdo->query(
                                             </button>
                                         </form>
                                     <?php else: ?>
-                                        <form method="post" action="admin/process/process_admin.php" class="d-inline"
+                                        <form method="post" action="admin/process/process_admin.php" class="d-inline ms-1"
                                             onsubmit="return confirm('Reactivate this account?');">
                                             <?php echo csrfField(); ?>
                                             <input type="hidden" name="action" value="reactivate_member">
@@ -109,7 +109,7 @@ $members = $pdo->query(
                                     <?php endif; ?>
 
                                     <!-- Delete -->
-                                    <form method="post" action="admin/process/process_admin.php" class="d-inline"
+                                    <form method="post" action="admin/process/process_admin.php" class="d-inline ms-1"
                                         onsubmit="return confirm('Permanently delete this account and all their data? This cannot be undone.');">
                                         <?php echo csrfField(); ?>
                                         <input type="hidden" name="action" value="delete_member">

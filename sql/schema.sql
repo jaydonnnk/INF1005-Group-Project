@@ -14,14 +14,20 @@ USE rolling_dice_db;
 -- Members table (User accounts)
 
 CREATE TABLE IF NOT EXISTS members (
-    member_id   INT AUTO_INCREMENT PRIMARY KEY,
-    fname       VARCHAR(45),
-    lname       VARCHAR(45) NOT NULL,
-    email       VARCHAR(100) NOT NULL UNIQUE,
-    password_hash VARCHAR(255) NOT NULL,
-    phone       VARCHAR(20),
-    is_admin    TINYINT(1) NOT NULL DEFAULT 0,
-    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP
+    member_id            INT AUTO_INCREMENT PRIMARY KEY,
+    fname                VARCHAR(45),
+    lname                VARCHAR(45) NOT NULL,
+    email                VARCHAR(100) NOT NULL UNIQUE,
+    password_hash        VARCHAR(255) NOT NULL,
+    phone                VARCHAR(20),
+    is_admin             TINYINT(1) NOT NULL DEFAULT 0,
+    account_status       ENUM('active', 'disabled') NOT NULL DEFAULT 'active',
+    email_verified       TINYINT(1) NOT NULL DEFAULT 0,
+    verification_token   VARCHAR(64) DEFAULT NULL,
+    verification_expires DATETIME DEFAULT NULL,
+    totp_secret          VARCHAR(64) DEFAULT NULL,          -- NULL = 2FA not configured
+    totp_enabled         TINYINT(1) NOT NULL DEFAULT 0,
+    created_at           DATETIME DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
@@ -278,30 +284,8 @@ CREATE TABLE IF NOT EXISTS matchmaking_sessions (
 -- Database User (for PHP application)
 -- Change the password below before running!
 -- ============================================
+
 CREATE USER IF NOT EXISTS 'rolling_dice_user'@'localhost' IDENTIFIED BY 'Student@s1t';
 GRANT ALL PRIVILEGES ON rolling_dice_db.* TO 'rolling_dice_user'@'localhost';
 FLUSH PRIVILEGES;
 
--- ============================================
--- Email Verification & 2FA Columns (run on live DB)
--- ============================================
--- ALTER TABLE members ADD COLUMN email_verified TINYINT(1) NOT NULL DEFAULT 0 AFTER is_admin;
--- ALTER TABLE members ADD COLUMN verification_token VARCHAR(64) DEFAULT NULL AFTER email_verified;
--- ALTER TABLE members ADD COLUMN verification_expires DATETIME DEFAULT NULL AFTER verification_token;
--- ALTER TABLE members ADD COLUMN totp_secret VARCHAR(64) DEFAULT NULL AFTER verification_expires;  -- NULL = 2FA not configured
--- ALTER TABLE members ADD COLUMN totp_enabled TINYINT(1) NOT NULL DEFAULT 0 AFTER totp_secret;
-
--- ============================================
--- Matchmaking booking_id column (run on existing DB if matchmaking_posts already exists)
--- ============================================
--- ALTER TABLE matchmaking_posts ADD COLUMN booking_id INT DEFAULT NULL AFTER member_id;
--- ALTER TABLE matchmaking_posts ADD CONSTRAINT fk_mp_booking FOREIGN KEY (booking_id) REFERENCES bookings(booking_id) ON DELETE SET NULL;
-
--- ============================================
--- Disable Account Column
--- Run on your live DB (GCP VM):
---   mysql -u root -p rolling_dice_db < add_account_status.sql
--- ============================================
-ALTER TABLE members
-    ADD COLUMN account_status ENUM('active', 'disabled') NOT NULL DEFAULT 'active'
-    AFTER is_admin;

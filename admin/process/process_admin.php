@@ -331,6 +331,55 @@ try {
             header("Location: " . Routes::ADMIN_MEMBERS);
             exit();
 
+        // Disable member account
+        case 'disable_member':
+            $target_id = (int)($_POST['member_id'] ?? 0);
+
+            if ($target_id === (int)$_SESSION['member_id']) {
+                setFlash('error', 'You cannot disable your own account.');
+                header("Location: " . Routes::ADMIN_MEMBERS);
+                exit();
+            }
+
+            if ($target_id > 0) {
+                $stmt = $pdo->prepare("UPDATE members SET account_status = 'disabled' WHERE member_id = :id");
+                $stmt->execute([':id' => $target_id]);
+                setFlash('success', 'Member account has been disabled.');
+            }
+            header("Location: " . Routes::ADMIN_MEMBERS);
+            exit();
+
+        // Reactivate member account
+        case 'reactivate_member':
+            $target_id = (int)($_POST['member_id'] ?? 0);
+
+            if ($target_id > 0) {
+                $stmt = $pdo->prepare("UPDATE members SET account_status = 'active' WHERE member_id = :id");
+                $stmt->execute([':id' => $target_id]);
+                setFlash('success', 'Member account has been reactivated.');
+            }
+            header("Location: " . Routes::ADMIN_MEMBERS);
+            exit();
+
+        // Permanently delete member account
+        case 'delete_member':
+            $target_id = (int)($_POST['member_id'] ?? 0);
+
+            if ($target_id === (int)$_SESSION['member_id']) {
+                setFlash('error', 'You cannot delete your own account.');
+                header("Location: " . Routes::ADMIN_MEMBERS);
+                exit();
+            }
+
+            if ($target_id > 0) {
+                // CASCADE on foreign keys will remove bookings, orders, reviews, etc.
+                $stmt = $pdo->prepare("DELETE FROM members WHERE member_id = :id");
+                $stmt->execute([':id' => $target_id]);
+                setFlash('success', 'Member account and all associated data have been permanently deleted.');
+            }
+            header("Location: " . Routes::ADMIN_MEMBERS);
+            exit();
+
         default:
             setFlash('error', 'Unknown action.');
             header("Location: " . Routes::ADMIN_HOME);

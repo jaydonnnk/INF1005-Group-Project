@@ -9,7 +9,7 @@ require_once "auth_check.php";
 require_once __DIR__ . "/../process/db.php";
 
 $members = $pdo->query(
-    "SELECT member_id, fname, lname, email, phone, is_admin, created_at FROM members ORDER BY created_at DESC"
+    "SELECT member_id, fname, lname, email, phone, is_admin, account_status, created_at FROM members ORDER BY created_at DESC"
 )->fetchAll();
 ?>
 <!DOCTYPE html>
@@ -42,7 +42,8 @@ $members = $pdo->query(
                         <th>Phone</th>
                         <th>Joined</th>
                         <th>Admin</th>
-                        <th>Action</th>
+                        <th>Status</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -61,9 +62,17 @@ $members = $pdo->query(
                                 <?php endif; ?>
                             </td>
                             <td>
+                                <?php if ($m['account_status'] === 'active'): ?>
+                                    <span class="badge bg-success">Active</span>
+                                <?php else: ?>
+                                    <span class="badge bg-danger">Disabled</span>
+                                <?php endif; ?>
+                            </td>
+                            <td>
                                 <?php if ((int)$m['member_id'] === (int)$_SESSION['member_id']): ?>
                                     <span class="text-muted small">You</span>
                                 <?php else: ?>
+                                    <!-- Toggle Admin -->
                                     <form method="post" action="admin/process/process_admin.php" class="d-inline"
                                         onsubmit="return confirm('<?php echo $m['is_admin'] ? 'Remove admin access?' : 'Grant admin access?'; ?>');">
                                         <?php echo csrfField(); ?>
@@ -73,6 +82,40 @@ $members = $pdo->query(
                                         <button type="submit" class="btn btn-sm <?php echo $m['is_admin'] ? 'btn-outline-danger' : 'btn-outline-primary'; ?>"
                                                 title="<?php echo $m['is_admin'] ? 'Remove admin' : 'Make admin'; ?>">
                                             <?php echo $m['is_admin'] ? 'Remove Admin' : 'Make Admin'; ?>
+                                        </button>
+                                    </form>
+
+                                    <!-- Disable / Reactivate -->
+                                    <?php if ($m['account_status'] === 'active'): ?>
+                                        <form method="post" action="admin/process/process_admin.php" class="d-inline"
+                                            onsubmit="return confirm('Disable this account? The member will not be able to log in.');">
+                                            <?php echo csrfField(); ?>
+                                            <input type="hidden" name="action" value="disable_member">
+                                            <input type="hidden" name="member_id" value="<?php echo (int)$m['member_id']; ?>">
+                                            <button type="submit" class="btn btn-sm btn-outline-warning" title="Disable account">
+                                                <span class="material-icons align-middle" style="font-size:1rem;" aria-hidden="true">block</span> Disable
+                                            </button>
+                                        </form>
+                                    <?php else: ?>
+                                        <form method="post" action="admin/process/process_admin.php" class="d-inline"
+                                            onsubmit="return confirm('Reactivate this account?');">
+                                            <?php echo csrfField(); ?>
+                                            <input type="hidden" name="action" value="reactivate_member">
+                                            <input type="hidden" name="member_id" value="<?php echo (int)$m['member_id']; ?>">
+                                            <button type="submit" class="btn btn-sm btn-outline-success" title="Reactivate account">
+                                                <span class="material-icons align-middle" style="font-size:1rem;" aria-hidden="true">check_circle</span> Reactivate
+                                            </button>
+                                        </form>
+                                    <?php endif; ?>
+
+                                    <!-- Delete -->
+                                    <form method="post" action="admin/process/process_admin.php" class="d-inline"
+                                        onsubmit="return confirm('Permanently delete this account and all their data? This cannot be undone.');">
+                                        <?php echo csrfField(); ?>
+                                        <input type="hidden" name="action" value="delete_member">
+                                        <input type="hidden" name="member_id" value="<?php echo (int)$m['member_id']; ?>">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete account permanently">
+                                            <span class="material-icons align-middle" style="font-size:1rem;" aria-hidden="true">delete_forever</span> Delete
                                         </button>
                                     </form>
                                 <?php endif; ?>

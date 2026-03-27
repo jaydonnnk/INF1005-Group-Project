@@ -19,6 +19,9 @@ $edit_id = isset($_GET['review_id']) ? (int) $_GET['review_id'] : 0;
 $preselect_game = isset($_GET['game_id']) ? (int) $_GET['game_id'] : 0;
 $review_data = null;
 
+// game_id with no action = show all reviews for that game (read-only)
+$show_game_reviews = ($preselect_game > 0 && !isset($_GET['action']));
+
 if ($show_form && $_GET['action'] === 'edit' && $edit_id > 0) {
     $stmt = $pdo->prepare("SELECT * FROM reviews WHERE review_id = :rid AND member_id = :mid");
     $stmt->execute([':rid' => $edit_id, ':mid' => $member_id]);
@@ -29,11 +32,6 @@ if ($show_form && $_GET['action'] === 'edit' && $edit_id > 0) {
         exit();
     }
     $preselect_game = $review_data['game_id'];
-}
-
-// If arriving from games.php with game_id, auto-show form
-if ($preselect_game > 0 && !$show_form && !isset($_GET['action'])) {
-    $show_form = true;
 }
 
 $all_games = $pdo->query("SELECT game_id, title FROM games ORDER BY title ASC")->fetchAll();
@@ -52,17 +50,60 @@ $all_games = $pdo->query("SELECT game_id, title FROM games ORDER BY title ASC")-
     <main id="main-content" class="container section-padding">
 
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1>My Reviews</h1>
-            <?php if (!$show_form): ?>
+            <h1><?php echo $show_game_reviews ? htmlspecialchars($pdo->query("SELECT title FROM games WHERE game_id = $preselect_game")->fetchColumn()) . ' Reviews' : 'My Reviews'; ?></h1>
+            <?php if (!$show_form && !$show_game_reviews): ?>
                 <a href="reviews.php?action=new" class="btn btn-primary">
                     <span class="material-icons align-middle me-1" aria-hidden="true">add</span>Write a Review
+                </a>
+            <?php elseif ($show_game_reviews): ?>
+                <a href="reviews.php" class="btn btn-outline-primary">
+                    <span class="material-icons align-middle me-1" aria-hidden="true">arrow_back</span>My Reviews
                 </a>
             <?php endif; ?>
         </div>
 
         <?php echo displayFlash(); ?>
 
-        <?php if ($show_form): ?>
+        <?php if ($show_game_reviews): ?>
+            <!-- ALL REVIEWS FOR THIS GAME -->
+            <?php
+            $stmt = $pdo->prepare(
+                "SELECT r.*, m.fname, m.lname
+                FROM reviews r
+                JOIN members m ON r.member_id = m.member_id
+                WHERE r.game_id = :gid
+                ORDER BY r.created_at DESC"
+            );
+            $stmt->execute([':gid' => $preselect_game]);
+            $game_reviews = $stmt->fetchAll();
+            ?>
+            <?php if (count($game_reviews) === 0): ?>
+                <p class="text-muted">No reviews yet for this game.</p>
+            <?php else: ?>
+                <div class="row g-4">
+                    <?php foreach ($game_reviews as $r): ?>
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <p class="text-muted small mb-2">by <?php echo htmlspecialchars(trim($r['fname'] . ' ' . $r['lname'])); ?></p>
+                                    <div class="star-rating mb-2">
+                                        <?php for ($i = 1; $i <= 5; $i++): ?>
+                                            <span class="material-icons <?php echo $i <= $r['rating'] ? '' : 'empty'; ?>" aria-hidden="true">star</span>
+                                        <?php endfor; ?>
+                                        <span class="visually-hidden"><?php echo $r['rating']; ?> out of 5 stars</span>
+                                    </div>
+                                    <?php if (!empty($r['comment'])): ?>
+                                        <p class="card-text"><?php echo nl2br(htmlspecialchars($r['comment'])); ?></p>
+                                    <?php endif; ?>
+                                    <p class="text-muted small"><?php echo date('d M Y', strtotime($r['created_at'])); ?></p>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+
+        <?php elseif ($show_form): ?>
             <!-- CREATE / EDIT REVIEW FORM -->
             <div class="row justify-content-center">
                 <div class="col-md-8 col-lg-6">
@@ -116,7 +157,7 @@ $all_games = $pdo->query("SELECT game_id, title FROM games ORDER BY title ASC")-
                                 <span class="material-icons align-middle me-1" aria-hidden="true">save</span>
                                 <?php echo $review_data ? 'Update Review' : 'Submit Review'; ?>
                             </button>
-                            <a href="reviews.php" class="btn btn-outline-primary">Cancel</a>
+                            <a href="games.php" class="btn btn-outline-primary">Cancel</a>
                         </div>
                     </form>
                 </div>

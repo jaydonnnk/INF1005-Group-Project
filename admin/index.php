@@ -80,11 +80,13 @@ $total_menu = $pdo->query("SELECT COUNT(*) FROM menu_items")->fetchColumn();
                 </a>
             </div>
             <div class="col-sm-6 col-lg-4">
-                <div class="dashboard-card">
-                    <span class="material-icons" aria-hidden="true">rate_review</span>
-                    <p class="fs-3 fw-bold mb-0"><?php echo (int)$total_reviews; ?></p>
-                    <p class="text-muted mb-0">Reviews</p>
-                </div>
+                <a href="admin/reviews.php" class="text-decoration-none">
+                    <div class="dashboard-card">
+                        <span class="material-icons" aria-hidden="true">rate_review</span>
+                        <p class="fs-3 fw-bold mb-0"><?php echo (int)$total_reviews; ?></p>
+                        <p class="text-muted mb-0">Reviews</p>
+                    </div>
+                </a>
             </div>
         </div>
 

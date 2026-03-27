@@ -72,22 +72,9 @@ $members = $pdo->query(
                                 <?php if ((int)$m['member_id'] === (int)$_SESSION['member_id']): ?>
                                     <span class="text-muted small">You</span>
                                 <?php else: ?>
-                                    <!-- Toggle Admin -->
-                                    <form method="post" action="admin/process/process_admin.php" class="d-inline"
-                                        onsubmit="return confirm('<?php echo $m['is_admin'] ? 'Remove admin access?' : 'Grant admin access?'; ?>');">
-                                        <?php echo csrfField(); ?>
-                                        <input type="hidden" name="action" value="toggle_admin">
-                                        <input type="hidden" name="member_id" value="<?php echo (int)$m['member_id']; ?>">
-                                        <input type="hidden" name="is_admin" value="<?php echo $m['is_admin'] ? 0 : 1; ?>">
-                                        <button type="submit" class="btn btn-sm <?php echo $m['is_admin'] ? 'btn-outline-danger' : 'btn-outline-primary'; ?>"
-                                                title="<?php echo $m['is_admin'] ? 'Remove admin' : 'Make admin'; ?>">
-                                            <?php echo $m['is_admin'] ? 'Remove Admin' : 'Make Admin'; ?>
-                                        </button>
-                                    </form>
-
                                     <!-- Disable / Reactivate -->
                                     <?php if ($m['account_status'] === 'active'): ?>
-                                        <form method="post" action="admin/process/process_admin.php" class="d-inline ms-1"
+                                        <form method="post" action="admin/process/process_admin.php" class="d-inline"
                                             onsubmit="return confirm('Disable this account? The member will not be able to log in.');">
                                             <?php echo csrfField(); ?>
                                             <input type="hidden" name="action" value="disable_member">
@@ -97,7 +84,7 @@ $members = $pdo->query(
                                             </button>
                                         </form>
                                     <?php else: ?>
-                                        <form method="post" action="admin/process/process_admin.php" class="d-inline ms-1"
+                                        <form method="post" action="admin/process/process_admin.php" class="d-inline"
                                             onsubmit="return confirm('Reactivate this account?');">
                                             <?php echo csrfField(); ?>
                                             <input type="hidden" name="action" value="reactivate_member">
@@ -109,7 +96,7 @@ $members = $pdo->query(
                                     <?php endif; ?>
 
                                     <!-- Delete -->
-                                    <form method="post" action="admin/process/process_admin.php" class="d-inline ms-1"
+                                    <form method="post" action="admin/process/process_admin.php" class="d-inline"
                                         onsubmit="return confirm('Permanently delete this account and all their data? This cannot be undone.');">
                                         <?php echo csrfField(); ?>
                                         <input type="hidden" name="action" value="delete_member">

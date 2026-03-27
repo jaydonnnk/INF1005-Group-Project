@@ -380,6 +380,18 @@ try {
             header("Location: " . Routes::ADMIN_MEMBERS);
             exit();
 
+        // Reviews
+        case 'delete_review':
+            $review_id = (int)($_POST['review_id'] ?? 0);
+            
+            if ($review_id > 0) {
+                $stmt = $pdo->prepare("DELETE FROM reviews WHERE review_id = :rid");
+                $stmt->execute([':rid' => $review_id]);
+                setFlash('success', 'Review deleted.');
+            }
+            header("Location: " . Routes::ADMIN_REVIEWS);
+            exit();
+
         default:
             setFlash('error', 'Unknown action.');
             header("Location: " . Routes::ADMIN_HOME);

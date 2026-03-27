@@ -46,4 +46,5 @@ class Routes {
     const ADMIN_BOOKINGS = '../bookings.php';
     const ADMIN_ORDERS   = '../orders.php';
     const ADMIN_MEMBERS  = '../members.php';
+    const ADMIN_REVIEWS  = '../reviews.php';
 }

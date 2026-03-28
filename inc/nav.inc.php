@@ -88,6 +88,12 @@ if (!defined('ARIA_CURRENT_PAGE')) {
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link <?php echo ($current_page === 'waitlist.php') ? 'active' : ''; ?>" href="waitlist.php"
+                        <?php echo ($current_page === 'waitlist.php') ? ARIA_CURRENT_PAGE : ''; ?>>
+                            <span class="material-icons align-middle me-1" aria-hidden="true">queue</span>Waitlist
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link <?php echo ($current_page === 'profile.php') ? 'active' : ''; ?>" href="profile.php"
                         <?php echo ($current_page === 'profile.php') ? ARIA_CURRENT_PAGE : ''; ?>>
                             <span class="material-icons align-middle me-1" aria-hidden="true">manage_accounts</span>Profile

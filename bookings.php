@@ -80,10 +80,15 @@ if ($show_form && $booking_data) {
 
                     <p class="text-muted small"><span class="text-danger">*</span> indicates a required field.</p>
 
+                    <?php
+                    $prefill_date = isset($_GET['date']) ? htmlspecialchars($_GET['date']) : '';
+                    $prefill_slot = isset($_GET['time_slot']) ? htmlspecialchars($_GET['time_slot']) : '';
+                    ?>
                     <div class="mb-3">
                         <label for="booking_date" class="form-label">Date: <span class="text-danger">*</span></label>
                         <input type="date" id="booking_date" name="booking_date" class="form-control" required
-                            min="<?php echo date('Y-m-d'); ?>">
+                            min="<?php echo date('Y-m-d'); ?>"
+                            value="<?php echo $prefill_date; ?>">
                         <div class="invalid-feedback">Please select a date.</div>
                     </div>
 
@@ -93,7 +98,8 @@ if ($show_form && $booking_data) {
                             <option value="">Select a time slot</option>
                             <?php
                             foreach ($slots as $s) {
-                                echo '<option value="' . htmlspecialchars($s) . '">' . htmlspecialchars($s) . '</option>';
+                                $selected = ($prefill_slot === $s) ? 'selected' : '';
+                                echo '<option value="' . htmlspecialchars($s) . '" ' . $selected . '>' . htmlspecialchars($s) . '</option>';
                             }
                             ?>
                         </select>
@@ -274,6 +280,14 @@ if ($show_form && $booking_data) {
             }
         }
         ?>
+
+        <div class="alert alert-info d-flex align-items-start gap-2 mb-4" role="note">
+            <span class="material-icons mt-1" aria-hidden="true">info</span>
+            <div>
+                Can't find an available slot?
+                <a href="waitlist.php?action=new">Join the waitlist</a> and we'll email you when a spot opens up.
+            </div>
+        </div>
 
         <?php if (count($bookings) === 0): ?>
             <p class="text-muted">You have no bookings yet. <a href="bookings.php?action=new">Make your first reservation!</a></p>
